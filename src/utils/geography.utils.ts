@@ -24,6 +24,7 @@ export class GeographyUtils {
         (Math.PI / 4 + lat / 2),
       ),
     );
+
     lng = R * lng;
 
     return {

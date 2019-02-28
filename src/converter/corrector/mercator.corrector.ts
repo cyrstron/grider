@@ -10,13 +10,17 @@ export class MercatorCorrector {
     return this.geography.sphericalToMercator(point);
   }
 
-  correctForGeo(point: grider.GeoPoint, gridParams: grider.GridParams): grider.GeoPoint {
+  correctForGeo(
+    point: grider.GeoPoint,
+    gridParams: grider.GridParams,
+  ): grider.GeoPoint {
     let result = this.geography.mercatorToSpherical(point);
 
     result = this.geography.formatGeoPoint(result, gridParams.crop);
 
     return result;
   }
+
   correctPoly(poly: grider.GeoPoint[]): grider.GeoPoint[] {
     return poly;
   }

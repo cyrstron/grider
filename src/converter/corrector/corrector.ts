@@ -12,7 +12,10 @@ export class Corrector {
     this.none = none;
   }
 
-  correctForGrid(point: grider.GeoPoint, {correction}: grider.GridParams): grider.GeoPoint {
+  correctForGrid(
+    point: grider.GeoPoint,
+    {correction}: grider.GridParams,
+  ): grider.GeoPoint {
     if (correction === 'merc') {
       return this.merc.correctForGrid(point);
     } else {
@@ -20,7 +23,10 @@ export class Corrector {
     }
   }
 
-  correctForGeo(point: grider.GeoPoint, gridParams: grider.GridParams): grider.GeoPoint {
+  correctForGeo(
+    point: grider.GeoPoint,
+    gridParams: grider.GridParams,
+  ): grider.GeoPoint {
     const {correction} = gridParams;
 
     if (correction === 'merc') {
@@ -30,7 +36,10 @@ export class Corrector {
     }
   }
 
-  correctPoly(poly: grider.GeoPoint[], {correction}: grider.GridParams): grider.GeoPoint[] {
+  correctPoly(
+    poly: grider.GeoPoint[],
+    {correction}: grider.GridParams,
+  ): grider.GeoPoint[] {
     if (correction === 'merc') {
       return this.merc.correctPoly(poly);
     } else {

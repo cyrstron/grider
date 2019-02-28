@@ -41,12 +41,13 @@ export class Converter {
       geoAxes: axesParams,
     } = gridParams;
 
-    const geoPoint = axesParams.reduce((geoPoint: grider.GeoPoint, axisParams: grider.Axis) => {
-      geoPoint[axisParams.name] = this.axisTransformer.toGeo(gridPoint, axisParams, gridParams);
+    const geoPoint = axesParams
+      .reduce((geoPoint: grider.GeoPoint, axisParams: grider.Axis) => {
+        geoPoint[axisParams.name] = this.axisTransformer.toGeo(gridPoint, axisParams, gridParams);
 
-      return geoPoint;
-    }, {} as grider.GeoPoint);
+        return geoPoint;
+      }, {} as grider.GeoPoint);
 
-    return geoPoint;
+    return this.corrector.correctForGeo(geoPoint, gridParams);
   }
 }
