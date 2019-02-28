@@ -6,21 +6,25 @@ export class PointUtils {
 
   roundHexGridPoint(gridPoint: grider.PointHex): grider.PointHex {
     const diffs = this.geometry.calcPointDecimalRemains(gridPoint);
-    const keys = Object.keys(diffs)
+    const sortedAxes = Object.keys(diffs)
       .sort((keyA, keyB) => diffs[keyB] - diffs[keyA]);
 
-    let diffsSum = keys.reduce((diffsSum, key) => diffsSum + diffs[key], 0);
+    let diffsSum = Object.values(diffs)
+      .reduce((diffsSum, diff) => diffsSum + diff, 0);
 
-    const roundedPoint = keys.reduce((roundedPoint: any, key: string) => {
-      if (diffsSum > 0) {
-        roundedPoint[key] = Math.ceil(gridPoint[key]);
-        diffsSum -= 1;
-      } else {
-        roundedPoint[key] = Math.floor(gridPoint[key]);
-      }
+    diffsSum = Math.round(diffsSum);
 
-      return roundedPoint;
-    }, {}) as grider.PointHex;
+    const roundedPoint = sortedAxes
+      .reduce((roundedPoint: any, key: string) => {
+        if (diffsSum > 0) {
+          roundedPoint[key] = Math.ceil(gridPoint[key]);
+          diffsSum -= 1;
+        } else {
+          roundedPoint[key] = Math.floor(gridPoint[key]);
+        }
+
+        return roundedPoint;
+      }, {}) as grider.PointHex;
 
     return roundedPoint;
   }
