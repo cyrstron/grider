@@ -1,4 +1,4 @@
-/// <reference types="./@types" />
+/// <reference types="../src/@types" />
 
 import { CenterCalculator } from './center-calc';
 import { Converter, createConverter } from './converter';

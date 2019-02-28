@@ -1,4 +1,3 @@
-// import { grider } from '../..';
 import { AxisRotator } from './rotator';
 import { AxisScaler } from './scaler';
 

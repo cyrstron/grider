@@ -1,4 +1,3 @@
-// import { grider } from '..';
 import { AxisTransformer } from './axis-transformer';
 import { Corrector } from './corrector';
 

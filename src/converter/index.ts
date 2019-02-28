@@ -1,4 +1,4 @@
-import { GriderUtils } from './../utils';
+import { GriderUtils } from '../utils';
 import { AxisTransformer, createAxisTransformer } from './axis-transformer';
 import { Converter } from './converter';
 import { Corrector, createCorrector } from './corrector';

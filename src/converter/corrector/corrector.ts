@@ -1,4 +1,3 @@
-// import { grider } from '../..';
 import { MercatorCorrector } from './mercator.corrector';
 import { NoneCorrector } from './none.corrector';
 

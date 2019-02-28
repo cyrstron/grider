@@ -20,5 +20,6 @@ module.exports = {
     path: path.resolve(__dirname, '.dist'),
     libraryTarget: 'commonjs'
   },
-  devtool: 'source-map'
+  devtool: 'source-map',
+  mode: 'development'
 };

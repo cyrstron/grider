@@ -1,5 +1,3 @@
-// import { grider } from '../..';
-
 export class AxisScaler {
   toGridScale(value: number, gridParams: grider.GridParams): number {
     const size = gridParams.initSize;

@@ -1,4 +1,3 @@
-// import { grider } from '../..';
 import { GriderUtils, MathUtils } from '../../utils';
 
 export class AxisRotator {

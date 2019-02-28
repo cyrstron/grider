@@ -1,4 +1,3 @@
-// import { grider } from '..';
 import { GeographyUtils, GriderUtils } from '../utils';
 import {
   axesParams,

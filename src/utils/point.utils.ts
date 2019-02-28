@@ -1,4 +1,3 @@
-// import { grider } from '..';
 import { GeometryUtils } from './geometry.utils';
 
 export class PointUtils {

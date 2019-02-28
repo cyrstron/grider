@@ -1,5 +1,3 @@
-// import { grider } from '..';
-
 const MERC_COOF = Math.PI / 2;
 const SIN60 = Math.sqrt(3) / 2;
 

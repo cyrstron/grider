@@ -1,5 +1,3 @@
-// import { grider } from '../..';
-
 export class NoneCorrector {
   correctForGrid(point: grider.GeoPoint): grider.GeoPoint {
     return point;
