@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "esnext"
+    ],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "outDir": "./.dist",
+    "declaration": true,
+    "typeRoots": ["./src/@types"]
+  },
+  "include": [
+    "./src/**/*", "tsconfig.json"
+  ],
+  "exclude": ["node_modules/**/*", "./dist/**/*", "*.js"]
+}

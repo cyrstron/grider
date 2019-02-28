@@ -1,0 +1,25 @@
+{
+  "name": "@micelord/grider",
+  "version": "1.0.0",
+  "main": "./.dist/index.js",
+  "module": "./.dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./.dist",
+  "description": "",
+  "scripts": {
+    "start": "webpack",
+    "dev": "webpack --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.3.3333",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  }
+}
