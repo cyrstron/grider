@@ -10,45 +10,72 @@ export class GeographyUtils {
     this.constants = constants;
   }
 
-  sphericalToMercator(
+  spherToMercAbs(
     point: grider.GeoPoint,
-    isAbsolute: boolean = false,
-  ): grider.GeoPoint {
-    const R: number = isAbsolute ? this.constants.radius : 90;
-
-    let lat = this.mathUtils.degToRad(point.lat);
-    let lng = this.mathUtils.degToRad(point.lng);
-
-    lat = R * Math.log(
-      Math.tan(
-        (Math.PI / 4 + lat / 2),
-      ),
-    );
-
-    lng = R * lng;
+  ): grider.Point {
+    const {x, y} = this.spherToMercRel(point);
 
     return {
-      lat,
-      lng,
+      x: x * this.constants.radius,
+      y: y * this.constants.radius,
     };
   }
 
-  mercatorToSpherical(
+  spherToMercGeo(
     point: grider.GeoPoint,
-    isAbsolute: boolean = false,
   ): grider.GeoPoint {
-    const R = isAbsolute ? this.constants.radius : 90;
-
-    let lng = point.lng / R;
-    let lat = 2 * (Math.atan(
-      Math.pow(Math.E, (point.lat / R)),
-    ) - Math.PI / 4);
-
-    lat = this.mathUtils.radToDeg(lat),
-    lng = this.mathUtils.radToDeg(lng);
+    const {x, y} = this.spherToMercRel(point);
 
     return {
-      lat,
+      lng: x * 90,
+      lat: y * 90,
+    };
+  }
+
+  spherToMercRel(
+    point: grider.GeoPoint,
+  ): grider.Point {
+    const x = this.mathUtils.degToRad(point.lng);
+    const y = Math.log(
+      Math.tan(
+        (Math.PI / 4 + this.mathUtils.degToRad(point.lat) / 2),
+      ),
+    );
+
+    return {
+      y,
+      x,
+    };
+  }
+
+  mercToSpherAbs(
+    {x, y}: grider.Point,
+  ): grider.GeoPoint {
+    return this.mercToSpherRel({
+      x: x / this.constants.radius,
+      y: y / this.constants.radius,
+    });
+  }
+
+  mercToSpherGeo(
+    {lng, lat}: grider.GeoPoint,
+  ): grider.GeoPoint {
+    return this.mercToSpherRel({
+      x: lng / 90,
+      y: lat / 90,
+    });
+  }
+
+  mercToSpherRel(
+    {x, y}: grider.Point,
+  ): grider.GeoPoint {
+    const lng = this.mathUtils.radToDeg(x);
+    const lat = 2 * (Math.atan(
+      Math.pow(Math.E, y),
+    ) - Math.PI / 4);
+
+    return {
+      lat: this.mathUtils.radToDeg(lat),
       lng,
     };
   }

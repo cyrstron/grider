@@ -1,14 +1,18 @@
+import { FigureBuilder } from './figure-builder';
 import { Grider } from './grider';
 
 export class StaticGrider {
   grider: Grider;
+  figureBuilder: FigureBuilder;
   params: grider.GridParams;
 
   constructor(
     grider: Grider,
+    figureBuilder: FigureBuilder,
     params: grider.GridParams,
   ) {
     this.grider = grider;
+    this.figureBuilder = figureBuilder;
     this.params = params;
   }
 
@@ -35,5 +39,9 @@ export class StaticGrider {
       geoPoint,
       this.params,
     );
+  }
+
+  buildFigure(poly: grider.GeoPoint[]): grider.GeoPoint[] {
+    return this.figureBuilder.buildFigure(poly, this.params);
   }
 }

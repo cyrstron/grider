@@ -2,6 +2,7 @@
 
 import { CenterCalculator } from './center-calc';
 import { Converter, createConverter } from './converter';
+import { createFigureBuilder } from './figure-builder';
 import { Grider } from './grider';
 import { ParamsBuilder } from './params-builder';
 import { ShapeBuilder } from './shape-builder';
@@ -21,12 +22,14 @@ export const grider = new Grider({
   centerCalc,
 });
 
+export const figureBuilder = createFigureBuilder(grider);
+
 export const createStaticGrider = (
   config: grider.GridConfig,
 ): StaticGrider => {
   const params = paramsBuilder.build(config);
 
-  return new StaticGrider(grider, params);
+  return new StaticGrider(grider, figureBuilder, params);
 };
 
 export {
