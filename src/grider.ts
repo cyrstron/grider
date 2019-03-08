@@ -74,4 +74,12 @@ export class Grider {
     return geoPoint;
   }
 
+  calcGridPointByGeoPoint(
+    geoPoint: grider.GeoPoint,
+    gridParams: grider.GridParams,
+  ): grider.PointHex | grider.PointRect {
+    const gridPoint = this.converter.toGrid(geoPoint, gridParams);
+
+    return gridPoint;
+  }
 }
