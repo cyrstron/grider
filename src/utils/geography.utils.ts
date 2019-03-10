@@ -21,8 +21,11 @@ export class GeographyUtils {
     lng1: number, 
     lng2: number
   ): grider.LngEdges {
-    lng1 = Math.min(lng1, lng2);
-    lng2 = Math.max(lng1, lng2);
+    const lngMin = Math.min(lng1, lng2);
+    const lngMax = Math.max(lng1, lng2);
+
+    const delta1 = lngMax - lngMin;
+    const delta2 = 360 + lngMin - lngMax;
 
     
   }
