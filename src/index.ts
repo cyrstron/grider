@@ -22,7 +22,7 @@ export const grider = new Grider({
   centerCalc,
 });
 
-export const figureBuilder = createFigureBuilder(grider);
+export const figureBuilder = createFigureBuilder(grider, utils);
 
 export const createStaticGrider = (
   config: grider.GridConfig,

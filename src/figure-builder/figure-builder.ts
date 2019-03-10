@@ -12,56 +12,76 @@ export class FigureBuilder {
     gridParams: grider.GridParams,
   ): grider.GeoPoint[] {
     const figure: grider.GeoPoint[] = [];
-    const correctedShape = shape.map(
-      (geoPoint) => {
-        const centerPoint = this.grider.calcGridCenterPointByGeoPoint(geoPoint, gridParams);
-        const geoPoly = this.grider.buildPolyByCenterGridPoint(centerPoint, gridParams);
-        const firstPoint = geoPoly.reduce((
-          firstPoint: grider.GeoPoint,
-          point: grider.GeoPoint): grider.GeoPoint => {
-          const isContain = this.utils.geometry.polyContains(shape, point);
+    // const correctedShape = shape.map(
+    //   (geoPoint) => {
+    //     const centerPoint = this.grider.calcGridCenterPointByGeoPoint(geoPoint, gridParams);
+    //     const geoPoly = this.grider.buildPolyByCenterGridPoint(centerPoint, gridParams);
+    //     const firstPoint = geoPoly.reduce((
+    //       firstPoint: grider.GeoPoint,
+    //       point: grider.GeoPoint): grider.GeoPoint => {
+    //       const isContain = this.utils.geometry.polyContains(shape, point);
 
-        }, geoPoly[0]);
-      },
-    );
+    //     }, geoPoly[0]);
+    //   },
+    // );
 
-    return figure;
+    return shape;
   }
 
-  getFirstPoint(
+  buildFigure(
     shape: grider.GeoPoint[],
     gridParams: grider.GridParams,
-  ): grider.GeoPoint {
-    let contains: boolean[] = [];
-    const gridCenter: grider.PointRect | grider.PointHex = this.grider
-      .calcGridCenterPointByGeoPoint(shape[0], gridParams);
-    const geoPoly: grider.GeoPoint[] = this.grider.buildPolyByCenterGridPoint(gridCenter, gridParams);
+  ): grider.GeoPoint[] {
+    const figure: grider.GeoPoint[] = [];
+    // const correctedShape = shape.map(
+    //   (geoPoint) => {
+    //     const centerPoint = this.grider.calcGridCenterPointByGeoPoint(geoPoint, gridParams);
+    //     const geoPoly = this.grider.buildPolyByCenterGridPoint(centerPoint, gridParams);
+    //     const firstPoint = geoPoly.reduce((
+    //       firstPoint: grider.GeoPoint,
+    //       point: grider.GeoPoint): grider.GeoPoint => {
+    //       const isContain = this.utils.geometry.polyContains(shape, point);
 
-    while (contains.every((isContained) => isContained === contains[0])) {
-      contains = geoPoly.map((
-        geoPoint: grider.GeoPoint,
-      ): boolean => this.utils.geometry.polyContains(shape, geoPoint));
-    }
+    //     }, geoPoly[0]);
+    //   },
+    // );
 
-    let firstPoint: grider.GeoPoint | undefined;
-
-    while (!firstPoint) {
-      }, undefined;)
-    }
-
-return firstPoint;
+    return shape;
   }
+//   getFirstPoint(
+//     shape: grider.GeoPoint[],
+//     gridParams: grider.GridParams,
+//   ): grider.GeoPoint {
+//     let contains: boolean[] = [];
+//     const gridCenter: grider.PointRect | grider.PointHex = this.grider
+//       .calcGridCenterPointByGeoPoint(shape[0], gridParams);
+//     const geoPoly: grider.GeoPoint[] = this.grider.buildPolyByCenterGridPoint(gridCenter, gridParams);
 
-getNextGridCenter(
-    shape: grider.GeoPoint[],
-    gridCenter: grider.PointRect | grider.PointHex,
-    gridParams: grider.GridParams,
-  ); : grider.PointRect | grider.PointHex; {
+//     while (contains.every((isContained) => isContained === contains[0])) {
+//       contains = geoPoly.map((
+//         geoPoint: grider.GeoPoint,
+//       ): boolean => this.utils.geometry.polyContains(shape, geoPoint));
+//     }
 
-    const geoPoly = this.grider.buildPolyByCenterGridPoint(centerPoint, gridParams);
-    const firstPoint = geoPoly.reduce((
-      firstPoint: grider.GeoPoint,
-      point: grider.GeoPoint): grider.GeoPoint => {
-      const isContain = this.utils.geometry.polyContains(shape, point);
-  };
+//     let firstPoint: grider.GeoPoint | undefined;
+
+//     while (!firstPoint) {
+//       }, undefined;)
+//     }
+
+// return firstPoint;
+//   }
+
+// getNextGridCenter(
+//     shape: grider.GeoPoint[],
+//     gridCenter: grider.PointRect | grider.PointHex,
+//     gridParams: grider.GridParams,
+//   ); : grider.PointRect | grider.PointHex; {
+
+//     const geoPoly = this.grider.buildPolyByCenterGridPoint(centerPoint, gridParams);
+//     const firstPoint = geoPoly.reduce((
+//       firstPoint: grider.GeoPoint,
+//       point: grider.GeoPoint): grider.GeoPoint => {
+//       const isContain = this.utils.geometry.polyContains(shape, point);
+//   };
 }

@@ -3,6 +3,11 @@ declare namespace grider {
     x: number;
     y: number;
   }
+
+  export interface LngEdges {
+    west: number;
+    east: number;
+  }
   
   export interface GeoPoint {
     lat: number,

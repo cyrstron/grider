@@ -1,10 +1,84 @@
 import {MathUtils} from './math.utils';
 
 export class GeometryUtils {
-  mathUtils: MathUtils;
+  constructor(
+    public math: MathUtils, 
+  ) {}
 
-  constructor(mathUtils: MathUtils) {
-    this.mathUtils = mathUtils;
+  calcSectionsIntersect(
+    sectionA: [[number, number], [number, number]],
+    sectionB: [[number, number], [number, number]],
+  ): [number, number] | undefined {    
+    const [[x1, y1], [x2, y2]] = sectionA;
+    const [[x3, y3], [x4, y4]] = sectionB;
+
+    const coofsA = this.calcFlatLineCoofs(sectionA);
+    const coofsB = this.calcFlatLineCoofs(sectionB);
+
+    const intersect = this.resolveFlatLineMatrix([coofsA, coofsB]);
+
+    if (!intersect) return;
+
+    const [x, y] = intersect;
+
+    if (
+      Math.max(x1, x2) < x ||
+      Math.min (x1, x2) > x ||
+      Math.max (x3, x4) < x ||
+      Math.min (x3, x4) > x ||
+      Math.max(y1, y2) < y ||
+      Math.min (y1, y2) > y ||
+      Math.max (y3, y4) < y ||
+      Math.min (y3, y4) > y
+    ) return;
+
+    return intersect;
+  }
+
+  calcFlatLineCoofs(
+    [[x1, y1], [x2, y2]]: [
+      [number, number], [number, number]
+  ]): [number, number, number] {
+    return [
+      y1 - y2,
+      x2 - x1,
+      -((x1 * y2) - (y1 * x2))
+    ];
+  }
+
+  resolveFlatLineMatrix(
+    [[a1, b1, c1], [a2, b2, c2]]: number[][]
+  ): [number, number] | undefined {
+    const delta = a1 * b2 - b1 * a2;
+    const deltaX = c1 * b2 - b1 * c2;
+    const deltaY = a1 * c2 - c1 * a2;
+
+    if (delta === 0) return;
+
+    return [
+      deltaX / delta,
+      deltaY / delta,
+    ]
+  }
+
+  calcXLineEquation(
+    [[x1, y1], [x2, y2]]: [[number, number], [number, number]]
+  ): (y: number) => number {
+    return (y: number): number => {
+      return (
+        y - y1 / (y2 - y1)
+      ) * (x2 - x1) + x1;
+    }
+  }
+
+  calcYLineEquation(
+    [[x1, y1], [x2, y2]]: [[number, number], [number, number]]
+  ): (x: number) => number {
+    return (x: number): number => {      
+      return (
+        x - x1 / (x2 - x1)
+      ) * (y2 - y1) + y1;
+    }
   }
 
   calcLatIntersecs(
@@ -117,7 +191,7 @@ export class GeometryUtils {
     const remains: grider.PointHex = Object.keys(point)
       .reduce((remains: any, key: string) => {
         const value = point[key];
-        const remain = this.mathUtils.decRemain(value);
+        const remain = this.math.decRemain(value);
 
         remains[key] = remain;
 

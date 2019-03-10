@@ -13,8 +13,8 @@ export interface GriderUtils {
 export const createGriderUtils = (): GriderUtils => {
   const math = new MathUtils();
   const geometry = new GeometryUtils(math);
+  const geography = new GeographyUtils(math, geometry);
   const point = new PointUtils(geometry);
-  const geography = new GeographyUtils(math);
 
   return {
     math,
