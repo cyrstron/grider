@@ -1,6 +1,6 @@
 import {constants} from '../constants';
-import {MathUtils} from './math.utils';
 import { GeometryUtils } from './geometry.utils';
+import {MathUtils} from './math.utils';
 
 export class GeographyUtils {
   constants: any = constants;
@@ -10,16 +10,58 @@ export class GeographyUtils {
     public geometry: GeometryUtils,
   ) {}
 
-  polyContainsPoint(    
+  polyContainsPoint(
     poly: grider.GeoPoint[],
     {lat, lng}: grider.GeoPoint,
-  ) {
+  ): boolean {
+    const lngIntersects = poly.reduce((
+      intersects: number[],
+      point: grider.GeoPoint,
+      index: number,
+    ): number[] => {
+      const nextPoint = poly[index + 1] || poly[0];
 
+      const lngIntersect = this.calcLngByLatOnLox(lat, [point, nextPoint]);
+      // const {east, west} = this.calcDeltaLng(point.lng, nextPoint.lng);
+
+      // const lngEast = east < west ? point.lng : nextPoint.lng;
+      // const lngWest = east < west ? nextPoint.lng : point.lng;
+
+      if (
+        Math.min(point.lat, nextPoint.lat) < lat &&
+        Math.max(point.lat, nextPoint.lat) > lat
+      ) {
+        intersects.push(lngIntersect);
+      }
+
+      return intersects;
+    }, []);
+
+    const edges = this.findLngEdges(lngIntersects);
+    const gapStartIndex = lngIntersects.indexOf(edges.west);
+
+    const gaps = [
+      ...lngIntersects.slice(gapStartIndex),
+      ...lngIntersects.slice(0, gapStartIndex),
+    ];
+
+    return gaps.reduce((
+      isContained: boolean,
+      intersect: number,
+      index: number,
+    ): boolean => {
+      if (isContained || index % 2) return isContained;
+
+      const from = intersect;
+      const to = gaps[index + 1];
+
+      return from <= lng && to >= lng;
+    }, false);
   }
 
   calcDeltaLng(
-    lng1: number, 
-    lng2: number
+    lng1: number,
+    lng2: number,
   ): grider.LngEdges {
     const lngMin = Math.min(lng1, lng2);
     const lngMax = Math.max(lng1, lng2);
@@ -27,24 +69,40 @@ export class GeographyUtils {
     const delta1 = lngMax - lngMin;
     const delta2 = 360 + lngMin - lngMax;
 
-    
+    return lng1 === lngMin ? {
+      east: delta1,
+      west: delta2,
+    } : {
+      east: delta2,
+      west: delta1,
+    };
   }
 
-  calcShapeLngEdges(
-    shape: grider.GeoPoint[]
+  findLngEdges(
+    lngs: number[],
   ): grider.LngEdges {
-    const edges = shape.reduce((
-      edges: grider.LngEdges, 
-      point: grider.GeoPoint,
-      index: number,
-    ): grider.LngEdges => {
-      if (index === 0) return edges;
+    const edges = lngs.reduce((
+        edges: grider.LngEdges,
+        lng: number,
+        index: number,
+      ): grider.LngEdges => {
+        if (index === 0) return edges;
 
+        const edgesEast = this.calcDeltaLng(lng, edges.east);
+        const edgesWest = this.calcDeltaLng(lng, edges.west);
 
+        if (edgesEast.west < edgesEast.east) {
+          edges.east = lng;
+        }
 
-    }, {east: shape[0].lng, west: shape[0].lng})
+        if (edgesWest.west > edgesWest.east) {
+          edges.west = lng;
+        }
 
-    }
+        return edges;
+      }, {east: lngs[0], west: lngs[0]});
+
+    return edges;
   }
 
   calcSectionsIntersect(
@@ -53,7 +111,7 @@ export class GeographyUtils {
   ): grider.GeoPoint | undefined {
     const intersect = this.geometry.calcSectionsIntersect(
       [[a1.lng, a1.lat], [b1.lng, b1.lat]],
-      [[a2.lng, a2.lat], [b2.lng, b2.lat]]
+      [[a2.lng, a2.lat], [b2.lng, b2.lat]],
     );
 
     if (!intersect) return;
@@ -193,33 +251,33 @@ export class GeographyUtils {
   }
 
   getLngLoxEquation(
-    loxPoints: [grider.GeoPoint, grider.GeoPoint]
+    loxPoints: [grider.GeoPoint, grider.GeoPoint],
   ): (lat: number) => number {
     return (lat: number) => this.calcLngByLatOnLox(lat, loxPoints);
-  } 
+  }
 
   getLatLoxEquation(
-    loxPoints: [grider.GeoPoint, grider.GeoPoint]
+    loxPoints: [grider.GeoPoint, grider.GeoPoint],
   ): (lng: number) => number {
     return (lng: number) => this.calcLatByLngOnLox(lng, loxPoints);
-  } 
+  }
 
   calcLngByLatOnLox(
     lat: number,
-    loxPoints: [grider.GeoPoint, grider.GeoPoint]
+    loxPoints: [grider.GeoPoint, grider.GeoPoint],
   ): number {
     const [
-      {lat: lat1, lng: lng1}, 
-      {lat: lat2, lng: lng2}
+      {lat: lat1, lng: lng1},
+      {lat: lat2, lng: lng2},
     ] = loxPoints;
 
     const tgK = (lng2 - lng1) / (lat2 - lat1);
 
     const lngRad = tgK * (
       Math.log(
-        Math.tan((Math.PI / 4) + (this.math.degToRad(lat) / 2))
+        Math.tan((Math.PI / 4) + (this.math.degToRad(lat) / 2)),
       ) - Math.log(
-        Math.tan((Math.PI / 4) + (this.math.degToRad(lat1) / 2))
+        Math.tan((Math.PI / 4) + (this.math.degToRad(lat1) / 2)),
       )
     ) + this.math.degToRad(lng1);
 
@@ -228,11 +286,11 @@ export class GeographyUtils {
 
   calcLatByLngOnLox(
     lng: number,
-    loxPoints: [grider.GeoPoint, grider.GeoPoint]
+    loxPoints: [grider.GeoPoint, grider.GeoPoint],
   ): number {
     const [
-      {lat: lat1, lng: lng1}, 
-      {lat: lat2, lng: lng2}
+      {lat: lat1, lng: lng1},
+      {lat: lat2, lng: lng2},
     ] = loxPoints;
 
     const tgK = (lng2 - lng1) / (lat2 - lat1);
@@ -240,12 +298,12 @@ export class GeographyUtils {
     const latRad = 2 * (
       Math.atan(
         Math.pow(Math.E, (
-          this.math.degToRad(lng) + Math.log(Math.tan(            
-            (Math.PI / 4) + (this.math.degToRad(lat1) / 2) + this.math.degToRad(lng1)
+          this.math.degToRad(lng) + Math.log(Math.tan(
+            (Math.PI / 4) + (this.math.degToRad(lat1) / 2) + this.math.degToRad(lng1),
           ))
-        ) / tgK)
+        ) / tgK),
       ) - Math.PI / 4
-    )
+    );
 
     return this.math.radToDeg(latRad);
   }

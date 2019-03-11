@@ -2,13 +2,13 @@ import {MathUtils} from './math.utils';
 
 export class GeometryUtils {
   constructor(
-    public math: MathUtils, 
+    public math: MathUtils,
   ) {}
 
   calcSectionsIntersect(
     sectionA: [[number, number], [number, number]],
     sectionB: [[number, number], [number, number]],
-  ): [number, number] | undefined {    
+  ): [number, number] | undefined {
     const [[x1, y1], [x2, y2]] = sectionA;
     const [[x3, y3], [x4, y4]] = sectionB;
 
@@ -42,12 +42,12 @@ export class GeometryUtils {
     return [
       y1 - y2,
       x2 - x1,
-      -((x1 * y2) - (y1 * x2))
+      -((x1 * y2) - (y1 * x2)),
     ];
   }
 
   resolveFlatLineMatrix(
-    [[a1, b1, c1], [a2, b2, c2]]: number[][]
+    [[a1, b1, c1], [a2, b2, c2]]: number[][],
   ): [number, number] | undefined {
     const delta = a1 * b2 - b1 * a2;
     const deltaX = c1 * b2 - b1 * c2;
@@ -58,27 +58,27 @@ export class GeometryUtils {
     return [
       deltaX / delta,
       deltaY / delta,
-    ]
+    ];
   }
 
   calcXLineEquation(
-    [[x1, y1], [x2, y2]]: [[number, number], [number, number]]
+    [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
   ): (y: number) => number {
     return (y: number): number => {
       return (
         y - y1 / (y2 - y1)
       ) * (x2 - x1) + x1;
-    }
+    };
   }
 
   calcYLineEquation(
-    [[x1, y1], [x2, y2]]: [[number, number], [number, number]]
+    [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
   ): (x: number) => number {
-    return (x: number): number => {      
+    return (x: number): number => {
       return (
         x - x1 / (x2 - x1)
       ) * (y2 - y1) + y1;
-    }
+    };
   }
 
   calcLatIntersecs(
