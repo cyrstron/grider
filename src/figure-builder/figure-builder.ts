@@ -9,9 +9,9 @@ export class FigureBuilder {
 
   buildInnerFigure(
     shape: grider.GeoPoint[],
-    gridParams: grider.GridParams,
+    _gridParams: grider.GridParams,
   ): grider.GeoPoint[] {
-    const figure: grider.GeoPoint[] = [];
+    // const figure: grider.GeoPoint[] = [];
     // const correctedShape = shape.map(
     //   (geoPoint) => {
     //     const centerPoint = this.grider.calcGridCenterPointByGeoPoint(geoPoint, gridParams);
@@ -30,9 +30,9 @@ export class FigureBuilder {
 
   buildFigure(
     shape: grider.GeoPoint[],
-    gridParams: grider.GridParams,
+    _gridParams: grider.GridParams,
   ): grider.GeoPoint[] {
-    const figure: grider.GeoPoint[] = [];
+    // const figure: grider.GeoPoint[] = [];
     // const correctedShape = shape.map(
     //   (geoPoint) => {
     //     const centerPoint = this.grider.calcGridCenterPointByGeoPoint(geoPoint, gridParams);

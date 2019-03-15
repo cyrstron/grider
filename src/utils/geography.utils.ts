@@ -298,12 +298,10 @@ export class GeographyUtils {
     const latRad = 2 * (
       Math.atan(
         Math.pow(Math.E, (
-          this.math.degToRad(lng) + Math.log(Math.tan(
-            (Math.PI / 4) + (this.math.degToRad(lat1) / 2) + this.math.degToRad(lng1),
-          ))
-        ) / tgK),
-      ) - Math.PI / 4
-    );
+          this.math.degToRad(lng) +
+          Math.log(Math.tan((Math.PI / 4) + this.math.degToRad(lat1) / 2)) +
+          this.math.degToRad(lng1)
+        ) / tgK)) - Math.PI / 4);
 
     return this.math.radToDeg(latRad);
   }

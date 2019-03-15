@@ -62,23 +62,37 @@ export class GeometryUtils {
   }
 
   calcXLineEquation(
-    [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
+    points: [[number, number], [number, number]],
   ): (y: number) => number {
-    return (y: number): number => {
-      return (
-        y - y1 / (y2 - y1)
-      ) * (x2 - x1) + x1;
-    };
+    return (
+      y: number,
+    ): number => this.calcXByYOnLine(y, points);
   }
 
   calcYLineEquation(
-    [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
+    points: [[number, number], [number, number]],
   ): (x: number) => number {
-    return (x: number): number => {
-      return (
-        x - x1 / (x2 - x1)
-      ) * (y2 - y1) + y1;
-    };
+    return (
+      x: number,
+    ): number => this.calcYByXOnLine(x, points);
+  }
+
+  calcXByYOnLine(
+    y: number,
+    [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
+  ): number {
+    return (
+      (y - y1) * (x2 - x1) / (y2 - y1)
+    ) + x1;
+  }
+
+  calcYByXOnLine(
+    x: number,
+    [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
+  ): number {
+    return (
+      (x - x1) * (y2 - y1) / (x2 - x1)
+    )  + y1;
   }
 
   calcLatIntersecs(
