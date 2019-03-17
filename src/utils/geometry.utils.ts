@@ -15,6 +15,8 @@ export class GeometryUtils {
     const coofsA = this.calcFlatLineCoofs(sectionA);
     const coofsB = this.calcFlatLineCoofs(sectionB);
 
+    // TODO: make solution for x === 0 or y === 0 cases;
+
     const intersect = this.resolveFlatLineMatrix([coofsA, coofsB]);
 
     if (!intersect) return;
