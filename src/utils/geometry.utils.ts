@@ -12,12 +12,7 @@ export class GeometryUtils {
     const [[x1, y1], [x2, y2]] = sectionA;
     const [[x3, y3], [x4, y4]] = sectionB;
 
-    const coofsA = this.calcFlatLineCoofs(sectionA);
-    const coofsB = this.calcFlatLineCoofs(sectionB);
-
-    // TODO: make solution for x === 0 or y === 0 cases;
-
-    const intersect = this.resolveFlatLineMatrix([coofsA, coofsB]);
+    const intersect = this.calcLinesIntersection(sectionA, sectionB);
 
     if (!intersect) return;
 
@@ -35,6 +30,79 @@ export class GeometryUtils {
     ) return;
 
     return intersect;
+  }
+
+  calcLinesIntersection(
+    sectionA: [[number, number], [number, number]],
+    sectionB: [[number, number], [number, number]],
+  ): [number, number] | undefined {
+    const [[x1, y1], [x2, y2]] = sectionA;
+    const [[x3, y3], [x4, y4]] = sectionB;
+
+    let x;
+    let y;
+
+    if (x1 === x2 && x3 === x4) {
+      return;
+    } else if (x1 === x2) {
+      x = x1;
+    } else if (x3 === x4) {
+      x = x3;
+    } else {
+      x = this.calcXIntersection(sectionA, sectionB);
+    }
+
+    if (y1 === y2 && y3 === y4) {
+      return;
+    } else if (y1 === y2) {
+      y = y1;
+    } else if (y3 === y4) {
+      y = y3;
+    } else {
+      y = this.calcYIntersection(sectionA, sectionB);
+    }
+
+    if (x === undefined && y !== undefined) {
+      x = this.calcXByYOnLine(y, sectionA) || this.calcXByYOnLine(y, sectionB);
+    }
+
+    if (y === undefined && x !== undefined) {
+      y = this.calcYByXOnLine(x, sectionA) || this.calcYByXOnLine(x, sectionB);
+    }
+
+    if (x === undefined || y === undefined) return;
+
+    return [x, y];
+  }
+
+  calcYIntersection(
+    sectionA: [[number, number], [number, number]],
+    sectionB: [[number, number], [number, number]],
+  ): number | void {
+    const [a1, b1, c1] = this.calcFlatLineCoofs(sectionA);
+    const [a2, b2, c2] = this.calcFlatLineCoofs(sectionB);
+
+    const delta = a1 * b2 - b1 * a2;
+    const deltaY = a1 * c2 - c1 * a2;
+
+    if (!delta) return;
+
+    return deltaY / delta;
+  }
+
+  calcXIntersection(
+    sectionA: [[number, number], [number, number]],
+    sectionB: [[number, number], [number, number]],
+  ): number | void {
+    const [a1, b1, c1] = this.calcFlatLineCoofs(sectionA);
+    const [a2, b2, c2] = this.calcFlatLineCoofs(sectionB);
+
+    const delta = a1 * b2 - b1 * a2;
+    const deltaX = c1 * b2 - b1 * c2;
+
+    if (!delta) return;
+
+    return deltaX / delta;
   }
 
   calcFlatLineCoofs(
@@ -65,10 +133,10 @@ export class GeometryUtils {
 
   calcXLineEquation(
     points: [[number, number], [number, number]],
-  ): (y: number) => number {
+  ): (y: number) => number | void {
     return (
       y: number,
-    ): number => this.calcXByYOnLine(y, points);
+    ): number | void => this.calcXByYOnLine(y, points);
   }
 
   calcYLineEquation(
@@ -82,7 +150,9 @@ export class GeometryUtils {
   calcXByYOnLine(
     y: number,
     [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
-  ): number {
+  ): number | void {
+    if (y2 - y1 === 0) return;
+
     return (
       (y - y1) * (x2 - x1) / (y2 - y1)
     ) + x1;

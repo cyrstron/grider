@@ -24,7 +24,8 @@ export class GeographyUtils {
 
       if (
         Math.min(point.lat, nextPoint.lat) < lat &&
-        Math.max(point.lat, nextPoint.lat) > lat
+        Math.max(point.lat, nextPoint.lat) > lat &&
+        lngIntersect
       ) {
         intersects.push(lngIntersect);
       }
@@ -161,13 +162,13 @@ export class GeographyUtils {
   }
 
   spherLngToMercX(
-    lng: number
+    lng: number,
   ): number {
     return this.math.degToRad(lng);
   }
 
   spherLatToMercY(
-    lat: number
+    lat: number,
   ): number {
     return Math.log(
       Math.tan(
@@ -197,27 +198,29 @@ export class GeographyUtils {
   mercToSpherRel(
     {x, y}: grider.Point,
   ): grider.GeoPoint {
+    const lat = this.mercYToSpherLat(y);
+    const lng = this.mercXToSpherLng(x);
+
     return {
-      lat: this.mercYToSpherLat(y),
-      lng: this.mercXToSpherLng(x),
+      lat: this.formatSpherValue(lat),
+      lng: this.formatSpherValue(lng),
     };
   }
-  
+
   mercXToSpherLng(
-    x: number
+    x: number,
   ): number {
     return this.math.radToDeg(x);
   }
 
-  
   mercYToSpherLat(
-    y: number
+    y: number,
   ): number {
-    const lat = 2 * (Math.atan(
+    const latRad = 2 * (Math.atan(
       Math.pow(Math.E, y),
     ) - Math.PI / 4);
 
-    return this.math.radToDeg(lat);
+    return this.math.radToDeg(latRad);
   }
 
   formatGeoPoint(
@@ -241,11 +244,15 @@ export class GeographyUtils {
     }
 
     const result = {
-      lat: +geoPoint.lat.toFixed(7),
-      lng: +geoPoint.lng.toFixed(7),
+      lat: this.formatSpherValue(geoPoint.lat),
+      lng: this.formatSpherValue(geoPoint.lng),
     };
 
     return result;
+  }
+
+  formatSpherValue(value: number) {
+    return +value.toFixed(7);
   }
 
   reduceLat(lat: number): number {
@@ -278,7 +285,7 @@ export class GeographyUtils {
 
   calcLngLoxEquation(
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
-  ): (lat: number) => number {
+  ): (lat: number) => number | void {
     return (lat: number) => this.calcLngByLatOnLox(lat, loxPoints);
   }
 
@@ -291,7 +298,7 @@ export class GeographyUtils {
   calcLngByLatOnLox(
     lat: number,
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
-  ): number {
+  ): number | void {
     const [pointStart, pointEnd] = loxPoints;
 
     const y = this.spherLatToMercY(lat);
@@ -303,6 +310,8 @@ export class GeographyUtils {
       [x2, y2],
     ]);
 
+    if (x === undefined) return;
+
     const {lng} = this.mercToSpherRel({x, y});
 
     // TODO: add correction for loxes on 180 lng;
@@ -313,7 +322,7 @@ export class GeographyUtils {
   calcLatByLngOnLox(
     lng: number,
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
-  ): number {    
+  ): number {
     const [pointStart, pointEnd] = loxPoints;
 
     const x = this.spherLngToMercX(lng);

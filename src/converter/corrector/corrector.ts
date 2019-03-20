@@ -32,7 +32,7 @@ export class Corrector {
     if (correction === 'merc') {
       return this.merc.correctForGeo(point, gridParams);
     } else {
-      return this.none.correctForGeo(point);
+      return this.none.correctForGeo(point, gridParams);
     }
   }
 
