@@ -20,13 +20,17 @@ export class GeographyUtils {
       index: number,
     ): number[] => {
       const nextPoint = poly[index + 1] || poly[0];
-      const lngIntersect = this.calcLngByLatOnLox(lat, [point, nextPoint]);
 
       if (
-        Math.min(point.lat, nextPoint.lat) <= lat &&
-        Math.max(point.lat, nextPoint.lat) >= lat &&
-        lngIntersect
+        Math.min(point.lat, nextPoint.lat) > lat &&
+        Math.max(point.lat, nextPoint.lat) < lat
       ) {
+        return intersects;
+      }
+
+      const lngIntersect = this.calcLngByLatOnLox(lat, [point, nextPoint]);
+
+      if (lngIntersect) {
         intersects.push(lngIntersect);
       }
 
@@ -113,10 +117,50 @@ export class GeographyUtils {
     [pointStart1, pointEnd1]: [grider.GeoPoint, grider.GeoPoint],
     [pointStart2, pointEnd2]: [grider.GeoPoint, grider.GeoPoint],
   ): grider.GeoPoint | undefined {
-    const a1 = this.spherToMercRel(pointStart1);
-    const b1 = this.spherToMercRel(pointEnd1);
-    const a2 = this.spherToMercRel(pointStart2);
-    const b2 = this.spherToMercRel(pointEnd2);
+    const lngMin1 = Math.min(pointStart1.lng, pointEnd1.lng);
+    const lngMax1 = Math.max(pointStart1.lng, pointEnd1.lng);
+    const lngMin2 = Math.min(pointStart2.lng, pointEnd2.lng);
+    const lngMax2 = Math.max(pointStart2.lng, pointEnd2.lng);
+
+    const isRipped = (
+      lngMax1 - lngMin1 > 180
+    ) || (
+      lngMax2 - lngMin2 > 180
+    );
+
+    let pointStartA;
+    let pointEndA;
+    let pointStartB;
+    let pointEndB;
+
+    if (isRipped) {
+      pointStartA = {
+        lat: pointStart1.lat,
+        lng: this.reduceLng(pointStart1.lng - 180),
+      };
+      pointEndA = {
+        lat: pointEnd1.lat,
+        lng: this.reduceLng(pointEnd1.lng - 180),
+      };
+      pointStartB = {
+        lat: pointStart2.lat,
+        lng: this.reduceLng(pointStart2.lng - 180),
+      };
+      pointEndB = {
+        lat: pointEnd2.lat,
+        lng: this.reduceLng(pointEnd2.lng - 180),
+      };
+    } else {
+      pointStartA = pointStart1;
+      pointEndA = pointEnd1;
+      pointStartB = pointStart2;
+      pointEndB = pointEnd2;
+    }
+
+    const a1 = this.spherToMercRel(pointStartA);
+    const b1 = this.spherToMercRel(pointEndA);
+    const a2 = this.spherToMercRel(pointStartB);
+    const b2 = this.spherToMercRel(pointEndB);
 
     const intersect = this.geometry.calcSectionsIntersect(
       [[a1.x, a1.y], [b1.x, b1.y]],
@@ -127,7 +171,14 @@ export class GeographyUtils {
 
     const [x, y] = intersect;
 
-    return this.mercToSpherRel({x, y});
+    const geoPoint = this.mercToSpherRel({x, y});
+
+    if (!isRipped) return geoPoint;
+
+    return {
+      lat: geoPoint.lat,
+      lng: this.reduceLng(geoPoint.lng + 180),
+    };
   }
 
   spherToMercAbs(
