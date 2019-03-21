@@ -23,8 +23,8 @@ export class GeographyUtils {
       const lngIntersect = this.calcLngByLatOnLox(lat, [point, nextPoint]);
 
       if (
-        Math.min(point.lat, nextPoint.lat) < lat &&
-        Math.max(point.lat, nextPoint.lat) > lat &&
+        Math.min(point.lat, nextPoint.lat) <= lat &&
+        Math.max(point.lat, nextPoint.lat) >= lat &&
         lngIntersect
       ) {
         intersects.push(lngIntersect);
@@ -56,9 +56,9 @@ export class GeographyUtils {
       }
 
       return (
-        from <= lng || from < (lng + 360)
-      ) && (
-        to >= lng || to > (lng - 360)
+        from <= lng && lng <= 180
+      ) || (
+        to >= lng && lng > -180
       );
     }, false);
   }
@@ -301,9 +301,31 @@ export class GeographyUtils {
   ): number | void {
     const [pointStart, pointEnd] = loxPoints;
 
+    const lngMax = Math.max(pointStart.lng, pointEnd.lng);
+    const lngMin = Math.min(pointStart.lng, pointEnd.lng);
+
+    const isRipped = (lngMax - lngMin) > 180;
+
+    let pointA;
+    let pointB;
+
+    if (isRipped) {
+      pointA = {
+        lat: pointStart.lat,
+        lng: this.reduceLng(pointStart.lng - 180),
+      };
+      pointB = {
+        lat: pointEnd.lat,
+        lng: this.reduceLng(pointEnd.lng - 180),
+      };
+    } else {
+      pointA = pointStart;
+      pointB = pointEnd;
+    }
+
     const y = this.spherLatToMercY(lat);
-    const {x: x1, y: y1} = this.spherToMercRel(pointStart);
-    const {x: x2, y: y2} = this.spherToMercRel(pointEnd);
+    const {x: x1, y: y1} = this.spherToMercRel(pointA);
+    const {x: x2, y: y2} = this.spherToMercRel(pointB);
 
     const x = this.geometry.calcXByYOnLine(y, [
       [x1, y1],
@@ -312,9 +334,11 @@ export class GeographyUtils {
 
     if (x === undefined) return;
 
-    const {lng} = this.mercToSpherRel({x, y});
+    let lng = this.mercXToSpherLng(x);
 
-    // TODO: add correction for loxes on 180 lng;
+    if (isRipped) {
+      lng += 180;
+    }
 
     return this.reduceLng(lng);
   }
@@ -329,16 +353,12 @@ export class GeographyUtils {
     const {x: x1, y: y1} = this.spherToMercRel(pointStart);
     const {x: x2, y: y2} = this.spherToMercRel(pointEnd);
 
-    const pointStartRecalc = this.mercToSpherRel({x: x1, y: y1});
-
-    // TODO: add correction for loxes on 180 lng;
-
     const y = this.geometry.calcYByXOnLine(x, [
       [x1, y1],
       [x2, y2],
     ]);
 
-    const {lat} = this.mercToSpherRel({x, y});
+    const lat = this.mercYToSpherLat(y);
 
     return this.reduceLng(lat);
   }
