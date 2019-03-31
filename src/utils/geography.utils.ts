@@ -67,7 +67,7 @@ export class GeographyUtils {
     }, false);
   }
 
-  calcDeltaLng(
+  calcLngEdges(
     lng1: number,
     lng2: number,
   ): grider.LngEdges {
@@ -86,6 +86,15 @@ export class GeographyUtils {
     };
   }
 
+  calcDeltaLng(
+    eastLng: number,
+    westLng: number
+  ) {
+    const {east, west} = this.calcLngEdges(eastLng, westLng);
+
+    return Math.min(east, west);
+  }
+
   findLngEdges(
     lngs: number[],
   ): grider.LngEdges {
@@ -96,8 +105,8 @@ export class GeographyUtils {
       ): grider.LngEdges => {
         if (index === 0) return edges;
 
-        const edgesEast = this.calcDeltaLng(lng, edges.east);
-        const edgesWest = this.calcDeltaLng(lng, edges.west);
+        const edgesEast = this.calcLngEdges(lng, edges.east);
+        const edgesWest = this.calcLngEdges(lng, edges.west);
 
         if (edgesEast.west < edgesEast.east) {
           edges.east = lng;
