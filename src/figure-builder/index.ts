@@ -1,9 +1,11 @@
 import { Grider } from '../grider';
-import { FigureBuilder } from './figure-builder';
 import { GriderUtils } from '../utils';
+import { CellFinder } from './cell-finder';
+import { FigureBuilder } from './figure-builder';
 
 export const createFigureBuilder = (grider: Grider, utils: GriderUtils) => {
-  return new FigureBuilder(grider, utils);
+  const cellFinder = new CellFinder(utils.geography, utils.shape, grider);
+  return new FigureBuilder(grider, utils, cellFinder);
 };
 
 export {

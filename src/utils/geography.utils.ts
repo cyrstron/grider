@@ -1,6 +1,7 @@
 import {constants} from '../constants';
 import { GeometryUtils } from './geometry.utils';
 import {MathUtils} from './math.utils';
+import {ShapeUtils} from './shape.utils';
 
 export class GeographyUtils {
   constants: any = constants;
@@ -8,7 +9,72 @@ export class GeographyUtils {
   constructor(
     public math: MathUtils,
     public geometry: GeometryUtils,
+    public shape: ShapeUtils,
   ) {}
+
+  calcMercDistance(
+    pointA: grider.GeoPoint,
+    pointB: grider.GeoPoint,
+  ): number {
+    const minLng = Math.min(pointA.lng, pointB.lng);
+    const maxLng = Math.max(pointA.lng, pointB.lng);
+
+    if (maxLng - minLng > 180) {
+      pointA = {
+        ...pointA,
+        lng: this.reduceLng(pointA.lng - 180),
+      };
+      pointB = {
+        ...pointB,
+        lng: this.reduceLng(pointB.lng - 180),
+      };
+    }
+
+    return this.geometry.calcDistance(
+      this.spherToMercRel(pointA),
+      this.spherToMercRel(pointB),
+    );
+  }
+
+  calcPolyItselfIntersections(
+    poly: grider.GeoPoint[],
+  ): grider.GeoPoint[] {
+    return this.shape.reduceShapeOppositeSides<grider.GeoPoint, grider.GeoPoint[]>(poly, (
+      intersects,
+      sideA,
+      sideB,
+    ) => {
+      const intersect = this.calcSectionsIntersect(sideA, sideB);
+
+      if (intersect) {
+        intersects.push(intersect);
+      }
+      return intersects;
+    }, []);
+  }
+
+  calcPolyAndLineInersections(
+    poly: grider.GeoPoint[],
+    line: [grider.GeoPoint, grider.GeoPoint],
+  ): grider.GeoPoint[] {
+    return poly.reduce((
+      intersects: grider.GeoPoint[],
+      pointB: grider.GeoPoint,
+      index: number,
+    ): grider.GeoPoint[] => {
+      const nextPointB = poly[index + 1] || poly[0];
+
+      const intersect = this.calcSectionsIntersect(
+        line,
+        [pointB, nextPointB],
+      );
+
+      if (intersect) {
+        intersects.push(intersect);
+      }
+      return intersects;
+    }, []);
+  }
 
   polyContainsPoint(
     poly: grider.GeoPoint[],
@@ -22,7 +88,7 @@ export class GeographyUtils {
       const nextPoint = poly[index + 1] || poly[0];
 
       if (
-        Math.min(point.lat, nextPoint.lat) > lat &&
+        Math.min(point.lat, nextPoint.lat) > lat ||
         Math.max(point.lat, nextPoint.lat) < lat
       ) {
         return intersects;
