@@ -28,6 +28,8 @@ declare namespace grider {
     k: number;
   }
   
+  export type GridPoint = PointRect | PointHex;
+  
   export type ShapeType = 'hex' | 'rect';
   
   export type GridHexagon = [

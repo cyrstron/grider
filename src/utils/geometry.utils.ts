@@ -5,6 +5,16 @@ export class GeometryUtils {
     public math: MathUtils,
   ) {}
 
+  calcDistance(
+    {x: x1, y: y1}: grider.Point,
+    {x: x2, y: y2}: grider.Point,
+  ) {
+    return Math.sqrt(
+      Math.pow(x2 - x1, 2) +
+      Math.pow(y2 - y1, 2),
+    );
+  }
+
   calcSectionsIntersect(
     sectionA: [[number, number], [number, number]],
     sectionB: [[number, number], [number, number]],
@@ -20,13 +30,13 @@ export class GeometryUtils {
 
     if (
       Math.max(x1, x2) < x ||
-      Math.min (x1, x2) > x ||
-      Math.max (x3, x4) < x ||
-      Math.min (x3, x4) > x ||
+      Math.min(x1, x2) > x ||
+      Math.max(x3, x4) < x ||
+      Math.min(x3, x4) > x ||
       Math.max(y1, y2) < y ||
-      Math.min (y1, y2) > y ||
-      Math.max (y3, y4) < y ||
-      Math.min (y3, y4) > y
+      Math.min(y1, y2) > y ||
+      Math.max(y3, y4) < y ||
+      Math.min(y3, y4) > y
     ) return;
 
     return intersect;
