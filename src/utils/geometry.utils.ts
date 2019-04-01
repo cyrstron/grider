@@ -340,14 +340,6 @@ export class GeometryUtils {
       },
       {
         i: centerGridPoint.i + (1 / 2),
-        j: centerGridPoint.j,
-      },
-      {
-        i: centerGridPoint.i + (1 / 2),
-        j: centerGridPoint.j + (1 / 2),
-      },
-      {
-        i: centerGridPoint.i,
         j: centerGridPoint.j + (1 / 2),
       },
       {
@@ -356,14 +348,6 @@ export class GeometryUtils {
       },
       {
         i: centerGridPoint.i - (1 / 2),
-        j: centerGridPoint.j,
-      },
-      {
-        i: centerGridPoint.i - (1 / 2),
-        j: centerGridPoint.j - (1 / 2),
-      },
-      {
-        i: centerGridPoint.i,
         j: centerGridPoint.j - (1 / 2),
       },
     ];

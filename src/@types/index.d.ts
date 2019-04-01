@@ -46,10 +46,6 @@ declare namespace grider {
     PointRect, 
     PointRect, 
     PointRect, 
-    PointRect, 
-    PointRect, 
-    PointRect, 
-    PointRect
   ];
   
   export type CorrectionType = 'merc' | 'none';

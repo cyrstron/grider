@@ -154,7 +154,7 @@ export class GeographyUtils {
 
   calcDeltaLng(
     eastLng: number,
-    westLng: number
+    westLng: number,
   ) {
     const {east, west} = this.calcLngEdges(eastLng, westLng);
 

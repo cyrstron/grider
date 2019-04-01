@@ -118,9 +118,18 @@ export class FigureBuilder {
 
       const isReversed = !!intersect || isNextContained !== isInner;
 
+      if (isReversed) {
+        nextPoint = this.utils.shape.getPrevPoint(startCell, index);
+        isNextContained = this.utils.geography.polyContainsPoint(shape, nextPoint);
+        intersect = this.utils.geography.calcSectionsIntersect(
+          [startCell[index], nextPoint],
+          section,
+        );
+      }
+
       while (!intersect && isNextContained === isInner) {
         if (figure.length > 10000) break;
-        
+
         if (!isEqual(figure[figure.length - 1], startCell[index])) {
           figure.push(startCell[index]);
         }
