@@ -149,11 +149,12 @@ export class CellFinder {
 
       if (pointIsValid) {
         return takenPoints[0];
+      } else {
+        return;
       }
     }
 
     const nextCellPoints = this.grider.buildPolyByCenterGridPoint(nextCellCenter, gridParams);
-
     
     if (startCellContains.every((isContained) => isContained === isInner)) {
       const prevSection = [
