@@ -109,15 +109,19 @@ export class FigureBuilder {
       if (!startPoint) break;
 
       let index = startCell.indexOf(startPoint);
-      let isContained = this.utils.geography.polyContainsPoint(shape, startCell[index]);
-      const isNextContained = this.utils.geography.polyContainsPoint(shape, startCell[index + 1] || startCell[0]);
+      let intersect = this.utils.geography.calcSectionsIntersect(
+        [startCell[index], this.utils.shape.getNextPoint(startCell, index)],
+        section,
+      );
 
-      const isReversed = isNextContained !== isInner;
+      const isReversed = intersect;
 
-      while (isContained === isInner) {
+      while (!intersect) {
         if (!isEqual(figure[figure.length - 1], startCell[index])) {
           figure.push(startCell[index]);
         }
+
+        const pointA = startCell[index];
 
         if (isReversed) {
           index = startCell[index - 1] ? index - 1 : startCell.length - 1;
@@ -125,7 +129,9 @@ export class FigureBuilder {
           index = startCell[index + 1] ? index + 1 : 0;
         }
 
-        isContained = this.utils.geography.polyContainsPoint(shape, startCell[index]);
+        const cellSide = [pointA, startCell[index]] as [grider.GeoPoint, grider.GeoPoint];
+
+        intersect = this.utils.geography.calcSectionsIntersect(cellSide, section);
       }
 
       startCellCenter = this.cellFinder.calcNextCellCenter(startCellCenter, section, gridParams);

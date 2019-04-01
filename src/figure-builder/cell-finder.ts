@@ -130,10 +130,7 @@ export class CellFinder {
       ): boolean => this.geography.polyContainsPoint(shape, point),
     );
 
-    if (
-      startCellContains.every((isContained) => isContained === true) ||
-      startCellContains.every((isContained) => isContained === false)
-    ) {
+    if (startCellContains.every((isContained) => isContained === !isInner)) {
       return;
     }
 
@@ -156,6 +153,39 @@ export class CellFinder {
     }
 
     const nextCellPoints = this.grider.buildPolyByCenterGridPoint(nextCellCenter, gridParams);
+
+    
+    if (startCellContains.every((isContained) => isContained === isInner)) {
+      const prevSection = [
+        this.shape.getPrevPoint(shape, 0),
+        shape[0]
+      ] as [grider.GeoPoint, grider.GeoPoint];
+      const section = [
+        shape[0],
+        shape[1]
+      ] as [grider.GeoPoint, grider.GeoPoint];
+
+      const startCell = this.shape.reduceEachShapeSide<
+        grider.GeoPoint, 
+        grider.GeoPoint | undefined
+      >(
+        cellPoints, 
+        (startCell, cellSide) => {
+          if (startCell) return startCell;
+          const intersect = this.geography.calcSectionsIntersect(section, cellSide);
+          const intersectPrev = this.geography.calcSectionsIntersect(prevSection, cellSide);
+
+          if (!intersect || !intersectPrev) return startCell;
+          const [pointA, pointB] = cellSide;
+          
+          const distanceAPrev = this.geography.calcMercDistance(pointA, intersectPrev);
+          const distanceACurr = this.geography.calcMercDistance(pointA, intersect);
+
+          return distanceAPrev < distanceACurr ? pointA : pointB;
+      }, undefined) as grider.GeoPoint;
+
+      return startCell;
+    }
 
     const firstPoint = cellPoints.find((
       point: grider.GeoPoint,
