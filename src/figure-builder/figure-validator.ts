@@ -11,8 +11,4 @@ export class FigureValidator {
   getItselfIntersectsPoint(shape: grider.GeoPoint[]): grider.GeoPoint[] {
     return this.geography.calcPolyItselfIntersections(shape);
   }
-
-  getOppositeIntersecedCells() {
-
-  }
 }

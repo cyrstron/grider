@@ -155,22 +155,22 @@ export class CellFinder {
     }
 
     const nextCellPoints = this.grider.buildPolyByCenterGridPoint(nextCellCenter, gridParams);
-    
+
     if (startCellContains.every((isContained) => isContained === isInner)) {
       const prevSection = [
         this.shape.getPrevPoint(shape, 0),
-        shape[0]
+        shape[0],
       ] as [grider.GeoPoint, grider.GeoPoint];
       const section = [
         shape[0],
-        shape[1]
+        shape[1],
       ] as [grider.GeoPoint, grider.GeoPoint];
 
       const startCell = this.shape.reduceEachShapeSide<
-        grider.GeoPoint, 
+        grider.GeoPoint,
         grider.GeoPoint | undefined
       >(
-        cellPoints, 
+        cellPoints,
         (startCell, cellSide) => {
           if (startCell) return startCell;
           const intersect = this.geography.calcSectionsIntersect(section, cellSide);
@@ -178,7 +178,7 @@ export class CellFinder {
 
           if (!intersect || !intersectPrev) return startCell;
           const [pointA, pointB] = cellSide;
-          
+
           const distanceAPrev = this.geography.calcMercDistance(pointA, intersectPrev);
           const distanceACurr = this.geography.calcMercDistance(pointA, intersect);
 
