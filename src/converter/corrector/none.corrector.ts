@@ -12,9 +12,8 @@ export class NoneCorrector {
 
   correctForGeo(
     point: grider.GeoPoint,
-    gridParams: grider.GridParams,
     ): grider.GeoPoint {
-    return this.geography.formatGeoPoint(point, gridParams.crop);
+    return this.geography.formatGeoPoint(point);
   }
 
   correctPoly(poly: grider.GeoPoint[]): grider.GeoPoint[] {

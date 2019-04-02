@@ -12,11 +12,10 @@ export class MercatorCorrector {
 
   correctForGeo(
     point: grider.GeoPoint,
-    gridParams: grider.GridParams,
   ): grider.GeoPoint {
     let result = this.geography.mercToSpherGeo(point);
 
-    result = this.geography.formatGeoPoint(result, gridParams.crop);
+    result = this.geography.formatGeoPoint(result);
 
     return result;
   }

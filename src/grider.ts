@@ -62,7 +62,14 @@ export class Grider {
       gridParams.type,
     );
 
-    return centerGridPoint;
+    const reducedGeoPoint = this.converter.toGeo(centerGridPoint, gridParams);
+
+    const reducedCenterPoint = this.converter.toGrid(reducedGeoPoint, gridParams);
+
+    return this.centerCalc.round(
+      reducedCenterPoint,
+      gridParams.type,
+    );
   }
 
   calcGeoPointByGridPoint(

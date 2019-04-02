@@ -351,7 +351,6 @@ export class GeographyUtils {
 
   formatGeoPoint(
     geoPoint: grider.GeoPoint,
-    isCrop: boolean,
   ): grider.GeoPoint {
     if (geoPoint.lat > 90) {
       geoPoint.lat = 90;
@@ -361,12 +360,8 @@ export class GeographyUtils {
       geoPoint.lat = -90;
     }
 
-    if (geoPoint.lng > 180) {
-      geoPoint.lng = isCrop ? 180 : this.reduceLng(geoPoint.lng);
-    }
-
-    if (geoPoint.lng < -180) {
-      geoPoint.lng = isCrop ? -180 :  this.reduceLng(geoPoint.lng);
+    if (geoPoint.lng > 180 || geoPoint.lng <= -180) {
+      geoPoint.lng = this.reduceLng(geoPoint.lng);
     }
 
     const result = {

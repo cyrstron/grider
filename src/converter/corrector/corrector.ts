@@ -30,9 +30,9 @@ export class Corrector {
     const {correction} = gridParams;
 
     if (correction === 'merc') {
-      return this.merc.correctForGeo(point, gridParams);
+      return this.merc.correctForGeo(point);
     } else {
-      return this.none.correctForGeo(point, gridParams);
+      return this.none.correctForGeo(point);
     }
   }
 

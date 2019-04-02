@@ -19,7 +19,6 @@ export class ParamsBuilder {
     isHorizontal = false,
     type,
     correction,
-    crop = false,
     cellSize,
   }: grider.GridConfig): grider.GridParams {
     const orientation: grider.OrientType = isHorizontal ? 'horizontal' : 'vertical';
@@ -27,7 +26,6 @@ export class ParamsBuilder {
     const gridParams: grider.GridParams = {
       isHorizontal,
       type,
-      crop,
       axes: this.axesParams[type],
       geoAxes: this.calcAxesParams(isHorizontal, type),
       initSize: this.geography.calcInitialCellWidth(cellSize, initSizeCoof),

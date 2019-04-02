@@ -55,7 +55,6 @@ declare namespace grider {
     isHorizontal?: boolean;
     type: ShapeType;
     correction: CorrectionType;
-    crop?: boolean;
     cellSize: number;
   }
   
@@ -83,7 +82,6 @@ declare namespace grider {
   export interface GridParams {
     isHorizontal: boolean;
     type: ShapeType;
-    crop: boolean;
     axes: GridAxis[];
     geoAxes: Axis[];
     initSize: number;
