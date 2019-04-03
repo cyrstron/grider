@@ -98,7 +98,7 @@ export class ShapeUtils {
       return this.reduceEachShapeSide(shape, (initialValue, sideB, indexB) => {
         if (
           (indexA === 0 && indexB === lastIndex) ||
-          indexB + 1 <= indexA
+          indexB - 1 <= indexA
         ) return initialValue;
 
         return callback(initialValue, sideA, sideB);
