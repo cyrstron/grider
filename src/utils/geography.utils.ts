@@ -1,3 +1,4 @@
+import isEqual from 'lodash/isEqual';
 import {constants} from '../constants';
 import { GeometryUtils } from './geometry.utils';
 import {MathUtils} from './math.utils';
@@ -50,7 +51,10 @@ export class GeographyUtils {
         intersects.push(intersect);
       }
       return intersects;
-    }, []);
+    }, [])
+      .filter((intersect) => {
+        return !poly.find((point) => isEqual(intersect, point));
+      });
   }
 
   calcPolyAndLineInersections(

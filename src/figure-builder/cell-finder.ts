@@ -46,7 +46,9 @@ export class CellFinder {
       return nextCenter;
     }, {}) as grider.GridPoint;
 
-    return nextCenter;
+    const reducedGeoCenter = this.grider.calcGeoPointByGridPoint(nextCenter, gridParams);
+
+    return this.grider.calcGridCenterPointByGeoPoint(reducedGeoCenter, gridParams);
   }
 
   getNextCellSide(

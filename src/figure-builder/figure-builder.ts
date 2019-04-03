@@ -3,6 +3,7 @@ import { Grider } from '../grider';
 import { GriderUtils } from '../utils';
 import {CellFinder} from './cell-finder';
 import { FigureCleaner } from './figure-cleaner';
+import { ShapeValidator } from './shape-validator';
 
 export class FigureBuilder {
   constructor(
@@ -10,6 +11,7 @@ export class FigureBuilder {
     public utils: GriderUtils,
     public cellFinder: CellFinder,
     public figureCleaner: FigureCleaner,
+    public validator: ShapeValidator,
   ) {}
 
   buildOuterFigure(
@@ -31,9 +33,9 @@ export class FigureBuilder {
     gridParams: grider.GridParams,
     isInner: boolean = true,
   ): grider.GeoPoint[] {
-    // if (!this.validateShape(shape)) {
-    //   return [];
-    // }
+    if (!this.validator.validate(shape)) {
+      return [];
+    }
 
     const figure = shape.reduce((
       figure: grider.GeoPoint[],
