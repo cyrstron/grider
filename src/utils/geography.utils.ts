@@ -105,7 +105,8 @@ export class GeographyUtils {
       }
 
       return intersects;
-    }, []);
+    }, [])
+    .sort((a, b) => a - b);
 
     const edges = this.findLngEdges(lngIntersects);
     const gapStartIndex = lngIntersects.indexOf(edges.west);

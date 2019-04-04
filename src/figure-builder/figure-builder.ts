@@ -47,9 +47,9 @@ export class FigureBuilder {
       return this.addFigureSidePoints([point, nextPoint], shape, figure, gridParams, isInner);
     }, []);
 
-    return figure;
+    // return figure;
 
-    // return this.figureCleaner.cleanFigure(figure);
+    return this.figureCleaner.cleanFigure(figure);
   }
 
   validateShape(shape: grider.GeoPoint[]): boolean {
@@ -70,6 +70,7 @@ export class FigureBuilder {
     const endCellCenter = this.grider.calcGridCenterPointByGeoPoint(section[1], gridParams);
 
     let startCellCenter: grider.GridPoint | undefined;
+    let isSideStartPointFound = false;
     startCellCenter = this.grider.calcGridCenterPointByGeoPoint(section[0], gridParams);
 
     let startCell = this.grider.buildPolyByCenterGridPoint(startCellCenter, gridParams);
@@ -96,21 +97,34 @@ export class FigureBuilder {
     }
 
     while (!isEqual(endCellCenter, startCellCenter)) {
+      if (figure.length > 10000) break;
       const lastPoint = figure[figure.length - 1];
       let startPoint = startCell.find((point) => isEqual(point, lastPoint));
 
-      if (!startPoint) {
+      if (!startPoint && !isSideStartPointFound) {
+
         while (!startPoint && !isEqual(endCellCenter, startCellCenter)) {
+
           startCellCenter = this.cellFinder.calcNextCellCenter(startCellCenter, section, gridParams);
 
           if (!startCellCenter) continue;
 
           startCell = this.grider.buildPolyByCenterGridPoint(startCellCenter, gridParams);
+
+          const preLastPoint = figure[figure.length - 2];
+          const isCellHasPrelast = !!startCell.find((point) => isEqual(point, preLastPoint));
+
+          if (isCellHasPrelast) continue;
+
           startPoint = startCell.find((point) => isEqual(point, lastPoint));
         }
       }
 
       if (!startPoint) break;
+
+      if (!isSideStartPointFound && startPoint) {
+        isSideStartPointFound = true;
+      }
 
       let index = startCell.indexOf(startPoint);
       let nextPoint = this.utils.shape.getNextPoint(startCell, index);

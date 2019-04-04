@@ -115,8 +115,12 @@ export class CellFinder {
 
     if (suitablePoints.length === 1) {
       return this.checkStartPoint(suitablePoints[0], point, shape, gridParams);
-    } else {
+    } else if (prevPoint) {
       return suitablePoints.length > 1;
+    } else {
+      return suitablePoints
+        .map((suitablePoint) => this.checkStartPoint(suitablePoint, point, shape, gridParams))
+        .some((isPointValid) => isPointValid);
     }
   }
 
