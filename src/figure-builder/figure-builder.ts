@@ -33,7 +33,7 @@ export class FigureBuilder {
     gridParams: grider.GridParams,
     isInner: boolean = true,
   ): grider.GeoPoint[] {
-    if (!this.validator.validate(shape)) {
+    if (!this.validator.validate(shape, gridParams)) {
       return [];
     }
 
@@ -47,9 +47,9 @@ export class FigureBuilder {
       return this.addFigureSidePoints([point, nextPoint], shape, figure, gridParams, isInner);
     }, []);
 
-    // return figure;
+    return figure;
 
-    return this.figureCleaner.cleanFigure(figure);
+    // return this.figureCleaner.cleanFigure(figure);
   }
 
   validateShape(shape: grider.GeoPoint[]): boolean {

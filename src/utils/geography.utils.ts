@@ -193,6 +193,57 @@ export class GeographyUtils {
     return edges;
   }
 
+  closestPointOnSection(
+    point: grider.GeoPoint,
+    [pointA, pointB]: [grider.GeoPoint, grider.GeoPoint],
+  ): grider.GeoPoint | undefined {
+    const lngMin = Math.min(pointA.lng, pointB.lng);
+    const lngMax = Math.max(pointA.lng, pointB.lng);
+
+    const isRipped = lngMax - lngMin > 180;
+
+    let pointStart;
+    let pointEnd;
+    let pointTest;
+
+    if (isRipped) {
+      pointStart = {
+        lat: pointA.lat,
+        lng: this.reduceLng(pointA.lng - 180),
+      };
+      pointEnd = {
+        lat: pointB.lat,
+        lng: this.reduceLng(pointB.lng - 180),
+      };
+      pointTest = {
+        lat: point.lat,
+        lng: this.reduceLng(point.lng - 180),
+      };
+    } else {
+      pointStart = pointA;
+      pointEnd = pointB;
+      pointTest = point;
+    }
+
+    const a = this.spherToMercRel(pointStart);
+    const b = this.spherToMercRel(pointEnd);
+    const c = this.spherToMercRel(pointTest);
+
+    const closestPoint = this.geometry.closestPointOnSection(c, [a, b]);
+
+    if (!closestPoint) return;
+
+    const {lat, lng} = this.mercToSpherRel(closestPoint);
+
+    return isRipped ? {
+      lat,
+      lng: this.reduceLng(lng + 180),
+    } : {
+      lat,
+      lng,
+    };
+  }
+
   calcSectionsIntersect(
     [pointStart1, pointEnd1]: [grider.GeoPoint, grider.GeoPoint],
     [pointStart2, pointEnd2]: [grider.GeoPoint, grider.GeoPoint],
@@ -417,7 +468,7 @@ export class GeographyUtils {
 
   calcLatLoxEquation(
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
-  ): (lng: number) => number {
+  ): (lng: number) => number | void {
     return (lng: number) => this.calcLatByLngOnLox(lng, loxPoints);
   }
 
@@ -472,7 +523,7 @@ export class GeographyUtils {
   calcLatByLngOnLox(
     lng: number,
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
-  ): number {
+  ): number | void {
     const [pointStart, pointEnd] = loxPoints;
 
     const x = this.spherLngToMercX(lng);
@@ -483,6 +534,8 @@ export class GeographyUtils {
       [x1, y1],
       [x2, y2],
     ]);
+
+    if (y === undefined) return;
 
     const lat = this.mercYToSpherLat(y);
 

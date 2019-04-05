@@ -5,10 +5,76 @@ export class GeometryUtils {
     public math: MathUtils,
   ) {}
 
+  closestPointOnLine(
+    {x: x0, y: y0}: grider.Point,
+    [{x: x1, y: y1}, {x: x2, y: y2}]: [grider.Point, grider.Point],
+  ): grider.Point | undefined {
+    if (x1 === x2) {
+      return {
+        x: x1,
+        y: y0,
+      };
+    } else if (y1 === y2) {
+      return {
+        x: x0,
+        y: y1,
+      };
+    }
+
+    const coofsA = this.calcFlatLineCoofs([[x1, y1], [x2, y2]]);
+    const normalVector: [number, number] = [y1 - y2, x2 - x1];
+    const coofsB = this.calcFlatLineCoofsByVector([x0, y0], normalVector);
+
+    const closestPoint = this.resolveFlatLineMatrix([coofsA, coofsB]);
+
+    if (!closestPoint) return;
+
+    const [x, y] = closestPoint;
+
+    return {x, y};
+  }
+
+  closestPointOnSection(
+    c: grider.Point,
+    [a, b]: [grider.Point, grider.Point],
+  ): grider.Point | undefined {
+    const linePoint = this.closestPointOnLine(c, [a, b]);
+
+    if (!linePoint) return;
+
+    const minX = Math.min(a.x, b.x);
+    const maxX = Math.max(a.x, b.x);
+    const minY = Math.min(a.y, b.y);
+    const maxY = Math.max(a.y, b.y);
+
+    if (linePoint.x < minX) {
+      return minX === a.x ? a : b;
+    } else if (linePoint.x > maxX) {
+      return maxX === a.x ? a : b;
+    } else if (linePoint.y < minY) {
+      return minY === a.y ? a : b;
+    } else if (linePoint.y > maxY) {
+      return maxY === a.y ? a : b;
+    } else {
+      return linePoint;
+    }
+  }
+
+  calcDistanceToLine(
+    {x: x0, y: y0}: grider.Point,
+    [{x: x1, y: y1}, {x: x2, y: y2}]: [grider.Point, grider.Point],
+  ): number {
+    return Math.abs(
+      (y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1,
+    ) / Math.sqrt(
+      Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2),
+    );
+  }
+
   calcDistance(
     {x: x1, y: y1}: grider.Point,
     {x: x2, y: y2}: grider.Point,
-  ) {
+  ): number {
     return Math.sqrt(
       Math.pow(x2 - x1, 2) +
       Math.pow(y2 - y1, 2),
@@ -126,6 +192,17 @@ export class GeometryUtils {
     ];
   }
 
+  calcFlatLineCoofsByVector(
+    [x1, y1]: [number, number],
+    [ax, ay]: [number, number],
+  ): [number, number, number] {
+    return [
+      1 / ax,
+      -(1 / ay),
+      (x1 / ax - y1 / ay),
+    ];
+  }
+
   resolveFlatLineMatrix(
     [[a1, b1, c1], [a2, b2, c2]]: number[][],
   ): [number, number] | undefined {
@@ -151,17 +228,17 @@ export class GeometryUtils {
 
   calcYLineEquation(
     points: [[number, number], [number, number]],
-  ): (x: number) => number {
+  ): (x: number) => number | void {
     return (
       x: number,
-    ): number => this.calcYByXOnLine(x, points);
+    ): number | void => this.calcYByXOnLine(x, points);
   }
 
   calcXByYOnLine(
     y: number,
     [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
   ): number | void {
-    if (y2 - y1 === 0) return;
+    if (y2 === y1) return;
 
     return (
       (y - y1) * (x2 - x1) / (y2 - y1)
@@ -171,116 +248,12 @@ export class GeometryUtils {
   calcYByXOnLine(
     x: number,
     [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
-  ): number {
+  ): number | void {
+    if (x2 === x1) return;
+
     return (
       (x - x1) * (y2 - y1) / (x2 - x1)
     )  + y1;
-  }
-
-  calcLatIntersecs(
-    lat: number,
-    poly: grider.GeoPoint[],
-  ): number[] | undefined {
-    const intersecs = poly
-      .reduce((
-        intersecs: number[] | undefined,
-        {lat: latA, lng: lngA}: grider.GeoPoint,
-        index: number,
-      ): number[] | undefined => {
-        const {lat: latB, lng: lngB} = poly[index + 1] || poly[0];
-
-        if (
-          (latB < lat && latA < lat) || (latB > lat && latA > lat)
-        ) return intersecs;
-
-        const intersec = (lat * latA) / (latB - latA) *
-        (lngB - lngA) / lngA;
-
-        if (!intersecs) {
-          intersecs = [];
-        }
-
-        intersecs.push(intersec);
-
-        return intersecs;
-      }, undefined);
-
-    return intersecs;
-  }
-
-  sortLatIntersecs(intersecs: number[]): number[] {
-    intersecs = intersecs.sort();
-
-    const startIndex = intersecs
-      .map((
-        intersec: number,
-        index: number,
-      ): number => {
-        const nextIntersec = intersecs[index + 1];
-
-        if (nextIntersec !== undefined) {
-          return nextIntersec - intersec;
-        } else {
-          return (180 - intersec) + (intersecs[0] + 180);
-        }
-      })
-      .reduce((
-        startIndex: number,
-        gap: number,
-        index: number,
-        gaps: number[],
-      ): number => {
-        if (gap > gaps[startIndex]) {
-          return index;
-        } else {
-          return startIndex;
-        }
-      }, 0);
-
-    return [
-      ...intersecs.slice(startIndex + 1),
-      ...intersecs.slice(0, startIndex + 1),
-    ];
-  }
-
-  buildLngSections(
-    intersecs: number[],
-  ): Array<{from: number, to: number}> {
-    const sections = intersecs.reduce((
-      sections: Array<{from: number, to: number}>,
-      intersec: number,
-      index: number,
-    ): Array<{from: number, to: number}>  => {
-      if (index % 2 !== 0) {
-        sections.push({
-          from: intersecs[index - 1],
-          to: intersec,
-        });
-      }
-
-      return sections;
-    }, []);
-
-    return sections;
-  }
-
-  polyContains(
-    poly: grider.GeoPoint[],
-    {lat, lng}: grider.GeoPoint,
-  ): boolean {
-    const intersecs = this.calcLatIntersecs(lat, poly);
-
-    if (!intersecs) return false;
-
-    const sortedIntersecs = this.sortLatIntersecs(intersecs);
-
-    const sections = this.buildLngSections(sortedIntersecs);
-
-    const isContains = sections.some((
-      {from, to}: {from: number, to: number},
-    ): boolean => from <= lng && to >= lng);
-
-    return isContains;
   }
 
   calcPointDecimalRemains(point: grider.PointHex): grider.PointHex {
