@@ -312,6 +312,26 @@ export class GeographyUtils {
     };
   }
 
+  spherToMercMap(
+    point: grider.GeoPoint,
+  ): grider.Point {
+    const {x, y} = this.spherToMercRel(point);
+
+    return {
+      x: (x / Math.PI + 1) / 2,
+      y: -(y / Math.PI + 1) / 2,
+    };
+  }
+
+  mercToSpherMap(
+    {x, y}: grider.Point,
+  ): grider.GeoPoint {
+    return this.mercToSpherRel({
+      x: (x * 2 - 1) * Math.PI,
+      y: -(y * 2 - 1) * Math.PI,
+    });
+  }
+
   spherToMercAbs(
     point: grider.GeoPoint,
   ): grider.Point {
