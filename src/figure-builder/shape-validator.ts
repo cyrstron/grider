@@ -12,6 +12,8 @@ export class ShapeValidator {
   ) {}
 
   validate(shape: grider.GeoPoint[], gridParams: grider.GridParams): boolean {
+    if (shape.length < 3) return false;
+
     const selfIntersects = this.getSelfIntersectsPoints(shape);
 
     if (selfIntersects.length > 0) return false;
