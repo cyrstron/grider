@@ -120,7 +120,6 @@ declare namespace grider {
     calcGridCenterPointByGeoPoint(
       geoPoint: grider.GeoPoint,
     ): grider.PointHex | grider.PointRect;
-
   }
 }
 

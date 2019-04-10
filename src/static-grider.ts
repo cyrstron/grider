@@ -1,20 +1,14 @@
 import { FigureBuilder } from './figure-builder';
 import { Grider } from './grider';
+import { Neighborer } from './neighborer';
 
 export class StaticGrider {
-  grider: Grider;
-  figureBuilder: FigureBuilder;
-  params: grider.GridParams;
-
   constructor(
-    grider: Grider,
-    figureBuilder: FigureBuilder,
-    params: grider.GridParams,
-  ) {
-    this.grider = grider;
-    this.figureBuilder = figureBuilder;
-    this.params = params;
-  }
+    public grider: Grider,
+    public figureBuilder: FigureBuilder,
+    public neighbors: Neighborer,
+    public params: grider.GridParams,
+  ) {}
 
   buildPolyByGeoPoint(geoPoint: grider.GeoPoint): grider.GeoPoint[] {
     return this.grider.buildPolyByGeoPoint(
@@ -49,5 +43,37 @@ export class StaticGrider {
   }
   buildInnerFigure(poly: grider.GeoPoint[]): grider.GeoPoint[] {
     return this.figureBuilder.buildInnerFigure(poly, this.params);
+  }
+
+  getNorthWest(cellCenter: grider.GridPoint) {
+    return this.neighbors.getNorthWest(cellCenter, this.params);
+  }
+
+  getSouthWest(cellCenter: grider.GridPoint) {
+    return this.neighbors.getSouthWest(cellCenter, this.params);
+  }
+
+  getNorthEast(cellCenter: grider.GridPoint) {
+    return this.neighbors.getNorthEast(cellCenter, this.params);
+  }
+
+  getSouthEast(cellCenter: grider.GridPoint) {
+    return this.neighbors.getSouthEast(cellCenter, this.params);
+  }
+
+  getNorth(cellCenter: grider.GridPoint) {
+    return this.neighbors.getNorth(cellCenter, this.params);
+  }
+
+  getSouth(cellCenter: grider.GridPoint) {
+    return this.neighbors.getSouth(cellCenter, this.params);
+  }
+
+  getEast(cellCenter: grider.GridPoint) {
+    return this.neighbors.getEast(cellCenter, this.params);
+  }
+
+  getWest(cellCenter: grider.GridPoint) {
+    return this.neighbors.getWest(cellCenter, this.params);
   }
 }

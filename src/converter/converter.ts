@@ -13,7 +13,7 @@ export class Converter {
   toGrid(
     geoPoint: grider.GeoPoint,
     gridParams: grider.GridParams,
-  ): grider.PointHex | grider.PointRect {
+  ): grider.GridPoint {
     const correctedGeoPoint = this.corrector.correctForGrid(geoPoint, gridParams);
     const {
       axes: axesParams,
@@ -34,7 +34,7 @@ export class Converter {
   }
 
   toGeo(
-    gridPoint: grider.PointHex | grider.PointRect,
+    gridPoint: grider.GridPoint,
     gridParams: grider.GridParams,
   ): grider.GeoPoint {
     const {

@@ -55,14 +55,21 @@ export class Grider {
   calcGridCenterPointByGeoPoint(
     geoPoint: grider.GeoPoint,
     gridParams: grider.GridParams,
-  ): grider.PointHex | grider.PointRect {
+  ): grider.GridPoint {
     const gridPoint = this.converter.toGrid(geoPoint, gridParams);
     const centerGridPoint = this.centerCalc.round(
       gridPoint,
       gridParams.type,
     );
 
-    const reducedGeoPoint = this.converter.toGeo(centerGridPoint, gridParams);
+    return this.reducePoint(centerGridPoint, gridParams);
+  }
+
+  reducePoint(
+    gridPoint: grider.GridPoint,
+    gridParams: grider.GridParams,
+  ): grider.GridPoint {
+    const reducedGeoPoint = this.converter.toGeo(gridPoint, gridParams);
 
     const reducedCenterPoint = this.converter.toGrid(reducedGeoPoint, gridParams);
 
@@ -73,7 +80,7 @@ export class Grider {
   }
 
   calcGeoPointByGridPoint(
-    gridPoint: grider.PointHex | grider.PointRect,
+    gridPoint: grider.GridPoint,
     gridParams: grider.GridParams,
   ): grider.GeoPoint {
     const geoPoint = this.converter.toGeo(gridPoint, gridParams);
@@ -84,7 +91,7 @@ export class Grider {
   calcGridPointByGeoPoint(
     geoPoint: grider.GeoPoint,
     gridParams: grider.GridParams,
-  ): grider.PointHex | grider.PointRect {
+  ): grider.GridPoint {
     const gridPoint = this.converter.toGrid(geoPoint, gridParams);
 
     return gridPoint;
