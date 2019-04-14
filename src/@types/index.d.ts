@@ -95,32 +95,18 @@ declare namespace grider {
     meridianLength: number;
   }  
 
-  export interface Grider {
-    buildPolyByGeoPoint(
-      geoPoint: GeoPoint,
-      gridParams: GridParams,
-    ): GeoPoint[];
-    buildPolyByCenterGridPoint(
-      centerGridPoint: PointHex | PointRect,
-      gridParams: GridParams,
-    ): grider.GeoPoint[];
-    calcGridCenterPointByGeoPoint(
-      geoPoint: grider.GeoPoint,
-      gridParams: grider.GridParams,
-    ): grider.PointHex | grider.PointRect;
+  export interface PatternConfig {
+    pattern: grider.Point[][];
+    widthRel: number;
+    heightRel: number;
   }
 
-  export interface StaticGrider {
-    buildPolyByGeoPoint(
-      geoPoint: GeoPoint,
-    ): GeoPoint[];
-    buildPolyByCenterGridPoint(
-      centerGridPoint: PointHex | PointRect,
-    ): grider.GeoPoint[];
-    calcGridCenterPointByGeoPoint(
-      geoPoint: grider.GeoPoint,
-    ): grider.PointHex | grider.PointRect;
+  export interface GridPatternConfig {
+    patternConfig: PatternConfig;
+    start: Point;
+    end: Point;
   }
+
+  export type GridTileConfig = GridPatternConfig[]
 }
 
-declare function createStaticGrider(GridParams: grider.GridParams): grider.StaticGrider;

@@ -1,4 +1,5 @@
 import { FigureBuilder } from './figure-builder';
+import { GridRenderer } from './grid-renderer';
 import { Grider } from './grider';
 import { Neighborer } from './neighborer';
 
@@ -8,6 +9,7 @@ export class StaticGrider {
     public figureBuilder: FigureBuilder,
     public neighbors: Neighborer,
     public params: grider.GridParams,
+    public gridRenderer: GridRenderer,
   ) {}
 
   buildPolyByGeoPoint(geoPoint: grider.GeoPoint): grider.GeoPoint[] {
@@ -75,5 +77,13 @@ export class StaticGrider {
 
   getWest(cellCenter: grider.GridPoint) {
     return this.neighbors.getWest(cellCenter, this.params);
+  }
+
+  calcGridConfig(
+    tileCoords: grider.Point,
+    zoomCoofX: number,
+    zoomCoofY: number,
+  ): grider.GridTileConfig {
+    return this.gridRenderer.calcConfig(tileCoords, zoomCoofX, zoomCoofY, this.params);
   }
 }

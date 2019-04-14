@@ -318,8 +318,8 @@ export class GeographyUtils {
     const {x, y} = this.spherToMercRel(point);
 
     return {
-      x: (x / Math.PI + 1) / 2,
-      y: -(y / Math.PI + 1) / 2,
+      x: (x / (Math.PI) + 1) / 2,
+      y: (-y / Math.PI + 1) / 2,
     };
   }
 
@@ -358,8 +358,8 @@ export class GeographyUtils {
     {lat, lng}: grider.GeoPoint,
   ): grider.Point {
     return {
-      y: this.spherLatToMercY(lat),
       x: this.spherLngToMercX(lng),
+      y: this.spherLatToMercY(lat),
     };
   }
 

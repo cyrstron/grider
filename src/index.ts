@@ -1,3 +1,4 @@
+import { createGridRenderer } from './grid-renderer/index';
 /// <reference types="../src/@types" />
 
 import { CenterCalculator } from './center-calc';
@@ -26,14 +27,14 @@ export const grider = new Grider({
 
 export const neighbors: Neighborer = new Neighborer(grider);
 export const figureBuilder = createFigureBuilder(grider, utils);
-export const tileBuilder = new TileBuilder(grider, neighbors);
+export const gridRenderer = createGridRenderer(grider, utils.geography, neighbors);
 
 export const createStaticGrider = (
   config: grider.GridConfig,
 ): StaticGrider => {
   const params = paramsBuilder.build(config);
 
-  return new StaticGrider(grider, figureBuilder, neighbors, params);
+  return new StaticGrider(grider, figureBuilder, neighbors, params, gridRenderer);
 };
 
 export {

@@ -3,7 +3,7 @@ import { GeographyUtils } from '../utils';
 import { Neighborer } from './../neighborer';
 import { TileBuilder } from './tile-builder';
 
-class GridRenderer {
+export class GridRenderer {
   constructor(
     public grider: Grider,
     public tileBuilder: TileBuilder,
@@ -12,31 +12,172 @@ class GridRenderer {
   ) {}
 
   calcConfig(
-    {x, y}: grider.Point,
-    zoom: number,
+    tileCoords: grider.Point,
+    zoomCoofX: number,
+    zoomCoofY: number,
     gridParams: grider.GridParams,
   ) {
-    const zoomCoof = Math.pow(2, zoom);
+    const delta = this.calcStartDelta(tileCoords, zoomCoofX, zoomCoofY, gridParams);
+
+    if (gridParams.correction === 'merc') {
+      return this.calcMercTiles(tileCoords, zoomCoofX, zoomCoofY, delta, gridParams);
+    } else {
+      return this.calcNoneTiles(tileCoords, zoomCoofX, zoomCoofY, delta, gridParams);
+    }
+  }
+
+  calcStartDelta(
+    tileCoords: grider.Point,
+    zoomCoofX: number,
+    zoomCoofY: number,
+    gridParams: grider.GridParams,
+  ): grider.Point {
+    const {x, y} = tileCoords;
 
     const northWestCorner: grider.Point = {
-      x: x / zoomCoof,
-      y: y / zoomCoof,
-    };
-    const southEastCorner: grider.Point = {
-      x: (x + 1) / zoomCoof,
-      y: (y + 1) / zoomCoof,
+      x: x / zoomCoofX,
+      y: y / zoomCoofY,
     };
 
     const tileTopLeftGeo = this.geography.mercToSpherMap(northWestCorner);
     const gridCenter = this.grider.calcGridCenterPointByGeoPoint(tileTopLeftGeo, gridParams);
 
     const {northWest} = this.neighbors.getNorthWest(gridCenter, gridParams);
+
     const nwCenterGeo = this.grider.calcGeoPointByGridPoint(northWest, gridParams);
     const patternTopLeft = this.geography.spherToMercMap(nwCenterGeo);
 
-    const delta = {
-      x: (northWestCorner.x - patternTopLeft.x) * zoomCoof,
-      y: (northWestCorner.y - patternTopLeft.y) * zoomCoof,
+    return {
+      x: (patternTopLeft.x - northWestCorner.x) * zoomCoofX,
+      y: (patternTopLeft.y - northWestCorner.y) * zoomCoofY,
+    };
+  }
+
+  calcMercTiles(
+    tileCoords: grider.Point,
+    zoomCoofX: number,
+    zoomCoofY: number,
+    delta: grider.Point,
+    gridParams: grider.GridParams,
+  ): grider.GridTileConfig {
+    const patternConfig = this.calcPatternConfig(
+      tileCoords,
+      zoomCoofX,
+      zoomCoofY,
+      delta,
+      gridParams,
+    );
+
+    const start = {
+      ...delta,
+    };
+
+    const end = {
+      x: 1,
+      y: 1,
+    };
+
+    return [{
+      patternConfig,
+      start,
+      end,
+    }];
+  }
+
+  calcNoneTiles(
+    tileCoords: grider.Point,
+    zoomCoofX: number,
+    zoomCoofY: number,
+    delta: grider.Point,
+    gridParams: grider.GridParams,
+  ): grider.GridTileConfig {
+    const tileConfig: grider.GridTileConfig = [];
+    let yTo = delta.y;
+
+    while (yTo < 1) {
+      const prevPattern = tileConfig[tileConfig.length - 1];
+      const patternTopLeft = prevPattern ? {
+        x: delta.x,
+        y: prevPattern.end.y,
+      } : delta;
+
+      const patternConfig = this.calcPatternConfig(
+        tileCoords,
+        zoomCoofX,
+        zoomCoofY,
+        patternTopLeft,
+        gridParams,
+      );
+
+      tileConfig.push({
+        patternConfig,
+        start: {
+          x: delta.x,
+          y: yTo,
+        },
+        end: {
+          x: 1,
+          y: yTo + patternConfig.heightRel,
+        },
+      });
+
+      yTo += patternConfig.heightRel;
+    }
+
+    return tileConfig;
+  }
+
+  calcPatternConfig(
+    tileCoords: grider.Point,
+    zoomCoofX: number,
+    zoomCoofY: number,
+    patternTopLeft: grider.Point,
+    gridParams: grider.GridParams,
+  ): grider.PatternConfig {
+    const xFrom = patternTopLeft.x;
+    const yFrom = patternTopLeft.y;
+
+    const patternTopLeftTile = {
+      x: tileCoords.x + xFrom,
+      y: tileCoords.y + yFrom,
+    };
+
+    const patternTopLeftGeo = this.geography.mercToSpherMap({
+      x: patternTopLeftTile.x / zoomCoofX,
+      y: patternTopLeftTile.y / zoomCoofY,
+    });
+    const patternGridTopLeft = this.grider.calcGridCenterPointByGeoPoint(patternTopLeftGeo, gridParams);
+
+    const {southEast: patternGridCenter} = this.neighbors.getSouthEast(patternGridTopLeft, gridParams);
+    const patternGeoCenter = this.grider.calcGeoPointByGridPoint(patternGridCenter, gridParams);
+    const {southEast: patternGridBottomRight} = this.neighbors.getSouthEast(patternGridCenter, gridParams);
+
+    const patternGeoBottomRight = this.grider.calcGeoPointByGridPoint(patternGridBottomRight, gridParams);
+    const patternMercBottomRight = this.geography.spherToMercMap(patternGeoBottomRight);
+    const patternTileBottomRight = {
+      x: patternMercBottomRight.x * zoomCoofX - tileCoords.x,
+      y: patternMercBottomRight.y * zoomCoofY - tileCoords.y,
+    };
+
+    const widthRel = patternTileBottomRight.x - xFrom;
+    const heightRel = patternTileBottomRight.y - yFrom;
+
+    const patternPoints = this.tileBuilder.buildTile(patternGeoCenter, gridParams);
+    const patterPointsRel = patternPoints.map((polyline) => (
+      polyline.map((point) => {
+        const pointMerc = this.geography.spherToMercMap(point);
+
+        return {
+          x: ((pointMerc.x * zoomCoofX) - patternTopLeftTile.x) / (widthRel),
+          y: ((pointMerc.y * zoomCoofY) - patternTopLeftTile.y) / (heightRel),
+        };
+      })
+    ));
+
+    return {
+      pattern: patterPointsRel,
+      widthRel,
+      heightRel,
     };
   }
 }
