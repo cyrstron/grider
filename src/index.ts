@@ -27,7 +27,7 @@ export const grider = new Grider({
 
 export const neighbors: Neighborer = new Neighborer(grider);
 export const figureBuilder = createFigureBuilder(grider, utils);
-export const gridRenderer = createGridRenderer(grider, utils.geography, neighbors);
+export const gridRenderer = createGridRenderer(grider, utils.geography, utils.math, neighbors);
 
 export const createStaticGrider = (
   config: grider.GridConfig,

@@ -86,4 +86,10 @@ export class StaticGrider {
   ): grider.GridTileConfig {
     return this.gridRenderer.calcConfig(tileCoords, zoomCoofX, zoomCoofY, this.params);
   }
+
+  calcMinCellSize(
+    zoomCoofX: number,
+  ): number {
+    return this.gridRenderer.calcMinCellSize(zoomCoofX, this.params);
+  }
 }

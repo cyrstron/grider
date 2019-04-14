@@ -107,6 +107,8 @@ declare namespace grider {
     end: Point;
   }
 
-  export type GridTileConfig = GridPatternConfig[]
+  export interface GridTileConfig {
+    patterns: GridPatternConfig[];
+  }
 }
 

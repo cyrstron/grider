@@ -1,5 +1,5 @@
 import { Grider } from '../';
-import { GeographyUtils } from '../utils';
+import { GeographyUtils, MathUtils } from '../utils';
 import { Neighborer } from './../neighborer';
 import { TileBuilder } from './tile-builder';
 
@@ -8,6 +8,7 @@ export class GridRenderer {
     public grider: Grider,
     public tileBuilder: TileBuilder,
     public geography: GeographyUtils,
+    public math: MathUtils,
     public neighbors: Neighborer,
   ) {}
 
@@ -16,13 +17,17 @@ export class GridRenderer {
     zoomCoofX: number,
     zoomCoofY: number,
     gridParams: grider.GridParams,
-  ) {
+  ): grider.GridTileConfig {
     const delta = this.calcStartDelta(tileCoords, zoomCoofX, zoomCoofY, gridParams);
 
     if (gridParams.correction === 'merc') {
-      return this.calcMercTiles(tileCoords, zoomCoofX, zoomCoofY, delta, gridParams);
+      return {
+        patterns: this.calcMercTiles(tileCoords, zoomCoofX, zoomCoofY, delta, gridParams),
+      };
     } else {
-      return this.calcNoneTiles(tileCoords, zoomCoofX, zoomCoofY, delta, gridParams);
+      return {
+        patterns: this.calcNoneTiles(tileCoords, zoomCoofX, zoomCoofY, delta, gridParams),
+      };
     }
   }
 
@@ -59,7 +64,7 @@ export class GridRenderer {
     zoomCoofY: number,
     delta: grider.Point,
     gridParams: grider.GridParams,
-  ): grider.GridTileConfig {
+  ): grider.GridPatternConfig[] {
     const patternConfig = this.calcPatternConfig(
       tileCoords,
       zoomCoofX,
@@ -84,14 +89,25 @@ export class GridRenderer {
     }];
   }
 
+  calcMinCellSize(
+    zoomCoofX: number,
+    gridParams: grider.GridParams,
+  ) {
+    const {initSize, initHeight, isHorizontal} = gridParams;
+    const cellSize = isHorizontal ? initSize : initHeight;
+    const initSizeDeg = cellSize / 10000000;
+
+    return initSizeDeg * zoomCoofX / 360;
+  }
+
   calcNoneTiles(
     tileCoords: grider.Point,
     zoomCoofX: number,
     zoomCoofY: number,
     delta: grider.Point,
     gridParams: grider.GridParams,
-  ): grider.GridTileConfig {
-    const tileConfig: grider.GridTileConfig = [];
+  ): grider.GridPatternConfig[] {
+    const tileConfig: grider.GridPatternConfig[] = [];
     let yTo = delta.y;
 
     while (yTo < 1) {

@@ -5,7 +5,7 @@ import {MathUtils} from './math.utils';
 import {ShapeUtils} from './shape.utils';
 
 export class GeographyUtils {
-  constants: any = constants;
+  constants: grider.Constants = constants;
 
   constructor(
     public math: MathUtils,
