@@ -1,7 +1,7 @@
 import {Grider} from '../grider';
 import {Neighborer} from '../neighborer';
 import {GeographyUtils, MathUtils} from '../utils';
-import {GridRenderer} from './renderer';
+import {GridRenderer} from './grid-renderer';
 import {TileBuilder} from './tile-builder';
 
 export const createGridRenderer = (

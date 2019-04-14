@@ -1,6 +1,6 @@
-import { Grider } from '../';
+import { Grider } from '..';
+import { Neighborer } from '../neighborer';
 import { GeographyUtils, MathUtils } from '../utils';
-import { Neighborer } from './../neighborer';
 import { TileBuilder } from './tile-builder';
 
 export class GridRenderer {

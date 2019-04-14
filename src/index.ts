@@ -1,10 +1,9 @@
-import { createGridRenderer } from './grid-renderer/index';
+import { createGridRenderer } from './grid-renderer';
 /// <reference types="../src/@types" />
 
 import { CenterCalculator } from './center-calc';
 import { Converter, createConverter } from './converter';
 import { createFigureBuilder } from './figure-builder';
-import { TileBuilder } from './grid-renderer/tile-builder';
 import { Grider } from './grider';
 import { Neighborer } from './neighborer';
 import { ParamsBuilder } from './params-builder';
@@ -40,5 +39,4 @@ export const createStaticGrider = (
 export {
   Grider,
   StaticGrider,
-  TileBuilder,
 };
