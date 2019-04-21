@@ -1,6 +1,7 @@
 import {Grider} from '../grider';
 import {Neighborer} from '../neighborer';
 import {GeographyUtils, MathUtils} from '../utils';
+import {BorderRenderer} from './border-renderer';
 import {GridRenderer} from './grid-renderer';
 import {TileBuilder} from './tile-builder';
 

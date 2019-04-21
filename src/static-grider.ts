@@ -36,6 +36,7 @@ export class StaticGrider {
       this.params,
     );
   }
+
   buildFigure(poly: grider.GeoPoint[], isInner: boolean = true): grider.GeoPoint[] {
     return this.figureBuilder.buildFigure(poly, this.params, isInner);
   }
