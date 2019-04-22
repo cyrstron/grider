@@ -68,8 +68,9 @@ export class BorderRenderer {
     ];
   }
 
-  simplifyFigure(figure: grider.GeoPoint[], shape: grider.GeoPoint[]) {
+  simplifyFigure(figure: grider.GeoPoint[], shape: grider.GeoPoint[]): grider.GeoPoint[] {
     const len = figure.length;
+    const isInner = this.geography.polyContainsPoint(shape, figure[0]);
 
     const distances = figure.map((point): number =>
       this.shapeUtils.reduceEachShapeSide<grider.GeoPoint, number>(shape,
@@ -84,18 +85,31 @@ export class BorderRenderer {
         }, Infinity),
     );
 
-    const simplified = this.figure.reduce((result, point, index) => {
-      if (index === len || index === 0) return result;
+    const simplified = figure.reduce((result: grider.GeoPoint[], point, index) => {
+      if (index === len || index === 0) {
+        result.push(point);
+        return result;
+      };
+
+      const pointDistance = distances[index];
 
       const prevIndex2: number = index - 2 < 0 ? index - 3 + len : index - 2;
       const prevIndex: number = index - 1 < 0 ? len - 1 : index - 1;
-      const nextIndex: number = index + 1 > len ? 0 : index + 1;
-      const nextIndex2: number = index + 2 > len ? index + 1 - len : index + 1;
+      const nextIndex: number = index + 1 > len - 1 ? 0 : index + 1;
+      const nextIndex2: number = (index + 2) > (len - 1) ? index + 2 - len : index + 2;
+
+      const segmentIndexes = [
+        prevIndex2,
+        prevIndex,
+        index,
+        nextIndex,
+        nextIndex2,
+      ];
 
       const segment = [
         figure[prevIndex2],
         figure[prevIndex],
-        point,
+        figure[index],
         figure[nextIndex],
         figure[nextIndex2],
       ];
@@ -137,14 +151,16 @@ export class BorderRenderer {
               };
             }
 
-            const s = (
+            const square = (
               (startPoint.lng - testPoint.lng) * (endPoint.lat - testPoint.lat) -
               (endPoint.lng - testPoint.lng) * (startPoint.lat - testPoint.lat)
             ) / 2;
 
-            if (s === 0) {
+            if (square === 0) {
               pointsInRow.push(
-                [indexA, indexB, index].sort((a, b) => a - b),
+                [indexA, indexB, index]
+                .sort((a, b) => a - b)
+                .map((index) => segmentIndexes[index]),
               );
             }
           });
@@ -154,7 +170,27 @@ export class BorderRenderer {
         }, pointsInRow);
       }, []);
 
-      return result;
+      const toBeAdded = pointsInRow.length === 0 || pointsInRow
+        .reduce((toBeAdded: boolean, row): boolean => {
+          if (toBeAdded) return toBeAdded;
+
+          if (row.includes(index)) {
+            return false;
+          }
+          
+          const testPointIndex = row[1];
+          const isPointNearer = pointDistance > distances[testPointIndex];
+
+          return isPointNearer === isInner;
+        }, false);
+
+        if (toBeAdded) {
+          result.push(point);
+        }
+
+        return result;
     }, []);
+
+    return simplified;
   }
 }

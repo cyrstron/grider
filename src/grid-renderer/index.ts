@@ -20,4 +20,5 @@ export const createGridRenderer = (
 export {
   GridRenderer,
   TileBuilder,
+  BorderRenderer,
 };
