@@ -1,3 +1,4 @@
+import { Grider } from '../grider';
 import { GeographyUtils, ShapeUtils } from '../utils';
 
 export class BorderRenderer {
@@ -6,6 +7,7 @@ export class BorderRenderer {
     public shape: grider.GeoPoint[],
     public geography: GeographyUtils,
     public shapeUtils: ShapeUtils,
+    public grider: Grider,
   ) {}
 
   calcBorderTileFigure(
@@ -68,7 +70,11 @@ export class BorderRenderer {
     ];
   }
 
-  simplifyFigure(figure: grider.GeoPoint[], shape: grider.GeoPoint[]): grider.GeoPoint[] {
+  simplifyFigure(
+    figure: grider.GeoPoint[],
+    shape: grider.GeoPoint[],
+    gridParams: grider.GridParams,
+  ): grider.GeoPoint[] {
     const len = figure.length;
     const isInner = this.geography.polyContainsPoint(shape, figure[0]);
 
@@ -89,7 +95,7 @@ export class BorderRenderer {
       if (index === len || index === 0) {
         result.push(point);
         return result;
-      };
+      }
 
       const pointDistance = distances[index];
 
@@ -106,7 +112,7 @@ export class BorderRenderer {
         nextIndex2,
       ];
 
-      const segment = [
+      let segment = [
         figure[prevIndex2],
         figure[prevIndex],
         figure[index],
@@ -114,49 +120,40 @@ export class BorderRenderer {
         figure[nextIndex2],
       ];
 
-      const pointsInRow = segment.reduce((pointsInRow: number[][], pointA, indexA) => {
-        const lngs = segment.map(({lng}) => lng);
+      const lngs = segment.map(({lng}) => lng);
 
-        const lngMin = Math.min(...lngs);
-        const lngMax = Math.max(...lngs);
+      const lngMin = Math.min(...lngs);
+      const lngMax = Math.max(...lngs);
 
-        const isRipped = lngMax - lngMin > 180;
+      const isRipped = lngMax - lngMin > 180;
 
-        return segment.reduce((pointsInRow: number[][], pointB, indexB) => {
+      if (isRipped) {
+        segment = segment.map(({lat, lng}) => ({
+          lng: this.geography.reduceLng(lng - 180),
+          lat,
+        }));
+      }
+
+      const gridSegment = segment.map((point) => this.grider.calcGridPointByGeoPoint(point, gridParams));
+
+      const pointsInRow = gridSegment.reduce((pointsInRow: number[][], pointA, indexA) => {
+        return gridSegment.reduce((pointsInRow: number[][], pointB, indexB) => {
           if (indexA >= indexB) return pointsInRow;
 
-          let startPoint = pointA;
-          let endPoint = pointB;
+          const startPoint = pointA;
+          const endPoint = pointB;
 
-          if (isRipped) {
-            startPoint = {
-              lng: this.geography.reduceLng(startPoint.lng - 180),
-              lat: startPoint.lat,
-            };
-            endPoint = {
-              lng: this.geography.reduceLng(endPoint.lng - 180),
-              lat: endPoint.lat,
-            };
-          }
-
-          segment.forEach((point, index) => {
+          gridSegment.forEach((point, index) => {
             if (index === indexA || index === indexB) return;
 
-            let testPoint = point;
+            const testPoint = point;
 
-            if (isRipped) {
-              testPoint = {
-                lng: this.geography.reduceLng(testPoint.lng - 180),
-                lat: testPoint.lat,
-              };
-            }
+            const diff = Math.round((
+              (startPoint.i - testPoint.i) * (endPoint.j - testPoint.j) -
+              (endPoint.i - testPoint.i) * (startPoint.j - testPoint.j)
+            ) * 3);
 
-            const square = (
-              (startPoint.lng - testPoint.lng) * (endPoint.lat - testPoint.lat) -
-              (endPoint.lng - testPoint.lng) * (startPoint.lat - testPoint.lat)
-            ) / 2;
-
-            if (square === 0) {
+            if (diff === 0) {
               pointsInRow.push(
                 [indexA, indexB, index]
                 .sort((a, b) => a - b)
@@ -177,18 +174,18 @@ export class BorderRenderer {
           if (row.includes(index)) {
             return false;
           }
-          
+
           const testPointIndex = row[1];
-          const isPointNearer = pointDistance > distances[testPointIndex];
+          const isPointNearer = pointDistance < distances[testPointIndex];
 
           return isPointNearer === isInner;
         }, false);
 
-        if (toBeAdded) {
-          result.push(point);
-        }
+      if (toBeAdded) {
+        result.push(point);
+      }
 
-        return result;
+      return result;
     }, []);
 
     return simplified;

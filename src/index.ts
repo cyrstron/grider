@@ -1,9 +1,9 @@
 /// <reference types="../src/@types" />
 
-import { createGridRenderer, BorderRenderer } from './grid-renderer';
 import { CenterCalculator } from './center-calc';
 import { Converter, createConverter } from './converter';
 import { createFigureBuilder } from './figure-builder';
+import { BorderRenderer, createGridRenderer } from './grid-renderer';
 import { Grider } from './grider';
 import { Neighborer } from './neighborer';
 import { ParamsBuilder } from './params-builder';
@@ -28,11 +28,11 @@ export const neighbors: Neighborer = new Neighborer(grider);
 export const figureBuilder = createFigureBuilder(grider, utils);
 
 export const createBorderRenderer = (
-  figure: grider.GeoPoint[], 
-  shape: grider.GeoPoint[]
+  figure: grider.GeoPoint[],
+  shape: grider.GeoPoint[],
 ): BorderRenderer => {
-  return new BorderRenderer(figure, shape, utils.geography, utils.shape);
-}
+  return new BorderRenderer(figure, shape, utils.geography, utils.shape, grider);
+};
 
 export const createStaticGrider = (
   config: grider.GridConfig,
