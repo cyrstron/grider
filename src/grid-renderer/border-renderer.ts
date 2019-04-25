@@ -167,9 +167,6 @@ export class BorderRenderer {
     if (gridParams.type === 'rect') return figure;
 
     const len = figure.length;
-
-    console.log(len);
-
     const isInner = this.geography.polyContainsPoint(shape, figure[0]);
 
     const distances = figure.map((point): number =>
@@ -228,8 +225,6 @@ export class BorderRenderer {
     const simpleLen = simplified.length;
     const simplifiedGrid = simplified.map((point) => this.grider.calcGridPointByGeoPoint(point, gridParams));
 
-    console.log(simpleLen);
-
     const cleared = simplifiedGrid.reduce((
       cleared: grider.GeoPoint[],
       point,
@@ -258,8 +253,28 @@ export class BorderRenderer {
       cleared.push(cleared[0]);
     }
 
-    console.log(cleared.length);
-    // return simplified;
+    this.indexateFigure(cleared);
+
     return cleared;
+  }
+
+  indexateFigure(figure: grider.GeoPoint[]) {
+    const lngIndexes: {[key: number]: number[]} = {};
+    const latIndexes: {[key: number]: number[]} = {};
+
+    figure.forEach(({lng, lat}, index) => {
+      if (!lngIndexes[lng]) {
+        lngIndexes[lng] = [];
+      }
+      if (!latIndexes[lat]) {
+        latIndexes[lat] = [];
+      }
+
+      lngIndexes[lng].push(index);
+      latIndexes[lat].push(index);
+    }, {});
+
+    console.log(Object.keys(lngIndexes));
+    console.log(Object.keys(latIndexes));
   }
 }
