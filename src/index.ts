@@ -31,7 +31,7 @@ export const createBorderRenderer = (
   figure: grider.GeoPoint[],
   shape: grider.GeoPoint[],
 ): BorderRenderer => {
-  return new BorderRenderer(figure, shape, utils.geography, utils.shape, grider);
+  return new BorderRenderer(figure, shape, utils.geography, utils.math, utils.shape, grider);
 };
 
 export const createStaticGrider = (

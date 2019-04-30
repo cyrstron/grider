@@ -1,12 +1,13 @@
 import isEqual from 'lodash/isEqual';
 import { Grider } from '../grider';
-import { GeographyUtils, ShapeUtils } from '../utils';
+import { GeographyUtils, MathUtils, ShapeUtils } from '../utils';
 
 export class BorderRenderer {
   constructor(
     public figure: grider.GeoPoint[],
     public shape: grider.GeoPoint[],
     public geography: GeographyUtils,
+    public math: MathUtils,
     public shapeUtils: ShapeUtils,
     public grider: Grider,
   ) {}
@@ -274,7 +275,33 @@ export class BorderRenderer {
       latIndexes[lat].push(index);
     }, {});
 
-    console.log(Object.keys(lngIndexes));
-    console.log(Object.keys(latIndexes));
+    const lngIndexation: {[key: string]: number[]} = Object.keys(lngIndexes).reduce((
+      indexation: {[key: string]: number[]},
+      lng,
+    ): {[key: string]: number[]} => {
+      let key = lng;
+
+      while (true) {
+        if (!indexation[key]) {
+          indexation[key] = [];
+        }
+
+        indexation[key].push(+lng);
+
+        const nextKey = this.math.floorNumStringByOrder(key);
+
+        if (nextKey === key) break;
+
+        key = nextKey;
+      }
+      return indexation;
+    }, {});
+
+    Object.keys(lngIndexation).forEach((key) => {
+      lngIndexation[key].sort((a, b) => a - b);
+    });
+
+    console.log(lngIndexation);
   }
+
 }

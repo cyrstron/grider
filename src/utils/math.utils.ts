@@ -83,4 +83,20 @@ export class MathUtils {
   decRemain(value: number): number {
     return value - Math.floor(value);
   }
+
+  floorNumStringByOrder(numString: string): string {
+    if (numString.split('').every((digit) => digit === '0')) {
+      return numString;
+    } else if (numString.length - 2 === numString.indexOf('.')) {
+      return Math.floor(+numString) + '';
+    } else if (numString.indexOf('.') !== -1) {
+      return numString.slice(0, -1);
+    } else if (numString.indexOf('0') === -1) {
+      return numString.slice(0, -1) + '0';
+    } else {
+      const zeroIndex = numString.indexOf('0');
+
+      return numString.slice(0, zeroIndex - 1) + '0'.repeat(numString.length - zeroIndex + 1);
+    }
+  }
 }
