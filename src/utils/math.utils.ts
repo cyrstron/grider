@@ -1,4 +1,21 @@
 export class MathUtils {
+  floorNumStrByOrder(str: string): string {
+    const strLen = str.length;
+
+    if (str.split('').every((dig) => dig === '0')) {
+      return str;
+    } else if (str.lastIndexOf('.') === strLen - 2) {
+      return Math.floor(+str) + '';
+    } else if (str.indexOf('.') !== -1) {
+      return str.slice(0, -1);
+    } else if (str.indexOf('0') === -1) {
+      return str.slice(0, -1) + '0';
+    } else {
+      const zeroIndex = str.lastIndexOf('0');
+
+      return str.slice(0, zeroIndex - 1) + '0'.repeat(strLen - zeroIndex + 1);
+    }
+  }
   calcClosestMultiple(divider: number, dividend: number): number {
     let ascDivider: number = divider;
     let descDivider: number = divider;

@@ -1,15 +1,40 @@
 import isEqual from 'lodash/isEqual';
 import { Grider } from '../grider';
-import { GeographyUtils, ShapeUtils } from '../utils';
+import { GeographyUtils, ShapeUtils, MathUtils } from '../utils';
 
 export class BorderRenderer {
   constructor(
     public figure: grider.GeoPoint[],
     public shape: grider.GeoPoint[],
+    public math: MathUtils,
     public geography: GeographyUtils,
     public shapeUtils: ShapeUtils,
     public grider: Grider,
   ) {}
+
+  indexateKeys(keys: string[]): {[key: string]: number[]} {
+    return keys.reduce((
+      indexation: {[key: string]: number[]},
+      key,
+    ): {[key: string]: number[]} => {
+      let keyIndex = key;
+      while(true) {
+        if (!indexation[keyIndex]) {
+          indexation[keyIndex] = [];
+        }
+
+        indexation[keyIndex].push(+key);
+
+        const newKeyIndex = this.math.floorNumStrByOrder(keyIndex);
+
+        if (newKeyIndex === keyIndex) break;
+
+        keyIndex = newKeyIndex;
+      }
+
+      return indexation;
+    }, {})
+  }
 
   calcBorderTileFigure(
     tileCoord: grider.Point,
@@ -274,7 +299,10 @@ export class BorderRenderer {
       latIndexes[lat].push(index);
     }, {});
 
-    console.log(Object.keys(lngIndexes));
-    console.log(Object.keys(latIndexes));
+    const lngKeysIndexation = this.indexateKeys(Object.keys(lngIndexes));
+    const latKeysIndexation = this.indexateKeys(Object.keys(latIndexes));
+
+    console.log(lngKeysIndexation);
+    console.log(latKeysIndexation);
   }
 }
