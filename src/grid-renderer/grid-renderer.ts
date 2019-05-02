@@ -1,9 +1,10 @@
-import { Grider } from '..';
+import { Grider } from '../';
 import { Neighborer } from '../neighborer';
 import { GeographyUtils, MathUtils } from '../utils';
 import { TileBuilder } from './tile-builder';
 
 export class GridRenderer {
+
   constructor(
     public grider: Grider,
     public tileBuilder: TileBuilder,

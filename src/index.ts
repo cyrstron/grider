@@ -28,10 +28,11 @@ export const neighbors: Neighborer = new Neighborer(grider);
 export const figureBuilder = createFigureBuilder(grider, utils);
 
 export const createBorderRenderer = (
+  gridParams: grider.GridParams,
   figure: grider.GeoPoint[],
   shape: grider.GeoPoint[],
 ): BorderRenderer => {
-  return new BorderRenderer(figure, shape, utils.geography, utils.math, utils.shape, grider);
+  return new BorderRenderer(gridParams, figure, shape, utils.math, utils.geography, utils.shape, grider);
 };
 
 export const createStaticGrider = (

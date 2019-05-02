@@ -1,4 +1,21 @@
 export class MathUtils {
+  floorNumStrByOrder(str: string): string {
+    const strLen = str.length;
+
+    if (str.split('').every((dig) => dig === '0')) {
+      return str;
+    } else if (str.lastIndexOf('.') === strLen - 2) {
+      return Math.floor(+str) + '';
+    } else if (str.indexOf('.') !== -1) {
+      return str.slice(0, -1);
+    } else if (str.indexOf('0') === -1) {
+      return str.slice(0, -1) + '0';
+    } else {
+      const zeroIndex = str.lastIndexOf('0');
+
+      return str.slice(0, zeroIndex - 1) + '0'.repeat(strLen - zeroIndex + 1);
+    }
+  }
   calcClosestMultiple(divider: number, dividend: number): number {
     let ascDivider: number = divider;
     let descDivider: number = divider;
@@ -82,21 +99,5 @@ export class MathUtils {
 
   decRemain(value: number): number {
     return value - Math.floor(value);
-  }
-
-  floorNumStringByOrder(numString: string): string {
-    if (numString.split('').every((digit) => digit === '0')) {
-      return numString;
-    } else if (numString.length - 2 === numString.indexOf('.')) {
-      return Math.floor(+numString) + '';
-    } else if (numString.indexOf('.') !== -1) {
-      return numString.slice(0, -1);
-    } else if (numString.indexOf('0') === -1) {
-      return numString.slice(0, -1) + '0';
-    } else {
-      const zeroIndex = numString.indexOf('0');
-
-      return numString.slice(0, zeroIndex - 1) + '0'.repeat(numString.length - zeroIndex + 1);
-    }
   }
 }

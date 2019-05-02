@@ -3,50 +3,216 @@ import { Grider } from '../grider';
 import { GeographyUtils, MathUtils, ShapeUtils } from '../utils';
 
 export class BorderRenderer {
+  simplifiedFigure: grider.GeoPoint[];
+  lngIndexes: {[key: string]: number[]};
+  latIndexes: {[key: string]: number[]};
+  lngKeysIndexation: {[key: string]: number[]};
+  latKeysIndexation: {[key: string]: number[]};
+  isRipped: boolean;
+  east: number;
+  north: number;
+  west: number;
+  south: number;
+
   constructor(
+    public gridParams: grider.GridParams,
     public figure: grider.GeoPoint[],
     public shape: grider.GeoPoint[],
-    public geography: GeographyUtils,
     public math: MathUtils,
+    public geography: GeographyUtils,
     public shapeUtils: ShapeUtils,
     public grider: Grider,
-  ) {}
-
-  calcBorderTileFigure(
-    tileCoord: grider.Point,
-    zoomCoofX: number,
-    zoomCoofY: number,
   ) {
-    const tileGeoShape = this.calcTileShape(tileCoord, zoomCoofX, zoomCoofY);
+    this.simplifiedFigure = this.simplifyFigure(figure, shape, gridParams);
 
-    const contains = tileGeoShape.map(
-      (point) => this.geography.polyContainsPoint(this.shape, point),
-    );
+    const {
+      lngIndexes,
+      latIndexes,
+      lngKeysIndexation,
+      latKeysIndexation,
+    } = this.indexateFigure(this.simplifiedFigure);
 
-    if (contains.every((isContained) => !isContained)) {
-      return [];
-    } else {
-      return [{
-        x: 0,
-        y: 0,
-      }, {
-        x: 1,
-        y: 0,
-      }, {
-        x: 1,
-        y: 1,
-      }, {
-        x: 0,
-        y: 1,
-      }];
-    }
+    this.lngIndexes = lngIndexes;
+    this.latIndexes = latIndexes;
+    this.lngKeysIndexation = lngKeysIndexation;
+    this.latKeysIndexation = latKeysIndexation;
+
+    const latKeys = Object.keys(latIndexes).sort((a, b) => +a - +b);
+    const lngKeys = Object.keys(lngIndexes).sort((a, b) => +a - +b);
+
+    this.south = +latKeys[0];
+    this.north = +latKeys[latKeys.length - 1];
+
+    const minLng = lngKeys[0];
+    const maxLng = lngKeys[lngKeys.length - 1];
+
+    this.isRipped = +maxLng - +minLng > 180;
+
+    this.east = this.isRipped ? +minLng : +maxLng;
+    this.west =  this.isRipped ? +maxLng : +minLng;
   }
 
-  calcTileShape(
+  getIntersectedBorder({
+    south,
+    north,
+    east,
+    west,
+  }: {
+    north: number,
+    east: number,
+    south: number,
+    west: number,
+  }) {
+    if ((
+      south > this.north
+    ) || (
+      north < this.south
+    ) || (
+      !this.isRipped && east < this.west
+    ) || (
+      !this.isRipped && west > this.east
+    ) || (
+      this.isRipped && east < this.west && west > this.east
+    )) {
+      return [];
+    }
+
+    const northKeys = this.getClosestLatKeys(north);
+    const {from: northClosestKey} = this.getClosestKeys(north, northKeys);
+    const southKeys = this.getClosestLatKeys(south);
+    const {to: southClosestKey} = this.getClosestKeys(south, southKeys);
+
+    const northPoints = this.latIndexes[northClosestKey].map((index) => this.simplifiedFigure[index]);
+    const southPoints = this.latIndexes[southClosestKey].map((index) => this.simplifiedFigure[index]);
+
+    console.log('north:', north, northClosestKey);
+    console.log(northPoints);
+    console.log('south:', south, southClosestKey);
+    console.log(southPoints);
+
+    const eastKeys = this.getClosestLngKeys(east);
+    const {from: eastClosestKey} = this.getClosestKeys(east, eastKeys);
+    const westKeys = this.getClosestLngKeys(west);
+    const {to: westClosestKey} = this.getClosestKeys(west, westKeys);
+
+    const eastPoints = this.lngIndexes[eastClosestKey].map((index) => this.simplifiedFigure[index]);
+    const westPoints = this.lngIndexes[westClosestKey].map((index) => this.simplifiedFigure[index]);
+
+    console.log('east:', east, eastClosestKey);
+    console.log(eastPoints);
+    console.log('west:', west, westClosestKey);
+    console.log(westPoints);
+
+    return [];
+  }
+
+  getClosestKeys(
+    value: number,
+    keys: number[],
+  ): {from: number, to: number} {
+    const min = keys[0];
+    const max = keys[keys.length - 1];
+    return keys.reduce((closests, key) => {
+      if (key > value && key < closests.to) {
+        closests.to = key;
+      }
+
+      if (key < value && key > closests.from) {
+        closests.from = key;
+      }
+
+      return closests;
+    }, {from: min, to: max});
+  }
+
+  getClosestLatKeys(lat: number): number[] {
+    let latStr = lat + '';
+    let keys: number[] | undefined;
+
+    while (!keys) {
+      keys = this.latKeysIndexation[latStr];
+
+      if (!keys) {
+        latStr = this.math.floorNumStrByOrder(latStr);
+      }
+    }
+
+    return keys;
+  }
+
+  getClosestLngKeys(lng: number): number[] {
+    let lngStr = lng + '';
+    let keys: number[] | undefined;
+
+    while (!keys) {
+      keys = this.lngKeysIndexation[lngStr];
+
+      if (!keys) {
+        lngStr = this.math.floorNumStrByOrder(lngStr);
+      }
+    }
+
+    return keys;
+  }
+
+  indexateKeys(keys: string[]): {[key: string]: number[]} {
+    const indexation: {[key: string]: number[]} = keys.reduce((
+      indexation: {[key: string]: number[]},
+      key,
+    ): {[key: string]: number[]} => {
+      let keyIndex = key;
+      while (true) {
+        if (!indexation[keyIndex]) {
+          indexation[keyIndex] = [];
+        }
+
+        indexation[keyIndex].push(+key);
+
+        const newKeyIndex = this.math.floorNumStrByOrder(keyIndex);
+
+        if (newKeyIndex === keyIndex) break;
+
+        keyIndex = newKeyIndex;
+      }
+
+      return indexation;
+    }, {});
+
+    Object.keys(indexation).forEach((key) => {
+      const indexes = indexation[key];
+      const min = Math.min(...indexes);
+      const max = Math.max(...indexes);
+
+      const indexMin = keys.indexOf(min + '');
+      const indexMax = keys.indexOf(max + '');
+
+      const closestToMin = keys[indexMin - 1];
+      const closestToMax = keys[indexMax + 1];
+
+      if (closestToMin) {
+        indexes.push(+closestToMin);
+      }
+
+      if (closestToMax) {
+        indexes.push(+closestToMax);
+      }
+
+      indexes.sort((a, b) => a - b);
+    });
+
+    return indexation;
+  }
+
+  calcTileBounds(
     tileCoord: grider.Point,
     zoomCoofX: number,
     zoomCoofY: number,
-  ): grider.GeoPoint[] {
+  ): {
+    north: number,
+    east: number,
+    south: number,
+    west: number,
+  } {
     const bottomRightTile = {
       x: tileCoord.x + 1,
       y: tileCoord.y + 1,
@@ -60,16 +226,12 @@ export class BorderRenderer {
       y: bottomRightTile.y / zoomCoofY,
     });
 
-    return [
-      northWest, {
-        lat: northWest.lat,
-        lng: southEast.lng,
-      },
-      southEast, {
-        lat: southEast.lat,
-        lng: northWest.lng,
-      },
-    ];
+    return {
+      north: northWest.lat,
+      east: southEast.lng,
+      south: southEast.lat,
+      west: northWest.lng,
+    };
   }
 
   checkPoint(
@@ -259,9 +421,16 @@ export class BorderRenderer {
     return cleared;
   }
 
-  indexateFigure(figure: grider.GeoPoint[]) {
-    const lngIndexes: {[key: number]: number[]} = {};
-    const latIndexes: {[key: number]: number[]} = {};
+  indexateFigure(
+    figure: grider.GeoPoint[],
+  ): {
+    lngIndexes: {[key: string]: number[]},
+    latIndexes: {[key: string]: number[]},
+    lngKeysIndexation: {[key: string]: number[]},
+    latKeysIndexation: {[key: string]: number[]},
+  } {
+    const lngIndexes: {[key: string]: number[]} = {};
+    const latIndexes: {[key: string]: number[]} = {};
 
     figure.forEach(({lng, lat}, index) => {
       if (!lngIndexes[lng]) {
@@ -275,33 +444,14 @@ export class BorderRenderer {
       latIndexes[lat].push(index);
     }, {});
 
-    const lngIndexation: {[key: string]: number[]} = Object.keys(lngIndexes).reduce((
-      indexation: {[key: string]: number[]},
-      lng,
-    ): {[key: string]: number[]} => {
-      let key = lng;
+    const lngKeysIndexation = this.indexateKeys(Object.keys(lngIndexes).sort((a, b) => +a - +b));
+    const latKeysIndexation = this.indexateKeys(Object.keys(latIndexes).sort((a, b) => +a - +b));
 
-      while (true) {
-        if (!indexation[key]) {
-          indexation[key] = [];
-        }
-
-        indexation[key].push(+lng);
-
-        const nextKey = this.math.floorNumStringByOrder(key);
-
-        if (nextKey === key) break;
-
-        key = nextKey;
-      }
-      return indexation;
-    }, {});
-
-    Object.keys(lngIndexation).forEach((key) => {
-      lngIndexation[key].sort((a, b) => a - b);
-    });
-
-    console.log(lngIndexation);
+    return {
+      lngIndexes,
+      latIndexes,
+      lngKeysIndexation,
+      latKeysIndexation,
+    };
   }
-
 }
