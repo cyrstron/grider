@@ -2,17 +2,21 @@ import isEqual from 'lodash/isEqual';
 import { Grider } from '../grider';
 import { GeographyUtils, MathUtils, ShapeUtils } from '../utils';
 
-export class BorderRenderer {
-  simplifiedFigure: grider.GeoPoint[];
+interface Indexation {
+  isRipped: boolean;
+  east: number;
+  west: number;
+  north: number;
+  south: number;
   lngIndexes: {[key: string]: number[]};
   latIndexes: {[key: string]: number[]};
   lngKeysIndexation: {[key: string]: number[]};
   latKeysIndexation: {[key: string]: number[]};
-  isRipped: boolean;
-  east: number;
-  north: number;
-  west: number;
-  south: number;
+}
+
+export class BorderRenderer {
+  simplifiedFigure: grider.GeoPoint[];
+  indexations: Indexation[];
 
   constructor(
     public gridParams: grider.GridParams,
@@ -25,83 +29,96 @@ export class BorderRenderer {
   ) {
     this.simplifiedFigure = this.simplifyFigure(figure, shape, gridParams);
 
-    const {
-      lngIndexes,
-      latIndexes,
-      lngKeysIndexation,
-      latKeysIndexation,
-    } = this.indexateFigure(this.simplifiedFigure);
+    console.log(this.simplifiedFigure.length);
 
-    this.lngIndexes = lngIndexes;
-    this.latIndexes = latIndexes;
-    this.lngKeysIndexation = lngKeysIndexation;
-    this.latKeysIndexation = latKeysIndexation;
+    const distributedPoints = this.distributePoints();
 
-    const latKeys = Object.keys(latIndexes).sort((a, b) => +a - +b);
-    const lngKeys = Object.keys(lngIndexes).sort((a, b) => +a - +b);
+    this.indexations = distributedPoints.reduce((
+      indexation: Indexation[],
+      points,
+    ): Indexation[] => {
+      const pointIndexation = this.indexatePoints(points);
+      indexation.push(pointIndexation);
 
-    this.south = +latKeys[0];
-    this.north = +latKeys[latKeys.length - 1];
+      return indexation;
+    }, []);
 
-    const minLng = lngKeys[0];
-    const maxLng = lngKeys[lngKeys.length - 1];
-
-    this.isRipped = +maxLng - +minLng > 180;
-
-    this.east = this.isRipped ? +minLng : +maxLng;
-    this.west =  this.isRipped ? +maxLng : +minLng;
+    console.log(this.indexations);
   }
 
-  getIntersectedBorder({
-    south,
-    north,
-    east,
-    west,
-  }: {
+  getIntersectedBorder(tileBounds: {
     north: number,
     east: number,
     south: number,
     west: number,
   }) {
+    console.log('BOUNDS!');
+    this.indexations.forEach((indexation) => {
+      this.getIntersectsWithSide(tileBounds, indexation);
+    });
+  }
+
+  getIntersectsWithSide(
+    {
+      south,
+      north,
+      east,
+      west,
+    }: {
+      north: number,
+      east: number,
+      south: number,
+      west: number,
+    },
+    indexation: Indexation,
+  ) {
     if ((
-      south > this.north
+      south > indexation.north
     ) || (
-      north < this.south
+      north < indexation.south
     ) || (
-      !this.isRipped && east < this.west
+      !indexation.isRipped && east < indexation.west
     ) || (
-      !this.isRipped && west > this.east
+      !indexation.isRipped && west > indexation.east
     ) || (
-      this.isRipped && east < this.west && west > this.east
+      indexation.isRipped && east < indexation.west && west > indexation.east
     )) {
       return [];
     }
 
-    const northKeys = this.getClosestLatKeys(north);
+    const northKeys = this.getClosestLatKeys(north, indexation);
     const {from: northClosestKey} = this.getClosestKeys(north, northKeys);
-    const southKeys = this.getClosestLatKeys(south);
+    const southKeys = this.getClosestLatKeys(south, indexation);
     const {to: southClosestKey} = this.getClosestKeys(south, southKeys);
 
-    const northPoints = this.latIndexes[northClosestKey].map((index) => this.simplifiedFigure[index]);
-    const southPoints = this.latIndexes[southClosestKey].map((index) => this.simplifiedFigure[index]);
+    const northPoints = indexation.latIndexes[northClosestKey].map((index) => this.simplifiedFigure[index]);
+    const southPoints = indexation.latIndexes[southClosestKey].map((index) => this.simplifiedFigure[index]);
 
     console.log('north:', north, northClosestKey);
-    console.log(northPoints);
+    console.log(northPoints.map(({lat, lng}) => ({lat, lng})));
     console.log('south:', south, southClosestKey);
-    console.log(southPoints);
+    console.log(southPoints.map(({lat, lng}) => ({lat, lng})));
 
-    const eastKeys = this.getClosestLngKeys(east);
-    const {from: eastClosestKey} = this.getClosestKeys(east, eastKeys);
-    const westKeys = this.getClosestLngKeys(west);
-    const {to: westClosestKey} = this.getClosestKeys(west, westKeys);
+    const eastKeys = this.getClosestLngKeys(east, indexation);
+    const {from: eastFrom, to: eastTo} = this.getClosestKeys(east, eastKeys);
+    const westKeys = this.getClosestLngKeys(west, indexation);
+    const {from: westFrom, to: westTo} = this.getClosestKeys(west, westKeys);
 
-    const eastPoints = this.lngIndexes[eastClosestKey].map((index) => this.simplifiedFigure[index]);
-    const westPoints = this.lngIndexes[westClosestKey].map((index) => this.simplifiedFigure[index]);
+    const eastPoints = [
+      ...indexation.lngIndexes[eastFrom],
+      ...indexation.lngIndexes[eastTo],
+    ].map((index) => this.simplifiedFigure[index])
+    .sort(({lat: latA}, {lat: latB}) => latA - latB);
+    const westPoints = [
+      ...indexation.lngIndexes[westFrom],
+      ...indexation.lngIndexes[westTo],
+    ].map((index) => this.simplifiedFigure[index])
+    .sort(({lat: latA}, {lat: latB}) => latA - latB);
 
-    console.log('east:', east, eastClosestKey);
-    console.log(eastPoints);
-    console.log('west:', west, westClosestKey);
-    console.log(westPoints);
+    console.log(`east: ${east}, ${eastFrom}/${eastTo}`);
+    console.log(eastPoints.map(({lat, lng}) => ({lat, lng})));
+    console.log(`west: ${west}, ${westFrom}/${westTo}`);
+    console.log(westPoints.map(({lat, lng}) => ({lat, lng})));
 
     return [];
   }
@@ -125,12 +142,12 @@ export class BorderRenderer {
     }, {from: min, to: max});
   }
 
-  getClosestLatKeys(lat: number): number[] {
+  getClosestLatKeys(lat: number, indexation: Indexation): number[] {
     let latStr = lat + '';
     let keys: number[] | undefined;
 
     while (!keys) {
-      keys = this.latKeysIndexation[latStr];
+      keys = indexation.latKeysIndexation[latStr];
 
       if (!keys) {
         latStr = this.math.floorNumStrByOrder(latStr);
@@ -140,12 +157,12 @@ export class BorderRenderer {
     return keys;
   }
 
-  getClosestLngKeys(lng: number): number[] {
+  getClosestLngKeys(lng: number, indexation: Indexation): number[] {
     let lngStr = lng + '';
     let keys: number[] | undefined;
 
     while (!keys) {
-      keys = this.lngKeysIndexation[lngStr];
+      keys = indexation.lngKeysIndexation[lngStr];
 
       if (!keys) {
         lngStr = this.math.floorNumStrByOrder(lngStr);
@@ -416,23 +433,64 @@ export class BorderRenderer {
       cleared.push(cleared[0]);
     }
 
-    this.indexateFigure(cleared);
-
     return cleared;
   }
 
-  indexateFigure(
-    figure: grider.GeoPoint[],
-  ): {
-    lngIndexes: {[key: string]: number[]},
-    latIndexes: {[key: string]: number[]},
-    lngKeysIndexation: {[key: string]: number[]},
-    latKeysIndexation: {[key: string]: number[]},
-  } {
+  distributePoints(): Array<Array<{point: grider.GeoPoint, index: number}>> {
+    const pointsBySide = this.simplifiedFigure.slice(0, -1)
+      .reduce((
+        pointsBySide: Array<Array<{point: grider.GeoPoint, index: number}>>,
+        point,
+        pointIndex,
+      ): Array<Array<{point: grider.GeoPoint, index: number}>> => {
+
+        let distance: number | undefined;
+        let index: number | undefined;
+
+        this.shapeUtils.forEachShapeSide<
+          grider.GeoPoint
+        >([...this.shape], (side, currentIndex) => {
+          const closestPoint = this.geography.closestPointOnSection(point, side);
+          if (!closestPoint) return;
+
+          const currentDistance = this.geography.calcMercDistance(point, closestPoint);
+
+          if (!distance || distance > currentDistance) {
+            distance = currentDistance;
+            index = currentIndex;
+          }
+        });
+
+        if (index === undefined) {
+          return pointsBySide;
+        }
+
+        if (!pointsBySide[index]) {
+          pointsBySide[index] = [];
+        }
+
+        pointsBySide[index].push({point, index: pointIndex});
+
+        return pointsBySide;
+      }, []);
+
+    pointsBySide.forEach((points, index) => {
+      const nextIndex = index === pointsBySide.length - 1 ? 0 : index + 1;
+      const nextPoints = pointsBySide[nextIndex];
+
+      points.push(nextPoints[0]);
+    });
+
+    return pointsBySide;
+  }
+
+  indexatePoints(
+    points: Array<{index: number, point: grider.GeoPoint}>,
+  ): Indexation {
     const lngIndexes: {[key: string]: number[]} = {};
     const latIndexes: {[key: string]: number[]} = {};
 
-    figure.forEach(({lng, lat}, index) => {
+    points.forEach(({point: {lat, lng}, index}) => {
       if (!lngIndexes[lng]) {
         lngIndexes[lng] = [];
       }
@@ -444,10 +502,27 @@ export class BorderRenderer {
       latIndexes[lat].push(index);
     }, {});
 
-    const lngKeysIndexation = this.indexateKeys(Object.keys(lngIndexes).sort((a, b) => +a - +b));
-    const latKeysIndexation = this.indexateKeys(Object.keys(latIndexes).sort((a, b) => +a - +b));
+    const lngKeys = Object.keys(lngIndexes).sort((a, b) => +a - +b);
+    const latKeys = Object.keys(latIndexes).sort((a, b) => +a - +b);
+
+    const lngKeysIndexation = this.indexateKeys(lngKeys);
+    const latKeysIndexation = this.indexateKeys(latKeys);
+
+    const south = +latKeys[0];
+    const north = +latKeys[latKeys.length - 1];
+
+    const minLng = +lngKeys[0];
+    const maxLng = +lngKeys[lngKeys.length - 1];
+    const isRipped = maxLng - minLng > 180;
+    const east = isRipped ? minLng : maxLng;
+    const west = isRipped ? maxLng : minLng;
 
     return {
+      isRipped,
+      south,
+      north,
+      east,
+      west,
       lngIndexes,
       latIndexes,
       lngKeysIndexation,
