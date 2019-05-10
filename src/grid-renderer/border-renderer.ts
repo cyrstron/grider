@@ -14,6 +14,19 @@ interface Indexation {
   latKeysIndexation: {[key: string]: number[]};
 }
 
+interface ClosestConfig {
+  from: number;
+  to: number;
+}
+
+interface TileClosestConfig {
+  east: ClosestConfig[];
+  west: ClosestConfig[];
+  north: ClosestConfig[];
+  south: ClosestConfig[];
+  [key: string]: ClosestConfig[];
+}
+
 export class BorderRenderer {
   simplifiedFigure: grider.GeoPoint[];
   indexations: Indexation[];
@@ -31,7 +44,7 @@ export class BorderRenderer {
 
     console.log(this.simplifiedFigure.length);
 
-    const distributedPoints = this.distributePoints();
+    const distributedPoints = this.dispersePoints();
 
     this.indexations = distributedPoints.reduce((
       indexation: Indexation[],
@@ -53,82 +66,131 @@ export class BorderRenderer {
     west: number,
   }) {
     console.log('BOUNDS!');
-    this.indexations.forEach((indexation) => {
-      this.getIntersectsWithSide(tileBounds, indexation);
+    const tileConfig = this.indexations.reduce((
+      result: TileClosestConfig,
+      indexation,
+    ): TileClosestConfig => {
+      const config = this.getIntersectsWithSide(tileBounds, indexation);
+
+      Object.keys(result).forEach((key) => {
+        result[key] = [...result[key], ...config[key]];
+      });
+
+      return result;
+    }, {
+      east: [],
+      west: [],
+      north: [],
+      south: [],
     });
+
+    console.log(tileConfig);
   }
 
   getIntersectsWithSide(
-    {
-      south,
-      north,
-      east,
-      west,
-    }: {
+    bounds: {
       north: number,
       east: number,
       south: number,
       west: number,
+      [key: string]: number,
     },
     indexation: Indexation,
-  ) {
+  ): TileClosestConfig {
+    const {
+      north,
+      east,
+      south,
+      west,
+    } = bounds;
+
+    const tileConfig: TileClosestConfig = {
+      east: [],
+      west: [],
+      north: [],
+      south: [],
+    };
+
     if ((
       south > indexation.north
     ) || (
       north < indexation.south
     ) || (
-      !indexation.isRipped && east < indexation.west
+      !indexation.isRipped && (east < indexation.west)
     ) || (
-      !indexation.isRipped && west > indexation.east
+      !indexation.isRipped && (west > indexation.east)
     ) || (
       indexation.isRipped && east < indexation.west && west > indexation.east
     )) {
-      return [];
+      return tileConfig;
     }
 
-    const northKeys = this.getClosestLatKeys(north, indexation);
-    const {from: northClosestKey} = this.getClosestKeys(north, northKeys);
-    const southKeys = this.getClosestLatKeys(south, indexation);
-    const {to: southClosestKey} = this.getClosestKeys(south, southKeys);
+    Object.keys(bounds).forEach((key) => {
+      const isLat = key === 'south' || key === 'north';
 
-    const northPoints = indexation.latIndexes[northClosestKey].map((index) => this.simplifiedFigure[index]);
-    const southPoints = indexation.latIndexes[southClosestKey].map((index) => this.simplifiedFigure[index]);
+      const keys = isLat ?
+        this.getClosestLatKeys(bounds[key], indexation) :
+        this.getClosestLngKeys(bounds[key], indexation);
 
-    console.log('north:', north, northClosestKey);
-    console.log(northPoints.map(({lat, lng}) => ({lat, lng})));
-    console.log('south:', south, southClosestKey);
-    console.log(southPoints.map(({lat, lng}) => ({lat, lng})));
+      const closests = this.getClosestKeys(bounds[key], keys);
 
-    const eastKeys = this.getClosestLngKeys(east, indexation);
-    const {from: eastFrom, to: eastTo} = this.getClosestKeys(east, eastKeys);
-    const westKeys = this.getClosestLngKeys(west, indexation);
-    const {from: westFrom, to: westTo} = this.getClosestKeys(west, westKeys);
+      if (!closests) return;
 
-    const eastPoints = [
-      ...indexation.lngIndexes[eastFrom],
-      ...indexation.lngIndexes[eastTo],
-    ].map((index) => this.simplifiedFigure[index])
-    .sort(({lat: latA}, {lat: latB}) => latA - latB);
-    const westPoints = [
-      ...indexation.lngIndexes[westFrom],
-      ...indexation.lngIndexes[westTo],
-    ].map((index) => this.simplifiedFigure[index])
-    .sort(({lat: latA}, {lat: latB}) => latA - latB);
+      const indexes = isLat ? indexation.latIndexes : indexation.lngIndexes;
 
-    console.log(`east: ${east}, ${eastFrom}/${eastTo}`);
-    console.log(eastPoints.map(({lat, lng}) => ({lat, lng})));
-    console.log(`west: ${west}, ${westFrom}/${westTo}`);
-    console.log(westPoints.map(({lat, lng}) => ({lat, lng})));
+      const toIndexes = indexes[closests.to];
+      const fromIndexes = indexes[closests.from];
 
-    return [];
+      if (toIndexes.length === 1 && fromIndexes.length === 1) {
+        tileConfig[key] = [{
+          from: fromIndexes[0],
+          to: toIndexes[0],
+        }];
+
+        return;
+      }
+      const toMin = Math.min(...toIndexes);
+      const toMax = Math.max(...toIndexes);
+      const fromMin = Math.min(...fromIndexes);
+      const fromMax = Math.max(...fromIndexes);
+
+      let resultClosest: ClosestConfig | undefined;
+
+      if (Math.abs(toMin - fromMax)) {
+        resultClosest = {
+          to: toMin,
+          from: fromMax,
+        };
+      } else if (Math.abs(toMax - fromMin)) {
+        resultClosest = {
+          to: toMax,
+          from: fromMin,
+        };
+      } else {
+        resultClosest = Math.abs(toMax - fromMin) > Math.abs(toMin - fromMax) ? {
+          to: toMax,
+          from: fromMin,
+        } : {
+          to: toMin,
+          from: fromMax,
+        };
+      }
+
+      tileConfig[key] = [resultClosest];
+    });
+
+    return tileConfig;
   }
 
   getClosestKeys(
     value: number,
     keys: number[],
-  ): {from: number, to: number} {
+  ): {from: number, to: number} | undefined {
     const min = keys[0];
     const max = keys[keys.length - 1];
+
+    if (value < min || value > max) return;
+
     return keys.reduce((closests, key) => {
       if (key > value && key < closests.to) {
         closests.to = key;
@@ -436,50 +498,69 @@ export class BorderRenderer {
     return cleared;
   }
 
-  distributePoints(): Array<Array<{point: grider.GeoPoint, index: number}>> {
+  dispersePoints(): Array<Array<{point: grider.GeoPoint, index: number}>> {
     const pointsBySide = this.simplifiedFigure.slice(0, -1)
       .reduce((
         pointsBySide: Array<Array<{point: grider.GeoPoint, index: number}>>,
         point,
         pointIndex,
+        figure,
       ): Array<Array<{point: grider.GeoPoint, index: number}>> => {
 
-        let distance: number | undefined;
-        let index: number | undefined;
+        const points = pointsBySide[pointsBySide.length - 1];
 
-        this.shapeUtils.forEachShapeSide<
-          grider.GeoPoint
-        >([...this.shape], (side, currentIndex) => {
-          const closestPoint = this.geography.closestPointOnSection(point, side);
-          if (!closestPoint) return;
+        if (!points) {
+          const lastPointIndex = figure.length - 1;
+          const lastPoint = figure[lastPointIndex];
 
-          const currentDistance = this.geography.calcMercDistance(point, closestPoint);
-
-          if (!distance || distance > currentDistance) {
-            distance = currentDistance;
-            index = currentIndex;
-          }
-        });
-
-        if (index === undefined) {
-          return pointsBySide;
+          return [[{
+            index: lastPointIndex,
+            point: lastPoint,
+          }, {
+            point,
+            index: pointIndex,
+          }]];
         }
 
-        if (!pointsBySide[index]) {
-          pointsBySide[index] = [];
+        const {lat, lng} = point;
+        const {
+          point: {lat: firstLat, lng: firstLng},
+        } = points[0];
+        const {
+          point: {lat: lastLat, lng: lastLng},
+        } = points[points.length - 1];
+
+        const latIsOK = lastLat > firstLat ? lat >= lastLat : lat <= lastLat;
+
+        const isRipped = Math.max(firstLng, lastLng) - Math.min(firstLng, lastLng) > 180;
+        const isNextRipped = Math.max(lng, lastLng) - Math.min(lng, lastLng) > 180;
+
+        let lngIsOK = false;
+
+        if (isRipped || isNextRipped) {
+          lngIsOK = lastLng > firstLng ? lng <= lastLng : lng >= lastLng;
+        } else {
+          lngIsOK = lastLng > firstLng ? lng >= lastLng : lng <= lastLng;
         }
 
-        pointsBySide[index].push({point, index: pointIndex});
+        if (latIsOK && lngIsOK) {
+          points.push({
+            index: pointIndex,
+            point,
+          });
+        } else {
+          pointsBySide.push([
+            points[points.length - 1],
+            {
+              index: pointIndex,
+              point,
+            },
+          ]);
+        }
 
         return pointsBySide;
+
       }, []);
-
-    pointsBySide.forEach((points, index) => {
-      const nextIndex = index === pointsBySide.length - 1 ? 0 : index + 1;
-      const nextPoints = pointsBySide[nextIndex];
-
-      points.push(nextPoints[0]);
-    });
 
     return pointsBySide;
   }
