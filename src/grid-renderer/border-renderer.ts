@@ -111,19 +111,19 @@ export class BorderRenderer {
       south: [],
     };
 
-    if ((
-      south > indexation.north
-    ) || (
-      north < indexation.south
-    ) || (
-      !indexation.isRipped && (east < indexation.west)
-    ) || (
-      !indexation.isRipped && (west > indexation.east)
-    ) || (
-      indexation.isRipped && east < indexation.west && west > indexation.east
-    )) {
-      return tileConfig;
-    }
+    // if ((
+    //   south > indexation.north
+    // ) || (
+    //   north < indexation.south
+    // ) || (
+    //   !indexation.isRipped && (east < indexation.west)
+    // ) || (
+    //   !indexation.isRipped && (west > indexation.east)
+    // ) || (
+    //   indexation.isRipped && east < indexation.west && west > indexation.east
+    // )) {
+    //   return tileConfig;
+    // }
 
     Object.keys(bounds).forEach((key) => {
       const isLat = key === 'south' || key === 'north';
@@ -131,6 +131,8 @@ export class BorderRenderer {
       const keys = isLat ?
         this.getClosestLatKeys(bounds[key], indexation) :
         this.getClosestLngKeys(bounds[key], indexation);
+
+      if (!keys) return;
 
       const closests = this.getClosestKeys(bounds[key], keys);
 
@@ -204,31 +206,45 @@ export class BorderRenderer {
     }, {from: min, to: max});
   }
 
-  getClosestLatKeys(lat: number, indexation: Indexation): number[] {
+  getClosestLatKeys(
+    lat: number,
+    indexation: Indexation,
+  ): number[] | undefined {
     let latStr = lat + '';
     let keys: number[] | undefined;
 
-    while (!keys) {
+    while (true) {
       keys = indexation.latKeysIndexation[latStr];
 
-      if (!keys) {
-        latStr = this.math.floorNumStrByOrder(latStr);
-      }
+      if (keys) break;
+
+      const nextStr = this.math.floorNumStrByOrder(latStr);
+
+      if (nextStr === latStr) break;
+
+      latStr = nextStr;
     }
 
     return keys;
   }
 
-  getClosestLngKeys(lng: number, indexation: Indexation): number[] {
+  getClosestLngKeys(
+    lng: number,
+    indexation: Indexation,
+  ): number[] | undefined {
     let lngStr = lng + '';
     let keys: number[] | undefined;
 
     while (!keys) {
       keys = indexation.lngKeysIndexation[lngStr];
 
-      if (!keys) {
-        lngStr = this.math.floorNumStrByOrder(lngStr);
-      }
+      if (keys) break;
+
+      const nextStr = this.math.floorNumStrByOrder(lngStr);
+
+      if (nextStr === lngStr) break;
+
+      lngStr = nextStr;
     }
 
     return keys;
