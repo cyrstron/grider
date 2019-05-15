@@ -15,6 +15,7 @@ interface Indexation {
 }
 
 interface ClosestConfig {
+  intersect: grider.GeoPoint;
   from: number;
   to: number;
 }
@@ -84,6 +85,50 @@ export class BorderRenderer {
       south: [],
     });
 
+    const tileConfigKeys = Object.keys(tileConfig);
+
+    if (tileConfigKeys.every((key) => tileConfig[key].length === 0)) return [];
+
+    tileConfigKeys.forEach((key) => {
+      const isLat = key === 'north' || key === 'south';
+      if (isLat) {
+        tileConfig[key].sort((
+          {intersect: {lat: latA}},
+          {intersect: {lat: latB}}
+        ) => latA - latB);
+      } else {        
+        tileConfig[key].sort((
+          {intersect: {lng: lngA}},
+          {intersect: {lng: lngB}}
+        ) => {  
+          const isRipped = Math.max(lngA, lngB) - Math.min(lngA, lngB) > 180;
+  
+          return isRipped ? lngB - lngA : lngA - lngB;            
+        });
+      }      
+    });
+
+    const tilePositions: Array<'included' | 'intersected' | 'excluded'> = tileConfigKeys.map((
+      key
+    ): 'included' | 'intersected' | 'excluded' => {
+      const isLat = key === 'north' || key === 'south';
+      const sidePosition = tileConfig[key].reduce((
+        sidePosition: 'included' | 'intersected' | 'excluded', 
+        closests, 
+        index
+        ): 'included' | 'intersected' | 'excluded' => {
+          let minKey = isLat ? 'west' : 'south';
+          let maxKey = isLat ? 'east' : 'north';
+
+          return sidePosition;
+        }, 'excluded');
+
+        return sidePosition;
+    })
+
+    
+
+
     console.log(tileConfig);
   }
 
@@ -131,12 +176,21 @@ export class BorderRenderer {
       const keys = isLat ?
         this.getClosestLatKeys(bounds[key], indexation) :
         this.getClosestLngKeys(bounds[key], indexation);
-
+      
       if (!keys) return;
 
       const closests = this.getClosestKeys(bounds[key], keys);
 
       if (!closests) return;
+
+      let lat: number | undefined;
+      let lng: number | undefined;
+
+      if (isLat) {
+        lat = bounds[key];
+      } else {
+        lng = bounds[key];
+      }
 
       const indexes = isLat ? indexation.latIndexes : indexation.lngIndexes;
 
@@ -144,10 +198,14 @@ export class BorderRenderer {
       const fromIndexes = indexes[closests.from];
 
       if (toIndexes.length === 1 && fromIndexes.length === 1) {
-        tileConfig[key] = [{
-          from: fromIndexes[0],
-          to: toIndexes[0],
-        }];
+        const [fromIndex] = fromIndexes;
+        const [toIndex] = toIndexes;
+        
+        const config = this.calcClosestConfig(fromIndex, toIndex, lat, lng);
+
+        if (config) {
+          tileConfig[key] = [config];
+        }
 
         return;
       }
@@ -156,7 +214,7 @@ export class BorderRenderer {
       const fromMin = Math.min(...fromIndexes);
       const fromMax = Math.max(...fromIndexes);
 
-      let resultClosest: ClosestConfig | undefined;
+      let resultClosest: {from: number, to: number} | undefined;
 
       if (Math.abs(toMin - fromMax)) {
         resultClosest = {
@@ -178,10 +236,48 @@ export class BorderRenderer {
         };
       }
 
-      tileConfig[key] = [resultClosest];
+      const closestConfig = this.calcClosestConfig(resultClosest.from, resultClosest.to, lat, lng);
+
+      if (closestConfig) {
+        tileConfig[key] = [closestConfig];
+      }
+
     });
 
     return tileConfig;
+  }
+
+  calcClosestConfig(
+    fromIndex: number, 
+    toIndex: number, 
+    lat?:number, 
+    lng?: number,
+  ): ClosestConfig | undefined{
+    if (lat == undefined && lng == undefined) return;
+
+    const loxPoints: [grider.GeoPoint, grider.GeoPoint] = [
+      this.simplifiedFigure[fromIndex],
+      this.simplifiedFigure[toIndex],
+    ];
+
+    const resultLat = lat !== undefined ? 
+      lat : 
+      this.geography.calcLatByLngOnLox(lng as number, loxPoints);
+    const resultLng = lng !== undefined ? 
+      lng : 
+      this.geography.calcLngByLatOnLox(lat as number, loxPoints);
+
+      
+    if (resultLat == undefined || resultLng == undefined) return;
+
+    return {
+      from: fromIndex,
+      to: toIndex,
+      intersect: {
+        lat: resultLat,
+        lng: resultLng
+      }
+    }
   }
 
   getClosestKeys(
