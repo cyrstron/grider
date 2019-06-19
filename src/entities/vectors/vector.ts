@@ -1,6 +1,6 @@
-class Point {
+export class Vector {
     constructor(
-        public x: number, 
+        public x: number,
         public y: number,
     ) {}
 }

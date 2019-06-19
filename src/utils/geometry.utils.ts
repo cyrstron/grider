@@ -5,6 +5,8 @@ export class GeometryUtils {
     public math: MathUtils,
   ) {}
 
+
+  //done
   closestPointOnLine(
     {x: x0, y: y0}: grider.Point,
     [{x: x1, y: y1}, {x: x2, y: y2}]: [grider.Point, grider.Point],
@@ -60,6 +62,7 @@ export class GeometryUtils {
     }
   }
 
+  // done
   calcDistanceToLine(
     {x: x0, y: y0}: grider.Point,
     [{x: x1, y: y1}, {x: x2, y: y2}]: [grider.Point, grider.Point],
@@ -71,6 +74,7 @@ export class GeometryUtils {
     );
   }
 
+  // done
   calcDistance(
     {x: x1, y: y1}: grider.Point,
     {x: x2, y: y2}: grider.Point,
@@ -81,6 +85,7 @@ export class GeometryUtils {
     );
   }
 
+  //done
   calcSectionsIntersect(
     sectionA: [[number, number], [number, number]],
     sectionB: [[number, number], [number, number]],
@@ -108,6 +113,7 @@ export class GeometryUtils {
     return intersect;
   }
 
+  // done
   calcLinesIntersection(
     sectionA: [[number, number], [number, number]],
     sectionB: [[number, number], [number, number]],
@@ -151,6 +157,7 @@ export class GeometryUtils {
     return [x, y];
   }
 
+  // done
   calcYIntersection(
     sectionA: [[number, number], [number, number]],
     sectionB: [[number, number], [number, number]],
@@ -166,6 +173,7 @@ export class GeometryUtils {
     return deltaY / delta;
   }
 
+  //done
   calcXIntersection(
     sectionA: [[number, number], [number, number]],
     sectionB: [[number, number], [number, number]],
@@ -181,6 +189,8 @@ export class GeometryUtils {
     return deltaX / delta;
   }
 
+
+  // done
   calcFlatLineCoofs(
     [[x1, y1], [x2, y2]]: [
       [number, number], [number, number]
@@ -192,6 +202,7 @@ export class GeometryUtils {
     ];
   }
 
+  // done
   calcFlatLineCoofsByVector(
     [x1, y1]: [number, number],
     [ax, ay]: [number, number],
@@ -203,6 +214,7 @@ export class GeometryUtils {
     ];
   }
 
+  //done
   resolveFlatLineMatrix(
     [[a1, b1, c1], [a2, b2, c2]]: number[][],
   ): [number, number] | undefined {
@@ -218,6 +230,7 @@ export class GeometryUtils {
     ];
   }
 
+  //done
   calcXLineEquation(
     points: [[number, number], [number, number]],
   ): (y: number) => number | void {
@@ -226,6 +239,7 @@ export class GeometryUtils {
     ): number | void => this.calcXByYOnLine(y, points);
   }
 
+  //done
   calcYLineEquation(
     points: [[number, number], [number, number]],
   ): (x: number) => number | void {
@@ -234,6 +248,7 @@ export class GeometryUtils {
     ): number | void => this.calcYByXOnLine(x, points);
   }
 
+  //done
   calcXByYOnLine(
     y: number,
     [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
@@ -245,6 +260,7 @@ export class GeometryUtils {
     ) + x1;
   }
 
+  //done
   calcYByXOnLine(
     x: number,
     [[x1, y1], [x2, y2]]: [[number, number], [number, number]],
