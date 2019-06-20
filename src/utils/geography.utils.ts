@@ -598,67 +598,67 @@ export class GeographyUtils {
     return result;
   }
 
-  getGridBreakpoints(initWidth: number, initHeight: number): {
-    [key: number]: number,
-  } {
-    const cellsAmount = 3600000000 / initWidth;
+  // getGridBreakpoints(initWidth: number, initHeight: number): {
+  //   [key: number]: number,
+  // } {
+  //   const cellsAmount = 3600000000 / initWidth;
 
-    const growthCoofs = this.math
-      .calcAreaCorrectionGrowthCoofs(cellsAmount);
+  //   const growthCoofs = this.math
+  //     .calcAreaCorrectionGrowthCoofs(cellsAmount);
 
-    let coof = 1;
+  //   let coof = 1;
 
-    const breakPoints = growthCoofs.reduce((breakPoints: any, value: number) => {
-      coof *= value;
+  //   const breakPoints = growthCoofs.reduce((breakPoints: any, value: number) => {
+  //     coof *= value;
 
-      const cosLat = 1 / (value * coof);
-      let breakpoint: number = this.math.radToDeg(Math.acos(cosLat));
+  //     const cosLat = 1 / (value * coof);
+  //     let breakpoint: number = this.math.radToDeg(Math.acos(cosLat));
 
-      breakpoint = (
-        Math.round((breakpoint * 10000000 / (initHeight))) - 0.5
-      ) * initHeight;
+  //     breakpoint = (
+  //       Math.round((breakpoint * 10000000 / (initHeight))) - 0.5
+  //     ) * initHeight;
 
-      breakpoint = +(breakpoint / 10000000).toFixed(7);
+  //     breakpoint = +(breakpoint / 10000000).toFixed(7);
 
-      breakPoints[breakpoint] = coof;
+  //     breakPoints[breakpoint] = coof;
 
-      return breakPoints;
-    }, {}) as {
-      [key: number]: number,
-    };
+  //     return breakPoints;
+  //   }, {}) as {
+  //     [key: number]: number,
+  //   };
 
-    return breakPoints;
-  }
+  //   return breakPoints;
+  // }
 
-  stringifyGeoPoints(polyGeoPoints: grider.GeoPoint[]): string[] {
-    return polyGeoPoints.map((item) => `${item.lat} ${item.lng}`);
-  }
+  // stringifyGeoPoints(polyGeoPoints: grider.GeoPoint[]): string[] {
+  //   return polyGeoPoints.map((item) => `${item.lat} ${item.lng}`);
+  // }
 
-  serializePoly(polyGeoPoints: grider.GeoPoint[]): string {
-    const strPoints = this.stringifyGeoPoints(polyGeoPoints);
+  // serializePoly(polyGeoPoints: grider.GeoPoint[]): string {
+  //   const strPoints = this.stringifyGeoPoints(polyGeoPoints);
 
-    strPoints.push(strPoints[0]);
+  //   strPoints.push(strPoints[0]);
 
-    return `POLYGON((${strPoints.join(',')}))`;
-  }
+  //   return `POLYGON((${strPoints.join(',')}))`;
+  // }
 
-  serializeMultiPoint(polyGeoPoints: grider.GeoPoint[]): string {
-    const strPoints = this.stringifyGeoPoints(polyGeoPoints);
+  // serializeMultiPoint(polyGeoPoints: grider.GeoPoint[]): string {
+  //   const strPoints = this.stringifyGeoPoints(polyGeoPoints);
 
-    return `MULTIPOINT(${strPoints.join(',')})`;
-  }
+  //   return `MULTIPOINT(${strPoints.join(',')})`;
+  // }
 
-  parsePoly(polyStr: string): grider.GeoPoint[] {
-    const points = polyStr.slice(9, -2)
-      .split(',')
-      .map((point) => {
-        const coords = point.split(' ');
-        return {
-          lat: +coords[0],
-          lng: +coords[1],
-        };
-      });
+  // parsePoly(polyStr: string): grider.GeoPoint[] {
+  //   const points = polyStr.slice(9, -2)
+  //     .split(',')
+  //     .map((point) => {
+  //       const coords = point.split(' ');
+  //       return {
+  //         lat: +coords[0],
+  //         lng: +coords[1],
+  //       };
+  //     });
 
-    return points;
-  }
+  //   return points;
+  // }
 }

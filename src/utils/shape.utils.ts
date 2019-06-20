@@ -7,6 +7,7 @@ export class ShapeUtils {
     public geometry: GeometryUtils,
   ) {}
 
+  // done
   forEachShapeSide<PointType>(
     shape: PointType[],
     callback: (side: [PointType, PointType], index: number) => void,
@@ -20,6 +21,7 @@ export class ShapeUtils {
     });
   }
 
+  // done
   mapEachShapeSide<PointType, ReturnedValue>(
     shape: PointType[],
     callback: (side: [PointType, PointType], index: number) => ReturnedValue,
@@ -33,6 +35,7 @@ export class ShapeUtils {
     });
   }
 
+  //done
   reduceEachShapeSide<PointType, ReturnedValue>(
     shape: PointType[],
     callback: (result: ReturnedValue, side: [PointType, PointType], index: number) => ReturnedValue,
@@ -49,6 +52,7 @@ export class ShapeUtils {
     }, initialValue);
   }
 
+  //done
   forEachShapeSidePair<PointType>(
     shape: PointType[],
     callback: (
@@ -65,6 +69,7 @@ export class ShapeUtils {
     });
   }
 
+  //done
   reduceShapeSidePair<PointType, ReturnedValue>(
     shape: PointType[],
     callback: (
@@ -83,6 +88,7 @@ export class ShapeUtils {
     }, initialValue);
   }
 
+  // done
   reduceShapeOppositeSides<PointType, ReturnedValue>(
     shape: PointType[],
     callback: (
@@ -106,6 +112,7 @@ export class ShapeUtils {
     }, initialValue);
   }
 
+  // done
   sideByIndex<PointType>(
     shape: PointType[],
     index: number,
@@ -116,10 +123,12 @@ export class ShapeUtils {
     ];
   }
 
+  // done
   getPrevPoint<Item>(shape: Item[], index: number): Item {
     return shape[index - 1] || shape[shape.length - 1];
   }
 
+  // done
   getNextPoint<Item>(shape: Item[], index: number): Item {
     return shape[index + 1] || shape[0];
   }

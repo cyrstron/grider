@@ -36,6 +36,7 @@ export class GeometryUtils {
     return {x, y};
   }
 
+  //done
   closestPointOnSection(
     c: grider.Point,
     [a, b]: [grider.Point, grider.Point],
