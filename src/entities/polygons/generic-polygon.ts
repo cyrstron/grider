@@ -3,18 +3,61 @@ import {Point} from '../points/point';
 interface DefaultSegment<PointType = Point> {
 	pointA: PointType;
 	pointB: PointType;
+	intersectionPoint(segment: DefaultSegment<PointType>): PointType | undefined;
 }
 
-export class GenericPolygon<PointType = Point> {
+interface DefaultPoint<PointType = Point> {
+	isEqual(point: PointType): boolean;
+}
+
+export class GenericPolygon<
+	PointType extends DefaultPoint<PointType> = Point,
+	SegmentType extends DefaultSegment<PointType> = DefaultSegment<PointType>,
+> {
 	constructor(
 		public points: PointType[],
 	) {}
+	
+  intersectsWithSegment(segment: SegmentType): PointType[] {
+    return this.reduceSides<PointType[]>((
+			intersects,
+			side,
+		) => {
+			const intersect = side.intersectionPoint(segment);
 
-	sideByIndex(index: number): DefaultSegment<PointType> {
+			if (intersect) {
+				intersects.push(intersect);
+			}
+
+			return intersects;
+		}, []);
+  }
+  
+  get selfIntersections(): PointType[] {
+    return this.reduceOppositeSidesPairs<PointType[]>((
+      intersects,
+      sideA,
+      sideB,
+    ) => {
+      const intersect = sideA.intersectionPoint(sideB);
+
+      if (intersect) {
+        intersects.push(intersect);
+      }
+
+      return intersects;
+    }, [])
+      .filter(
+        (intersect) => this.points
+          .find((point) => intersect.isEqual(point))
+      );
+  }
+
+	sideByIndex(index: number): SegmentType {
 		return {
 			pointA: this.points[index],
 			pointB: this.nextPointByIndex(index)
-		};
+		} as SegmentType;
 	}
 
 	nextPointByIndex(index: number): PointType {
@@ -34,7 +77,7 @@ export class GenericPolygon<PointType = Point> {
 	}
 
 	forEachSide(
-		callback: (side: DefaultSegment<PointType>, index: number) => void
+		callback: (side: SegmentType, index: number) => void
 	): void {
 		this.points.forEach((
 			_point: PointType,
@@ -47,7 +90,7 @@ export class GenericPolygon<PointType = Point> {
 	}
 
 	mapSides<ReturnedValue>(
-		callback: (side: DefaultSegment<PointType>, index: number) => ReturnedValue
+		callback: (side: SegmentType, index: number) => ReturnedValue
 	): ReturnedValue[] {
     return this.points.map((
       _point: PointType,
@@ -59,10 +102,10 @@ export class GenericPolygon<PointType = Point> {
     });
 	}
 
-	reduceSides<ReturnedValue = DefaultSegment<PointType>>(
+	reduceSides<ReturnedValue = SegmentType>(
 		callback: (
 			prevValue: ReturnedValue, 
-			currValue: DefaultSegment<PointType>, 
+			currValue: SegmentType, 
 			currIndex: number
 		) => ReturnedValue,
 		initValue: ReturnedValue
@@ -79,7 +122,7 @@ export class GenericPolygon<PointType = Point> {
 	}
 
 	forEachSidesPair(
-		callback: (sideA: DefaultSegment<PointType>, sideB: DefaultSegment<PointType>) => void
+		callback: (sideA: SegmentType, sideB: SegmentType) => void
 	): void {
     this.forEachSide((sideA, indexA) => {
       this.forEachSide((sideB, indexB) => {
@@ -90,11 +133,11 @@ export class GenericPolygon<PointType = Point> {
     });
 	}
 
-	reduceSidesPairs<ReturnedValue = DefaultSegment<PointType>>(
+	reduceSidesPairs<ReturnedValue = SegmentType>(
 		callback: (
 			prevValue: ReturnedValue, 
-			sideA: DefaultSegment<PointType>, 
-			sideB: DefaultSegment<PointType>
+			sideA: SegmentType, 
+			sideB: SegmentType
 		) => ReturnedValue,
 		initValue: ReturnedValue
 	): ReturnedValue {
@@ -107,11 +150,11 @@ export class GenericPolygon<PointType = Point> {
     }, initValue);
 	}
 
-	reduceOppositeSidesPairs<ReturnedValue = DefaultSegment<PointType>>(
+	reduceOppositeSidesPairs<ReturnedValue = SegmentType>(
 		callback: (
 			prevValue: ReturnedValue, 
-			sideA: DefaultSegment<PointType>, 
-			sideB: DefaultSegment<PointType>
+			sideA: SegmentType, 
+			sideB: SegmentType
 		) => ReturnedValue,
 		initValue: ReturnedValue
 	): ReturnedValue {

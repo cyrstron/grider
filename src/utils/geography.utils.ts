@@ -60,7 +60,7 @@ export class GeographyUtils {
   }
 
 
-  //geopoly, geoline
+  //geoline
   calcPolyAndLineInersections(
     poly: grider.GeoPoint[],
     line: [grider.GeoPoint, grider.GeoPoint],
@@ -143,7 +143,7 @@ export class GeographyUtils {
     }, false);
   }
 
-  // geopoly/line?
+  // geopoly
   calcLngEdges(
     lng1: number,
     lng2: number,
@@ -163,7 +163,7 @@ export class GeographyUtils {
     };
   }
 
-  //geoPoint
+  //done
   calcDeltaLng(
     eastLng: number,
     westLng: number,
@@ -174,7 +174,7 @@ export class GeographyUtils {
   }
 
 
-  //edges
+  //done
   findLngEdges(
     lngs: number[],
   ): grider.LngEdges {

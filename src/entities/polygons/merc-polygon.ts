@@ -2,7 +2,7 @@ import {GenericPolygon} from './generic-polygon';
 import {MercPoint} from '../points/merc-point';
 import {MercSegment} from '../segments/merc-segment';
 
-export class Polygon extends GenericPolygon<MercPoint> {  
+export class MercPolygon extends GenericPolygon<MercPoint, MercSegment> {  
 	sideByIndex(index: number): MercSegment {
     const {pointA, pointB} = super.sideByIndex(index);
 
