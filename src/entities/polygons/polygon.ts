@@ -55,7 +55,7 @@ export class Polyline {
     });
 	}
 
-	reduceSides<ReturnedValue>(
+	reduceSides<ReturnedValue = Segment>(
 		callback: (prevValue: ReturnedValue, currValue: Segment, currIndex: number) => ReturnedValue,
 		initValue: ReturnedValue
 	): ReturnedValue {
@@ -82,7 +82,7 @@ export class Polyline {
     });
 	}
 
-	reduceSidesPairs<ReturnedValue>(
+	reduceSidesPairs<ReturnedValue = Segment>(
 		callback: (prevValue: ReturnedValue, sideA: Segment, sideB: Segment) => ReturnedValue,
 		initValue: ReturnedValue
 	): ReturnedValue {
@@ -95,7 +95,7 @@ export class Polyline {
     }, initValue);
 	}
 
-	reduceOppositeSidesPairs<ReturnedValue>(
+	reduceOppositeSidesPairs<ReturnedValue = Segment>(
 		callback: (prevValue: ReturnedValue, sideA: Segment, sideB: Segment) => ReturnedValue,
 		initValue: ReturnedValue
 	): ReturnedValue {

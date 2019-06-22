@@ -1,5 +1,5 @@
-import {Line} from '../lines/line';
-import {Segment} from '../segments/segment';
+import {Line} from '../../lines/line';
+import {Segment} from '../../segments/segment';
 
 export class Point {
   constructor(

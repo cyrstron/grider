@@ -13,6 +13,7 @@ export class GeographyUtils {
     public shape: ShapeUtils,
   ) {}
 
+  //done
   calcMercDistance(
     pointA: grider.GeoPoint,
     pointB: grider.GeoPoint,
@@ -37,6 +38,7 @@ export class GeographyUtils {
     );
   }
 
+  //geoPoly
   calcPolyItselfIntersections(
     poly: grider.GeoPoint[],
   ): grider.GeoPoint[] {
@@ -57,6 +59,8 @@ export class GeographyUtils {
       });
   }
 
+
+  //geopoly, geoline
   calcPolyAndLineInersections(
     poly: grider.GeoPoint[],
     line: [grider.GeoPoint, grider.GeoPoint],
@@ -80,6 +84,7 @@ export class GeographyUtils {
     }, []);
   }
 
+  //geopoly
   polyContainsPoint(
     poly: grider.GeoPoint[],
     {lat, lng}: grider.GeoPoint,
@@ -138,6 +143,7 @@ export class GeographyUtils {
     }, false);
   }
 
+  // geopoly/line?
   calcLngEdges(
     lng1: number,
     lng2: number,
@@ -157,6 +163,7 @@ export class GeographyUtils {
     };
   }
 
+  //geoPoint
   calcDeltaLng(
     eastLng: number,
     westLng: number,
@@ -166,6 +173,8 @@ export class GeographyUtils {
     return Math.min(east, west);
   }
 
+
+  //edges
   findLngEdges(
     lngs: number[],
   ): grider.LngEdges {
@@ -193,6 +202,7 @@ export class GeographyUtils {
     return edges;
   }
 
+  //done
   closestPointOnSection(
     point: grider.GeoPoint,
     [pointA, pointB]: [grider.GeoPoint, grider.GeoPoint],
@@ -244,6 +254,7 @@ export class GeographyUtils {
     };
   }
 
+  //done
   calcSectionsIntersect(
     [pointStart1, pointEnd1]: [grider.GeoPoint, grider.GeoPoint],
     [pointStart2, pointEnd2]: [grider.GeoPoint, grider.GeoPoint],
@@ -312,6 +323,7 @@ export class GeographyUtils {
     };
   }
 
+  //done
   spherToMercMap(
     point: grider.GeoPoint,
   ): grider.Point {
@@ -323,6 +335,7 @@ export class GeographyUtils {
     };
   }
 
+  //done
   mercToSpherMap(
     {x, y}: grider.Point,
   ): grider.GeoPoint {
@@ -332,6 +345,8 @@ export class GeographyUtils {
     });
   }
 
+
+  //done
   spherToMercAbs(
     point: grider.GeoPoint,
   ): grider.Point {
@@ -343,6 +358,7 @@ export class GeographyUtils {
     };
   }
 
+  //done
   spherToMercGeo(
     point: grider.GeoPoint,
   ): grider.GeoPoint {
@@ -354,6 +370,7 @@ export class GeographyUtils {
     };
   }
 
+  //done
   spherToMercRel(
     {lat, lng}: grider.GeoPoint,
   ): grider.Point {
@@ -363,12 +380,14 @@ export class GeographyUtils {
     };
   }
 
+  //done
   spherLngToMercX(
     lng: number,
   ): number {
     return this.math.degToRad(lng);
   }
 
+  //done
   spherLatToMercY(
     lat: number,
   ): number {
@@ -379,6 +398,7 @@ export class GeographyUtils {
     );
   }
 
+  //done
   mercToSpherAbs(
     {x, y}: grider.Point,
   ): grider.GeoPoint {
@@ -388,6 +408,7 @@ export class GeographyUtils {
     });
   }
 
+  //done
   mercToSpherGeo(
     {lng, lat}: grider.GeoPoint,
   ): grider.GeoPoint {
@@ -397,6 +418,7 @@ export class GeographyUtils {
     });
   }
 
+  //done
   mercToSpherRel(
     {x, y}: grider.Point,
   ): grider.GeoPoint {
@@ -409,12 +431,14 @@ export class GeographyUtils {
     };
   }
 
+  //done
   mercXToSpherLng(
     x: number,
   ): number {
     return this.math.radToDeg(x);
   }
 
+  //done
   mercYToSpherLat(
     y: number,
   ): number {
@@ -425,6 +449,7 @@ export class GeographyUtils {
     return this.math.radToDeg(latRad);
   }
 
+  //done
   formatGeoPoint(
     geoPoint: grider.GeoPoint,
   ): grider.GeoPoint {
@@ -448,10 +473,12 @@ export class GeographyUtils {
     return result;
   }
 
+  //done
   formatSpherValue(value: number) {
     return +value.toFixed(7);
   }
 
+  //done
   reduceLat(lat: number): number {
     if (lat > 360 || lat < -360) {
       lat %= 360;
@@ -466,6 +493,7 @@ export class GeographyUtils {
     }
   }
 
+  //done
   reduceLng(lng: number): number {
     if (lng > 360 || lng < -360) {
       lng %= 360;
@@ -480,18 +508,21 @@ export class GeographyUtils {
     }
   }
 
+  //rhumb
   calcLngLoxEquation(
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
   ): (lat: number) => number | void {
     return (lat: number) => this.calcLngByLatOnLox(lat, loxPoints);
   }
 
+  //rhumb
   calcLatLoxEquation(
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
   ): (lng: number) => number | void {
     return (lng: number) => this.calcLatByLngOnLox(lng, loxPoints);
   }
 
+  //rhumb
   calcLngByLatOnLox(
     lat: number,
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
@@ -540,6 +571,7 @@ export class GeographyUtils {
     return this.reduceLng(lng);
   }
 
+  //rhumb
   calcLatByLngOnLox(
     lng: number,
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
@@ -562,6 +594,7 @@ export class GeographyUtils {
     return this.reduceLng(lat);
   }
 
+  //config
   calcInitialCellWidth(
     desiredSize: number,
     sizeCoof: number,
@@ -581,6 +614,7 @@ export class GeographyUtils {
     return result * sizeCoof;
   }
 
+  //config
   calcInitialCellHeight(desiredSize: number): number {
     const minWidth = this.constants.meridianLength / 3600000000;
     const relPolyWidth = Math.round(desiredSize / minWidth);

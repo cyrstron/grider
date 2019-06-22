@@ -16,6 +16,7 @@ export class MathUtils {
       return str.slice(0, zeroIndex - 1) + '0'.repeat(strLen - zeroIndex + 1);
     }
   }
+  
   calcClosestMultiple(divider: number, dividend: number): number {
     let ascDivider: number = divider;
     let descDivider: number = divider;
