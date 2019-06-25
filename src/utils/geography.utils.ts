@@ -38,7 +38,7 @@ export class GeographyUtils {
     );
   }
 
-  //geoPoly
+  //done
   calcPolyItselfIntersections(
     poly: grider.GeoPoint[],
   ): grider.GeoPoint[] {
@@ -60,7 +60,7 @@ export class GeographyUtils {
   }
 
 
-  //geoline
+  //done
   calcPolyAndLineInersections(
     poly: grider.GeoPoint[],
     line: [grider.GeoPoint, grider.GeoPoint],
@@ -84,7 +84,7 @@ export class GeographyUtils {
     }, []);
   }
 
-  //geopoly
+  //done
   polyContainsPoint(
     poly: grider.GeoPoint[],
     {lat, lng}: grider.GeoPoint,
@@ -143,7 +143,7 @@ export class GeographyUtils {
     }, false);
   }
 
-  // geopoly
+  // done
   calcLngEdges(
     lng1: number,
     lng2: number,
@@ -508,21 +508,21 @@ export class GeographyUtils {
     }
   }
 
-  //rhumb
+  //done
   calcLngLoxEquation(
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
   ): (lat: number) => number | void {
     return (lat: number) => this.calcLngByLatOnLox(lat, loxPoints);
   }
 
-  //rhumb
+  //done
   calcLatLoxEquation(
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
   ): (lng: number) => number | void {
     return (lng: number) => this.calcLatByLngOnLox(lng, loxPoints);
   }
 
-  //rhumb
+  //done
   calcLngByLatOnLox(
     lat: number,
     loxPoints: [grider.GeoPoint, grider.GeoPoint],
@@ -571,7 +571,7 @@ export class GeographyUtils {
     return this.reduceLng(lng);
   }
 
-  //rhumb
+  //done
   calcLatByLngOnLox(
     lng: number,
     loxPoints: [grider.GeoPoint, grider.GeoPoint],

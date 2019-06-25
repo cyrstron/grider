@@ -4,7 +4,7 @@ import {
   xToSemiLng,
   yToSemiLat,
   reduceX,
-} from './utils';
+} from '../../../utils/merc.utils';
 
 import {Point} from '../point';
 import {GeoPoint} from '../geo-point';

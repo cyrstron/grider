@@ -140,13 +140,13 @@ export class Line {
   }
 
   static fromTwoPoints(
-      {x: x1, y: y1}: Point,
-      {x: x2, y: y2}: Point,
+    {x: x1, y: y1}: Point,
+    {x: x2, y: y2}: Point,
   ): Line {
-      return new Line(
-          y1 - y2,
-          x2 - x1,
-          -((x1 * y2) - (y1 * x2)),
-      );
+    return new Line(
+      y1 - y2,
+      x2 - x1,
+      -((x1 * y2) - (y1 * x2)),
+    );
   }   
 }

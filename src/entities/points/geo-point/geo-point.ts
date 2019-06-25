@@ -5,7 +5,7 @@ import {
   reduceLng,
   formatLat,
   formatLng,
-} from './utils';
+} from '../../../utils/geo.utils';
 import {MercPoint} from '../merc-point';
 
 export class GeoPoint {

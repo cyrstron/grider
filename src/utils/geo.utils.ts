@@ -1,4 +1,4 @@
-import {degToRad} from '../../../../utils/math';
+import {degToRad} from './math';
 
 export function latToY(lat: number): number {
   const yRad = Math.log(
@@ -33,7 +33,6 @@ export function formatLng(lng: number): number {
   
   return +lng.toFixed(7);
 }
-
 
 export function reduceLat(lat: number): number {
   if (lat > 360 || lat < -360) {

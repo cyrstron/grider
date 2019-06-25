@@ -1,11 +1,17 @@
 import {MercSegment} from './merc-segment';
 import {GeoPoint} from '../points/geo-point';
+import {RhumbLine} from '../lines/rhumb-line';
+import {GeoPolygon} from '../polygons/geo-polygon';
 
 export class GeoSegment {
+  rhumbLine: RhumbLine;
+
   constructor(
     public pointA: GeoPoint,
     public pointB: GeoPoint,
-  ) {}
+  ) {
+    this.rhumbLine = RhumbLine.fromTwoGeoPoints(pointA, pointB);
+  }
 
   toMerc(): MercSegment {
     const pointA = this.pointA.toMerc();
@@ -19,6 +25,10 @@ export class GeoSegment {
     const pointB = this.pointB.toOppositeHemisphere();
 
     return new GeoSegment(pointA, pointB);
+  }
+
+  intersectsWithPoly(poly: GeoPolygon): GeoPoint[] {
+    return poly.intersectsWithSegment(this);
   }
 
   intersectionPoint(segment: GeoSegment): GeoPoint | undefined {
@@ -58,6 +68,26 @@ export class GeoSegment {
     const closest = mercSegment.closestToPoint(mercPoint).toSphere();
 
     return isAntiMeridian ? closest.toOppositeHemisphere() : closest;
+  }
+
+  latByLng(lng: number): number | undefined {
+    const lat = this.rhumbLine.latByLng(lng);
+
+    if (lat === undefined) return;
+
+    if (!this.containsLat(lat)) return;
+
+    return lat;
+  }
+
+  lngByLat(lat: number): number | undefined {
+    const lng = this.rhumbLine.lngByLat(lat);
+
+    if (lng === undefined) return;
+
+    if (!this.containsLng(lng)) return;
+
+    return lng;
   }
 
   get isAntiMeridian(): boolean {
@@ -110,5 +140,28 @@ export class GeoSegment {
     return this.pointA.isSouthernTo(this.pointB) ?
       this.pointA :
       this.pointB;
+  }
+
+  containsLat(lat: number): boolean {
+    const {lat: latA} = this.pointA;
+    const {lat: latB} = this.pointB;
+
+    return Math.max(latA, latB) > lat &&
+      Math.min(latA, latB) < lat;
+  }
+
+  containsLng(lng: number): boolean {
+    const {lng: lngA} = this.pointA;
+    const {lng: lngB} = this.pointB;
+
+    const maxLng = Math.max(lngA, lngB);
+    const minLng = Math.min(lngA, lngB);
+
+    if (!this.isAntiMeridian) {
+      return maxLng > lng && minLng < lng;
+    } else {
+      return (maxLng < lng && lng < 360) ||
+        (minLng > lng && lng > 0);
+    }   
   }
 }
