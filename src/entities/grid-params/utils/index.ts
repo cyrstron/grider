@@ -1,5 +1,5 @@
 import {constants} from '../../../constants';
-import {calcClosestMultiple} from '../../../utils/math';
+import {calcClosestMultiple} from '../../../utils/math.utils';
 
 const MERC_COOF = Math.PI / 2;
 const SIN60 = Math.sqrt(3) / 2;
