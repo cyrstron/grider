@@ -1,3 +1,6 @@
+import {constants} from '../../../constants';
+import {calcClosestMultiple} from '../../../utils/math';
+
 const MERC_COOF = Math.PI / 2;
 const SIN60 = Math.sqrt(3) / 2;
 
@@ -103,4 +106,40 @@ export function calcAxesParams(
       angle,
     },
   ];
+}
+
+export function calcInitialCellWidth(
+  desiredSize: number,
+  sizeCoof: number,
+): number {
+  const minWidth = constants.equatorLength / 3600000000;
+  const relPolyWidth = Math.round(desiredSize / minWidth);
+  let result = calcClosestMultiple(relPolyWidth, 3600000000);
+
+  if (result > 1800000000) {
+    result = 1800000000;
+  }
+
+  if (result < 1) {
+    result = 1;
+  }
+
+  return result * sizeCoof;
+}
+
+export function calcInitialCellHeight(desiredSize: number): number {
+  const minWidth = constants.meridianLength / 3600000000;
+  const relPolyWidth = Math.round(desiredSize / minWidth);
+
+  let result = calcClosestMultiple(relPolyWidth, 1800000000);
+
+  if (result > 1800000000) {
+    result = 1800000000;
+  }
+
+  if (result < 1) {
+    result = 1;
+  }
+
+  return result;
 }

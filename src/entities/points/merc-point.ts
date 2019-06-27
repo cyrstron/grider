@@ -4,10 +4,10 @@ import {
   xToSemiLng,
   yToSemiLat,
   reduceX,
-} from '../../../utils/merc.utils';
+} from '../../utils/merc.utils';
 
-import {Point} from '../point';
-import {GeoPoint} from '../geo-point';
+import {Point} from './point';
+import {GeoPoint} from './geo-point';
 
 export class MercPoint extends Point {
   constructor(x: number, y: number) {

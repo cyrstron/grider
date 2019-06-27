@@ -1,12 +1,14 @@
 import {
   latToY, 
   lngToX, 
+  semiLatToY,
+  semiLngToX,
   reduceLat,
   reduceLng,
   formatLat,
   formatLng,
-} from '../../../utils/geo.utils';
-import {MercPoint} from '../merc-point';
+} from '../../utils/geo.utils';
+import {MercPoint} from './merc-point';
 
 export class GeoPoint {
   lat: number;
@@ -54,6 +56,13 @@ export class GeoPoint {
   toSemiSphere(): GeoPoint {
     return this.toMerc()
       .toSemiSphere();
+  }
+
+  fromSemiSphere(): GeoPoint {
+    const x = semiLngToX(this.lng);
+    const y = semiLatToY(this.lat);
+
+    return new MercPoint(x, y).toSphere();
   }
 
   toFormatted(): GeoPoint {

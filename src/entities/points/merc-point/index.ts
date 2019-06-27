@@ -1,1 +1,0 @@
-export {MercPoint} from './merc-point';
