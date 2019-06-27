@@ -1,6 +1,21 @@
 import {decRemain} from '../../../../utils/math.utils';
+import {GridPoint} from '../../grid-point';
 
-export function roundHexGridPoint(point: grider.PointHex): grider.PointHex {
+export function round(point: GridPoint): grider.GridPoint {
+  const {type} = point.params;
+
+  if (type === 'hex') {
+    const {i, j, k} = point;
+    
+    return roundHexGridPoint({i, j, k: k as number});
+  } else {
+    const {i, j} = point;
+
+    return roundRectGridPoint({i, j});
+  }
+}
+
+function roundHexGridPoint(point: grider.PointHex): grider.PointHex {
   const diffs = calcPointDecimalRemains(point as {[key: string]: number});
   const sortedAxes = Object.keys(diffs)
     .sort((keyA, keyB) => diffs[keyB] - diffs[keyA]);
@@ -25,7 +40,7 @@ export function roundHexGridPoint(point: grider.PointHex): grider.PointHex {
   return roundedPoint;
 }
   
-export function roundRectGridPoint(point: grider.PointRect): grider.PointRect {
+function roundRectGridPoint(point: grider.PointRect): grider.PointRect {
   const roundedPoint = Object.keys(point as {[key: string]: number})
     .reduce((roundedPoint: any, key: string) => {
         roundedPoint[key] = Math.round(point[key]);

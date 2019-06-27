@@ -9,6 +9,9 @@ import {
   formatLng,
 } from '../../utils/geo.utils';
 import {MercPoint} from './merc-point';
+import {GridPoint} from './grid-point';
+import {CenterPoint} from './center-point';
+import {GridParams} from '../grid-params';
 
 export class GeoPoint {
   lat: number;
@@ -51,6 +54,14 @@ export class GeoPoint {
     const y = latToY(this.lat);
 
     return new MercPoint(x, y);
+  }
+
+  toGrid(params: GridParams): GridPoint {
+    return GridPoint.fromGeo(this, params);
+  }
+
+  toCenter(params: GridParams): CenterPoint {
+    return GridPoint.fromGeo(this, params).round();
   }
 
   toSemiSphere(): GeoPoint {
