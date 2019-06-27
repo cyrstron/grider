@@ -8,6 +8,10 @@ import {
   toGeo,
   toGrid,
 } from './utils/transformer';
+import {
+  roundHexGridPoint,
+  roundRectGridPoint,
+} from './utils/rounder';
 
 export class GridPoint {
   i: number;
@@ -57,5 +61,30 @@ export class GridPoint {
     const geoPoint = new GeoPoint(lat, lng);
 
     return correctForGeo(geoPoint, this.params);
+  }
+
+  round(): GridPoint {
+    const {type} = this.params;
+
+    if (type === 'hex') {
+      const {i, j, k} = this;
+
+      const {
+        i: roundedI, 
+        j: roundedJ, 
+        k: roundedK
+      } = roundHexGridPoint({i, j, k: k as number});
+
+      return new GridPoint(this.params, roundedI, roundedJ, roundedK);
+    } else {
+      const {i, j} = this;
+
+      const {
+        i: roundedI, 
+        j: roundedJ
+      } = roundRectGridPoint({i, j});
+
+      return new GridPoint(this.params, roundedI, roundedJ);
+    }
   }
 }
