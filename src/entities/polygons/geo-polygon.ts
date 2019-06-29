@@ -50,7 +50,23 @@ export class GeoPolygon<
     }, []);
   }
 
-  polyContainsPoint(point: GeoPoint): boolean {
+  pointsInsidePoly(poly: GeoPolygon): GeoPoint[] {
+    return this.points.filter((point) => poly.containsPoint(point));
+  }
+  
+  pointsOutsidePoly(poly: GeoPolygon): GeoPoint[] {
+    return this.points.filter((point) => !poly.containsPoint(point));
+  }
+  
+	arePointsInsidePoly(poly: GeoPolygon): boolean {
+		return this.points.every((point) => poly.containsPoint(point));
+  }
+  
+  arePointsOutsidePoly(poly: GeoPolygon): boolean {
+    return this.points.every((point) => !poly.containsPoint(point))
+  }
+
+  containsPoint(point: GeoPoint): boolean {
     const splitSegment = this.splitSectionsByLat(point.lat);
 
     return splitSegment.reduce((

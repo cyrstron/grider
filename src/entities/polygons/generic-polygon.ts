@@ -17,6 +17,17 @@ export class GenericPolygon<
 	constructor(
 		public points: PointType[],
 	) {}
+
+	intersectsSegment(segment: SegmentType) {
+		return this.reduceSides((
+			isIntersects: boolean,
+			side,
+		): boolean => {
+			if (isIntersects) return true;
+
+			return !!side.intersectionPoint(segment);
+		}, false);
+	}
 	
   intersectsWithSegment(segment: SegmentType): PointType[] {
     return this.reduceSides<PointType[]>((

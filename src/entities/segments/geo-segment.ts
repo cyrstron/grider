@@ -31,6 +31,10 @@ export class GeoSegment {
     return poly.intersectsWithSegment(this);
   }
 
+  intersects(segment: GeoSegment): boolean {
+    return !!this.intersectionPoint(segment);
+  }
+
   intersectionPoint(segment: GeoSegment): GeoPoint | undefined {
     let segmentA: GeoSegment = this;
     let segmentB: GeoSegment = segment;
