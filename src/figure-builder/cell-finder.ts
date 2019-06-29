@@ -9,6 +9,7 @@ export class CellFinder {
     public grider: Grider,
   ) {}
 
+  // done
   getNextCellByCellSide(
     initialCellCenter: grider.GridPoint,
     section: [grider.GeoPoint, grider.GeoPoint],
@@ -51,6 +52,7 @@ export class CellFinder {
     return this.grider.calcGridCenterPointByGeoPoint(reducedGeoCenter, gridParams);
   }
 
+  //done
   getNextCellSide(
     initialCellCenter: grider.GridPoint,
     section: [grider.GeoPoint, grider.GeoPoint],
@@ -81,6 +83,26 @@ export class CellFinder {
       .map(({side}) => side);
 
     return intersectedSidesByDistances[0];
+  }
+
+  // done
+  calcNextCellCenter(
+    initialCellCenter: grider.GridPoint | undefined,
+    section: [grider.GeoPoint, grider.GeoPoint],
+    gridParams: grider.GridParams,
+  ): grider.GridPoint | undefined {
+    const [startPoint, endPoint] = section;
+    const startCellCenter = this.grider.calcGridCenterPointByGeoPoint(startPoint, gridParams);
+    const endCellCenter = this.grider.calcGridCenterPointByGeoPoint(endPoint, gridParams);
+
+    if (isEqual(startCellCenter, endCellCenter)) return;
+
+    if (!initialCellCenter) return startCellCenter;
+
+    const nextCellSide = this.getNextCellSide(initialCellCenter, section, gridParams);
+    const nextCellCenter = this.getNextCellByCellSide(initialCellCenter, nextCellSide, gridParams);
+
+    if (!isEqual(nextCellCenter, endCellCenter)) return nextCellCenter;
   }
 
   checkStartPoint(
@@ -217,25 +239,7 @@ export class CellFinder {
     }
   }
 
-  calcNextCellCenter(
-    initialCellCenter: grider.GridPoint | undefined,
-    section: [grider.GeoPoint, grider.GeoPoint],
-    gridParams: grider.GridParams,
-  ): grider.GridPoint | undefined {
-    const [startPoint, endPoint] = section;
-    const startCellCenter = this.grider.calcGridCenterPointByGeoPoint(startPoint, gridParams);
-    const endCellCenter = this.grider.calcGridCenterPointByGeoPoint(endPoint, gridParams);
-
-    if (isEqual(startCellCenter, endCellCenter)) return;
-
-    if (!initialCellCenter) return startCellCenter;
-
-    const nextCellSide = this.getNextCellSide(initialCellCenter, section, gridParams);
-    const nextCellCenter = this.getNextCellByCellSide(initialCellCenter, nextCellSide, gridParams);
-
-    if (!isEqual(nextCellCenter, endCellCenter)) return nextCellCenter;
-  }
-
+  // done
   getNearestPoints(
     point: grider.GeoPoint,
     gridParams: grider.GridParams,

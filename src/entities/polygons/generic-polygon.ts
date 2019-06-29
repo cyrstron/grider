@@ -60,18 +60,24 @@ export class GenericPolygon<
 		} as SegmentType;
 	}
 
-	nextPointByIndex(index: number): PointType {
+	nextIndex(index: number) {
+		return index === this.points.length - 1 ? 0 : index + 1;
+	}
+
+	prevIndex(index: number) {
 		const {length} = this.points;
 
-		const nextIndex = index === length - 1 ? 0 : index + 1;
+		return index === 0 ? length - 1 : index - 1;
+	}
+
+	nextPointByIndex(index: number): PointType {
+		const nextIndex = this.nextIndex(index);
 
 		return this.points[nextIndex];
 	}
 
 	prevPointByIndex(index: number): PointType {
-		const {length} = this.points;
-
-		const prevIndex = index === 0 ? length - 1 : index - 1;
+		const prevIndex = this.prevIndex(index);
 
 		return this.points[prevIndex];
 	}

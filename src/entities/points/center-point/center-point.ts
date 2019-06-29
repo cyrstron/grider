@@ -1,5 +1,5 @@
 import {GridPoint} from '../grid-point';
-import {GeoSegment} from '../../segments/geo-segment';
+import {CellSide} from '../../segments/cell-side';
 import {
   round,
 } from './utils/rounder';
@@ -25,8 +25,8 @@ export class CenterPoint extends GridPoint {
     return new CenterPoint(point.params, i, j ,k);
   }
 
-  nextCenterByCellSide(cellSide: GeoSegment): GridPoint {
-    return getNextCenterByCellSide(this, cellSide)
+  nextCenterByCellSide(cellSide: CellSide): CenterPoint {
+    return getNextCenterByCellSide(this, cellSide);
   }
 
   get neighbors() {

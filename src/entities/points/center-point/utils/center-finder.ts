@@ -1,15 +1,14 @@
 import {CenterPoint} from '../center-point';
-import {GeoSegment} from '../../../segments/geo-segment';
-import {GridSegment} from '../../../segments/grid-segment';
+import {CellSide} from '../../../segments/cell-side';
 
 export function getNextCenterByCellSide(
   center: CenterPoint,
-  segment: GeoSegment,
+  segment: CellSide,
 ): CenterPoint {
   const {i, j, k, params} = center;
   const {
     averagePoint: {i: averI, j: averJ, k: averK}
-  } = GridSegment.fromGeo(segment, params);
+  } = segment;
 
   const nextI = Math.round(i + (averI - i) * 2);
   const nextJ = Math.round(j + (averJ - j) * 2);

@@ -28,6 +28,13 @@ export class GridPoint {
     this.k = k;
   }
 
+  isEqual(point: GridPoint): boolean {
+    const {i: iA, j: jA, k: kA} = this;
+    const {i: iB, j: jB, k: kB} = point;
+
+    return (iA === iB) && (jA === jB) && (kA === kB);
+  }
+
   static fromGeo(point: GeoPoint, params: GridParams) {
     const correctedGeoPoint = correctForGrid(point, params);
     const {

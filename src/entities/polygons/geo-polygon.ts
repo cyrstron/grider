@@ -2,11 +2,13 @@ import {GenericPolygon} from './generic-polygon';
 import {GeoPoint} from '../points/geo-point';
 import {GeoSegment} from '../segments/geo-segment';
 
-export class GeoPolygon extends GenericPolygon<GeoPoint, GeoSegment> {  
-	sideByIndex(index: number): GeoSegment {
+export class GeoPolygon<
+  SegmentType extends GeoSegment = GeoSegment
+> extends GenericPolygon<GeoPoint, SegmentType> {  
+	sideByIndex(index: number): SegmentType {
     const {pointA, pointB} = super.sideByIndex(index);
 
-    return new GeoSegment(pointA, pointB);
+    return new GeoSegment(pointA, pointB) as SegmentType;
   }
 
   splitSectionsByLat(lat: number): GeoSegment[] {

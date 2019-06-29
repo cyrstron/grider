@@ -22,6 +22,13 @@ export class GeoPoint {
     this.lng = reduceLng(lng);
   }
 
+  inSameCell(point: GeoPoint, params: GridParams): boolean {
+    const cellCenterA = this.toGrid(params);
+    const cellCenterB = point.toGrid(params);
+
+    return cellCenterA.isEqual(cellCenterB);
+  }
+
   isEqual(point: GeoPoint): boolean {
     return this.lat === point.lat && this.lng === point.lng;
   }
