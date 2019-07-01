@@ -10,7 +10,7 @@ export class ShapeValidator {
     public grider: Grider,
     public cellFinder: CellFinder,
   ) {}
-
+//done
   validate(shape: grider.GeoPoint[], gridParams: grider.GridParams): boolean {
     if (shape.length < 3) return false;
 
@@ -30,6 +30,7 @@ export class ShapeValidator {
     return this.geography.calcPolyItselfIntersections(shape);
   }
 
+//done
   getTooCloseCells(
     shape: grider.GeoPoint[],
     gridParams: grider.GridParams,
@@ -80,6 +81,7 @@ export class ShapeValidator {
     return cells;
   }
 
+//done
   getCloseCellIntesectedNeighbors(
     cellCenter: grider.GridPoint,
     shapePeak: grider.GeoPoint,

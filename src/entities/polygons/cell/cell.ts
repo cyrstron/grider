@@ -38,15 +38,21 @@ export class Cell extends GeoPolygon<CellSide> {
     return getIntersectedWithSegmentNeighbor(this, segment);
   }
 
-  intersectedWithPolyNeighbors(
-    poly: GeoPolygon,
+  intersectedWithSegmentsNeighbors(
+    segments: GeoSegment[],
   ): Cell[] {
-    return poly.reduceSides((
-      intersected: Cell[],
-      side: GeoSegment,
+    return segments.reduce((
+      intersectedCells: Cell[],
+      segment: GeoSegment
     ): Cell[] => {
+      const intersected = this.intersectedWithSegmentNeighbor(segment);
 
-    }, [])
+      if (intersected && !intersectedCells.find((cell) => cell.isEqual(intersected))) {
+        intersectedCells.push(intersected)
+      }
+
+      return intersectedCells;
+    }, []);
   }
 
   nearestPeaks(peak: PeakPoint): PeakPoint[] {

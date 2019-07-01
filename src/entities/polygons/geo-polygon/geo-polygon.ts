@@ -3,6 +3,9 @@ import {GeoPoint} from '../../points/geo-point';
 import {GeoSegment} from '../../segments/geo-segment';
 import { Cell } from '../cell';
 
+import {getInvalidCells} from './utils/cells-invalid-for-figure'
+import { GridParams } from '../../grid-params';
+
 export class GeoPolygon<
   SegmentType extends GeoSegment = GeoSegment
 > extends GenericPolygon<GeoPoint, SegmentType> {  
@@ -107,12 +110,22 @@ export class GeoPolygon<
     ) => isContained && segment.containsLng(point.lng) , false);
   }
 
-  get isValidForFigure(): boolean {
+  isValidForFigure(params: GridParams): boolean {
+    if (this.points.length < 3) return false;
+    
+    const {selfIntersections} = this;
 
+    if (selfIntersections.length > 0) return false;
+
+    const invalidCells = this.cellsInvalidForFigure(params);
+    
+    if (invalidCells.length > 0) return false;
+
+    return true;
   }
 
-  get cellsInvalidForFigure(): Cell[] {
-
+  cellsInvalidForFigure(params: GridParams): Cell[] {
+    return getInvalidCells(this, params);
   }
   
 	get easternPoint(): GeoPoint {

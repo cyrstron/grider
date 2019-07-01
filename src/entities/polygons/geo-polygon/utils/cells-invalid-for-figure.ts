@@ -13,12 +13,34 @@ export function getInvalidCells(
     nextSide: GeoSegment
   ): Cell[] => {
     const closestCells = getClosestToPeakCells(prevSide, nextSide, params);
+    const oppositeSides = shape.reduceSides((sides, side) => {
+      if (!side.isEqual(prevSide) && !side.isEqual(nextSide)) {
+        sides.push(side);
+      }
+
+      return sides;
+    }, [] as GeoSegment[]);
+
     const intersectedCells = closestCells.reduce((
       intersectedCells: Cell[],
       cell: Cell
     ): Cell[] => {
+      const intersectedNeighbors = cell.intersectedWithSegmentsNeighbors(oppositeSides)
+        .filter((cell) => !intersectedCells
+          .find((intersected) => intersected.isEqual(cell))
+        );
+
+      intersectedCells.push(...intersectedNeighbors);
+
       return intersectedCells;
-    }, []);
+    }, [])
+      .filter((cell) => !invalidCells
+        .find((invalidCell) => invalidCell.isEqual(cell))
+      );
+
+    invalidCells.push(...intersectedCells);
+
+    return invalidCells;
   }, []);
 }
 

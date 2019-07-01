@@ -11,6 +11,10 @@ export function buildFigurePoints(
   params: GridParams,
   isInner: boolean
 ): GeoPoint[] {
+  if (!shape.isValidForFigure(params)) {
+    return [];
+  }
+
   const figurePoints = shape.reduceSides((
     figurePoints: GeoPoint[],
     shapeSide,

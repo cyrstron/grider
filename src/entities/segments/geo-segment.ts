@@ -74,6 +74,14 @@ export class GeoSegment {
     return isAntiMeridian ? closest.toOppositeHemisphere() : closest;
   }
 
+  isEqual({pointA, pointB}: GeoSegment) {
+    return (
+      this.pointA.isEqual(pointA) && this.pointA.isEqual(pointB)
+    ) || (
+      this.pointA.isEqual(pointB) && this.pointA.isEqual(pointA)
+    );
+  }
+
   mercDistanceToPoint(point: GeoPoint): number {
     const closestPoint = this.closestToPoint(point);
 
