@@ -1,3 +1,5 @@
 import {Line} from './line';
 
-export class MercLine extends Line {}
+export class MercLine extends Line {
+  
+}

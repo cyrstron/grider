@@ -1,13 +1,14 @@
-import {GeoPolygon} from '../geo-polygon';
+import {GeoPolygon} from '../geo-polygon/geo-polygon';
 import {CenterPoint} from '../../points/center-point';
 import {CellSide} from '../../segments/cell-side';
 import {GeoSegment} from '../../segments/geo-segment';
 import { GeoPoint } from '../../points/geo-point';
 import { GridPoint } from '../../points/grid-point';
 import { GridParams } from '../../grid-params';
+import { PeakPoint } from '../../points/peak-point';
 
 import {expand} from './utils/cell-expander';
-import { PeakPoint } from '../../points/peak-point';
+import {getIntersectedWithSegmentNeighbor} from './utils/intersected-neighbors'
 
 export class Cell extends GeoPolygon<CellSide> {
   center: CenterPoint;
@@ -22,6 +23,30 @@ export class Cell extends GeoPolygon<CellSide> {
 
     this.peaks = peaks;
     this.center = center;
+  }
+
+  findEqualGeoPoint(
+    point: GeoPoint
+  ): GeoPoint | undefined {
+    return this.points
+    .find((cellPoint) => cellPoint.isEqual(point));
+  }
+
+  intersectedWithSegmentNeighbor(
+    segment: GeoSegment
+  ): Cell | undefined {
+    return getIntersectedWithSegmentNeighbor(this, segment);
+  }
+
+  intersectedWithPolyNeighbors(
+    poly: GeoPolygon,
+  ): Cell[] {
+    return poly.reduceSides((
+      intersected: Cell[],
+      side: GeoSegment,
+    ): Cell[] => {
+
+    }, [])
   }
 
   nearestPeaks(peak: PeakPoint): PeakPoint[] {

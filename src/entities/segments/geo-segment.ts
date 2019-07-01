@@ -1,7 +1,7 @@
 import {MercSegment} from './merc-segment';
 import {GeoPoint} from '../points/geo-point';
 import {RhumbLine} from '../lines/rhumb-line';
-import {GeoPolygon} from '../polygons/geo-polygon';
+import {GeoPolygon} from '../polygons/geo-polygon/geo-polygon';
 
 export class GeoSegment {
   rhumbLine: RhumbLine;
@@ -72,6 +72,12 @@ export class GeoSegment {
     const closest = mercSegment.closestToPoint(mercPoint).toSphere();
 
     return isAntiMeridian ? closest.toOppositeHemisphere() : closest;
+  }
+
+  mercDistanceToPoint(point: GeoPoint): number {
+    const closestPoint = this.closestToPoint(point);
+
+    return point.calcMercDistance(closestPoint);
   }
 
   latByLng(lng: number): number | undefined {

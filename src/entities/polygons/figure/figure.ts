@@ -1,4 +1,4 @@
-import {GeoPolygon} from '../geo-polygon';
+import {GeoPolygon} from '../geo-polygon/geo-polygon';
 
 export class Figure extends GeoPolygon {
   shape: GeoPolygon;

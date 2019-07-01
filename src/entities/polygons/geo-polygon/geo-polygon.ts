@@ -1,12 +1,19 @@
-import {GenericPolygon} from './generic-polygon';
-import {GeoPoint} from '../points/geo-point';
-import {GeoSegment} from '../segments/geo-segment';
+import {GenericPolygon} from '../generic-polygon';
+import {GeoPoint} from '../../points/geo-point';
+import {GeoSegment} from '../../segments/geo-segment';
+import { Cell } from '../cell';
 
 export class GeoPolygon<
   SegmentType extends GeoSegment = GeoSegment
 > extends GenericPolygon<GeoPoint, SegmentType> {  
 	sideByIndex(index: number): SegmentType {
     const {pointA, pointB} = super.sideByIndex(index);
+
+    return new GeoSegment(pointA, pointB) as SegmentType;
+  }
+
+	sideByIndexInversed(index: number): SegmentType {
+    const {pointA, pointB} = super.sideByIndexInversed(index);
 
     return new GeoSegment(pointA, pointB) as SegmentType;
   }
@@ -50,6 +57,31 @@ export class GeoPolygon<
     }, []);
   }
 
+  intersectsSegment(segment: GeoSegment): boolean {
+    return super.intersectsSegment(segment);
+  }
+  intersectsWithSegment(segment: GeoSegment): GeoPoint[] {
+    return super.intersectsWithSegment(segment);
+  }
+
+  closestSideToSegment(segment: GeoSegment): SegmentType {
+    const [pointA, pointB] = this.pointsByDistanceToSegment(segment);
+
+    const indexA = this.points.indexOf(pointA);
+    const indexB = this.points.indexOf(pointB);
+
+    return this.sideByIndex(Math.min(indexA, indexB));
+  }
+
+  pointsByDistanceToSegment(segment: GeoSegment): GeoPoint[] {
+    return [...this.points].sort((pointA, pointB) => {
+      const distanceA = segment.mercDistanceToPoint(pointA);
+      const distanceB = segment.mercDistanceToPoint(pointB);
+
+      return distanceA - distanceB;
+    })
+  }
+
   pointsInsidePoly(poly: GeoPolygon): GeoPoint[] {
     return this.points.filter((point) => poly.containsPoint(point));
   }
@@ -73,6 +105,14 @@ export class GeoPolygon<
       isContained,
       segment
     ) => isContained && segment.containsLng(point.lng) , false);
+  }
+
+  get isValidForFigure(): boolean {
+
+  }
+
+  get cellsInvalidForFigure(): Cell[] {
+
   }
   
 	get easternPoint(): GeoPoint {

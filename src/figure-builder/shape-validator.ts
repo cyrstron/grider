@@ -25,6 +25,7 @@ export class ShapeValidator {
     return true;
   }
 
+  // done
   getSelfIntersectsPoints(shape: grider.GeoPoint[]): grider.GeoPoint[] {
     return this.geography.calcPolyItselfIntersections(shape);
   }

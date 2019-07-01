@@ -18,7 +18,7 @@ export class GenericPolygon<
 		public points: PointType[],
 	) {}
 
-	intersectsSegment(segment: SegmentType) {
+	intersectsSegment(segment: DefaultSegment<PointType>): boolean {
 		return this.reduceSides((
 			isIntersects: boolean,
 			side,
@@ -29,7 +29,7 @@ export class GenericPolygon<
 		}, false);
 	}
 	
-  intersectsWithSegment(segment: SegmentType): PointType[] {
+  intersectsWithSegment(segment: DefaultSegment<PointType>): PointType[] {
     return this.reduceSides<PointType[]>((
 			intersects,
 			side,
@@ -68,6 +68,13 @@ export class GenericPolygon<
 		return {
 			pointA: this.points[index],
 			pointB: this.nextPointByIndex(index)
+		} as SegmentType;
+	}
+
+	sideByIndexInversed(index: number): SegmentType {
+		return {
+			pointA: this.points[index],
+			pointB: this.prevPointByIndex(index)
 		} as SegmentType;
 	}
 
@@ -165,6 +172,26 @@ export class GenericPolygon<
         return callback(initValue, sideA, sideB);
       }, initValue);
     }, initValue);
+	}
+
+	reduceNeighboringSidesPairs<ReturnedValue = SegmentType>(
+		callback: (
+			prevValue: ReturnedValue, 
+			prevSide: SegmentType, 
+			nextSide: SegmentType
+		) => ReturnedValue,
+		initValue: ReturnedValue
+	) {
+		return this.points.reduce((
+			initValue,
+			_point,
+			index
+		): ReturnedValue => {
+			const prevSide = this.sideByIndexInversed(index);
+			const nextSide = this.sideByIndex(index);
+
+			return callback(initValue, prevSide, nextSide);
+		}, initValue);
 	}
 
 	reduceOppositeSidesPairs<ReturnedValue = SegmentType>(
