@@ -425,6 +425,8 @@ export class BorderRenderer {
     };
   }
 
+
+  //done 
   checkPoint(
     figure: grider.GeoPoint[],
     distances: number[],
@@ -513,6 +515,7 @@ export class BorderRenderer {
     return toBeAdded;
   }
 
+  //done
   simplifyFigure(
     figure: grider.GeoPoint[],
     shape: grider.GeoPoint[],

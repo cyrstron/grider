@@ -5,6 +5,7 @@ import { GridParams } from "../../../grid-params";
 import { Cell } from "../../cell";
 
 import {findStartPointForSide, recalcStartCell} from './start-point-finder';
+import {cleanFigure} from './clean-figure';
 
 export function buildFigurePoints(  
   shape: GeoPolygon,
@@ -22,7 +23,7 @@ export function buildFigurePoints(
     calcSidePoints(shapeSide, shape, figurePoints, params, isInner)
   ), []);
 
-  return figurePoints;
+  return cleanFigure(figurePoints);
 }
 
 function calcSidePoints(

@@ -70,4 +70,21 @@ export class GridPoint {
   round(): CenterPoint {
     return CenterPoint.fromGrid(this);
   }
+
+  onSameAxis(prevPoint: GridPoint, nextPoint: GridPoint) {
+    if (this.params.type === 'hex') {
+      return 0 === Math.round((
+        (prevPoint.i - this.i) * (nextPoint.j - this.j) -
+        (nextPoint.i - this.i) * (prevPoint.j - this.j)
+      ) * 3);
+    } else {
+      return (
+        this.j === prevPoint.j || this.i === prevPoint.i
+      ) && (
+        this.j === nextPoint.j || this.i === nextPoint.i
+      ) && (
+        nextPoint.j === prevPoint.j || nextPoint.i === prevPoint.i
+      )
+    }
+  }
 }
