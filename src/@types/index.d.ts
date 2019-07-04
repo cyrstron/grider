@@ -93,6 +93,7 @@ declare namespace grider {
     equatorLength: number;
     radius: number;
     meridianLength: number;
+    googleTileSize: number;
   }  
 
   export interface PatternConfig {
