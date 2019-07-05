@@ -5,6 +5,7 @@ import {
   calcInitialCellWidth,
   calcInitialCellHeight,
 } from './utils';
+import { TileMercPoint } from '../points/tile-merc-point';
 
 export class GridParams {
   isHorizontal: boolean;
@@ -31,5 +32,13 @@ export class GridParams {
     this.initSize = calcInitialCellWidth(cellSize, initSizeCoof),
     this.initHeight = calcInitialCellHeight(cellSize),
     this.correction = correction;
+  }
+
+  minCellSize(tilePoint: TileMercPoint) {
+    const {initSize, initHeight, isHorizontal} = this;
+    const cellSize = isHorizontal ? initSize : initHeight;
+    const initSizeDeg = cellSize / 10000000;
+
+    return initSizeDeg * tilePoint.zoomCoofX / 360;
   }
 }

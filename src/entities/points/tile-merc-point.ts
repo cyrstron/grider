@@ -27,7 +27,7 @@ export class TileMercPoint extends MercPoint {
     this.zoom = zoom;
   }
 
-  gridTileStartDelta(params: GridParams): grider.Point {
+  gridPatternStartPoint(params: GridParams): TileMercPoint {
     const gridCenter = this.toSphere().toCenter(params);
     const {northWest} = gridCenter.northWestNeighbors;
     const gridTileTopLeft = northWest.toGeo().toMerc();
@@ -39,10 +39,21 @@ export class TileMercPoint extends MercPoint {
       this.zoom,
     );
 
-    return {
-      x: tilePoint.tileX - this.tileX,
-      y: tilePoint.tileY - this.tileY
-    }
+    return TileMercPoint.fromTile(
+      tilePoint.tileX - this.tileX,
+      tilePoint.tileY - this.tileY,
+      this.tileWidth,
+      this.tileHeight,
+      this.zoom,
+    );
+  }
+
+  get zoomCoofX(): number {
+    return 2 ** this.zoom * constants.googleTileSize / this.tileWidth;
+  }
+
+  get zoomCoofY(): number {
+    return 2 ** this.zoom * constants.googleTileSize / this.tileHeight;    
   }
 
   static fromTile(    

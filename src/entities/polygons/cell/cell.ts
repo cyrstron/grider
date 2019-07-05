@@ -9,6 +9,7 @@ import { PeakPoint } from '../../points/peak-point';
 
 import {expand} from './utils/cell-expander';
 import {getIntersectedWithSegmentNeighbor} from './utils/intersected-neighbors'
+import { TileMercPoint } from '../../points/tile-merc-point';
 
 export class Cell extends GeoPolygon<CellSide> {
   center: CenterPoint;

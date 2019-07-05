@@ -1,11 +1,14 @@
 import { GridPoint } from "../../../points/grid-point";
 import { GeoPoint } from "../../../points/geo-point";
 import { GridParams } from "../../../grid-params";
+import { MercPoint } from "../../../points/merc-point";
+import { TileMercPoint } from "../../../points/tile-merc-point";
 
 export function expandTile(
   geoPoint: GeoPoint,
+  tilePoint: TileMercPoint,
   params: GridParams,
-): GeoPoint[][] {
+): TileMercPoint[][] {
   const {northWestNeighbors: {northWest}} = geoPoint.toCenter(params);
 
   let gridTilePoints: grider.GridPoint[][];
@@ -17,7 +20,16 @@ export function expandTile(
   }
 
   return gridTilePoints.map((points) => points
-    .map(({i, j, k}) => new GridPoint(params, i, j, k).toGeo())
+    .map(({i, j, k}) => {
+      const mercPoint = new GridPoint(params, i, j, k).toGeo().toMerc();
+
+      return TileMercPoint.fromMerc(
+        mercPoint, 
+        tilePoint.tileWidth,
+        tilePoint.tileHeight,
+        tilePoint.zoom,
+      );
+    })
   );
 }
 
