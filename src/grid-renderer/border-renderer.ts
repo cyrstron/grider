@@ -302,48 +302,6 @@ export class BorderRenderer {
     }, {from: min, to: max});
   }
 
-  getClosestLatKeys(
-    lat: number,
-    indexation: Indexation,
-  ): number[] | undefined {
-    let latStr = lat + '';
-    let keys: number[] | undefined;
 
-    while (true) {
-      keys = indexation.latKeysIndexation[latStr];
-
-      if (keys) break;
-
-      const nextStr = this.math.floorNumStrByOrder(latStr);
-
-      if (nextStr === latStr) break;
-
-      latStr = nextStr;
-    }
-
-    return keys;
-  }
-
-  getClosestLngKeys(
-    lng: number,
-    indexation: Indexation,
-  ): number[] | undefined {
-    let lngStr = lng + '';
-    let keys: number[] | undefined;
-
-    while (!keys) {
-      keys = indexation.lngKeysIndexation[lngStr];
-
-      if (keys) break;
-
-      const nextStr = this.math.floorNumStrByOrder(lngStr);
-
-      if (nextStr === lngStr) break;
-
-      lngStr = nextStr;
-    }
-
-    return keys;
-  }
 
 }
