@@ -1,6 +1,6 @@
-import {TileMercPoint} from '../../points/tile-merc-point';
-import { GridParams } from '../../grid-params';
-import { GridTile } from '../grid-tile/grid-tile';
+import {TileMercPoint} from '../points/tile-merc-point';
+import { GridParams } from '../grid-params';
+import { GridTile } from './grid-tile/grid-tile';
 
 export class GridPattern {
   constructor(

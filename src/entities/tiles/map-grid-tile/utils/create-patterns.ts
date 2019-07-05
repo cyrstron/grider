@@ -1,5 +1,5 @@
 import { TileMercPoint } from "../../../points/tile-merc-point";
-import { GridPattern } from "../../grid-pattern/grid-pattern";
+import { GridPattern } from "../../grid-pattern";
 import { GridParams } from "../../../grid-params";
 
 export function createPatterns(

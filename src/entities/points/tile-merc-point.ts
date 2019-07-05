@@ -96,4 +96,76 @@ export class TileMercPoint extends MercPoint {
       zoom
     );
   }
+
+  get north() {
+    const {
+        tileX,
+        tileY,
+        tileHeight,
+        tileWidth,
+        zoom,
+    } = this;
+    
+    return TileMercPoint.fromTile(
+      tileX,
+      tileY - 1,
+      tileWidth,
+      tileHeight,
+      zoom,
+    );
+  }
+
+  get south() {
+    const {
+        tileX,
+        tileY,
+        tileHeight,
+        tileWidth,
+        zoom,
+    } = this;
+    
+    return TileMercPoint.fromTile(
+      tileX,
+      tileY + 1,
+      tileWidth,
+      tileHeight,
+      zoom,
+    );
+  }
+
+  get east() {
+    const {
+        tileX,
+        tileY,
+        tileHeight,
+        tileWidth,
+        zoom,
+    } = this;
+    
+    return TileMercPoint.fromTile(
+      tileX + 1,
+      tileY,
+      tileWidth,
+      tileHeight,
+      zoom,
+    );
+  }
+
+  get west() {
+    const {
+        tileX,
+        tileY,
+        tileHeight,
+        tileWidth,
+        zoom,
+    } = this;
+    
+    return TileMercPoint.fromTile(
+      tileX - 1,
+      tileY,
+      tileWidth,
+      tileHeight,
+      zoom,
+    );
+  }
 }

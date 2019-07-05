@@ -130,7 +130,7 @@ function checkPoint(
   distances: number[],
   index: number,
   segmentIndexes: number[],
-  params: grider.GridParams,
+  params: GridParams,
   isInner: boolean,
 ): boolean {
   const pointDistance = distances[index];

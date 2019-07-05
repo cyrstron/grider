@@ -1,24 +1,32 @@
 import {GeoPolygon} from '../geo-polygon/geo-polygon';
 import { GridParams } from '../../grid-params';
+import { GeoPoint } from '../../points/geo-point';
 
 import {buildFigurePoints} from './utils/calc-figure-points';
 import {simplifyFigure} from './utils/simplify-figure';
 
 export class Figure extends GeoPolygon {
-  shape: GeoPolygon;
-  params: GridParams;
-  isInner: boolean;
-  fullPoints: GeoPolygon;
-
-  constructor(shape: GeoPolygon, params: GridParams, isInner: boolean) {
-    const fullPoints = buildFigurePoints(shape, params, isInner);
-    const points = simplifyFigure(fullPoints, shape, params);
-
+  constructor(
+    points: GeoPoint[],
+    public shape: GeoPolygon,
+    public params: GridParams,
+    public isInner: boolean,
+    public fullPoints: GeoPolygon,
+  ) {
     super(points);
+  }
 
-    this.fullPoints = new GeoPolygon(fullPoints);
-    this.shape = shape;
-    this.params = params;
-    this.isInner = isInner;
+  fromShape(shape: GeoPolygon, params: GridParams, isInner: boolean) {
+    const figurePoints = buildFigurePoints(shape, params, isInner);
+    const points = simplifyFigure(figurePoints, shape, params);
+    const fullPoints = new GeoPolygon(figurePoints);
+
+    return new Figure(
+      points,
+      shape,
+      params,
+      isInner,
+      fullPoints,
+    );
   }
 }
