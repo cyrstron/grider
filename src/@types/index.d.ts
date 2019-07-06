@@ -1,4 +1,6 @@
 declare namespace grider {
+  export type Cardinal = 'north' | 'south' | 'east' | 'west';
+  
   export interface Point {
     x: number;
     y: number;

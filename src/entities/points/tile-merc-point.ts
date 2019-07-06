@@ -62,7 +62,7 @@ export class TileMercPoint extends MercPoint {
     tileWidth: number, 
     tileHeight: number, 
     zoom: number
-  ) {
+  ): TileMercPoint {
     const x = tileX / (2 ** (zoom) * (constants.googleTileSize / tileWidth));
     const y = tileY / (2 ** (zoom) * (constants.googleTileSize / tileHeight));
     
@@ -82,7 +82,7 @@ export class TileMercPoint extends MercPoint {
     tileWidth: number,
     tileHeight: number,
     zoom: number,
-  ) {
+  ): TileMercPoint {
     const tileX = mercPoint.x * (2 ** (zoom) * (constants.googleTileSize / tileWidth));
     const tileY = mercPoint.y * (2 ** (zoom) * (constants.googleTileSize / tileHeight));
 
@@ -97,7 +97,7 @@ export class TileMercPoint extends MercPoint {
     );
   }
 
-  get north() {
+  get north(): TileMercPoint {
     const {
         tileX,
         tileY,
@@ -115,7 +115,7 @@ export class TileMercPoint extends MercPoint {
     );
   }
 
-  get south() {
+  get south(): TileMercPoint {
     const {
         tileX,
         tileY,
@@ -133,7 +133,7 @@ export class TileMercPoint extends MercPoint {
     );
   }
 
-  get east() {
+  get east(): TileMercPoint {
     const {
         tileX,
         tileY,
@@ -151,7 +151,7 @@ export class TileMercPoint extends MercPoint {
     );
   }
 
-  get west() {
+  get west(): TileMercPoint {
     const {
         tileX,
         tileY,
@@ -167,5 +167,21 @@ export class TileMercPoint extends MercPoint {
       tileHeight,
       zoom,
     );
+  }
+
+  get northBound(): number {
+    return this.north.toSphere().lat;
+  }
+
+  get southBound(): number {
+    return this.south.toSphere().lat;
+  }
+
+  get eastBound(): number {
+    return this.east.toSphere().lng;
+  }
+
+  get westBound(): number {
+    return this.west.toSphere().lng;
   }
 }
