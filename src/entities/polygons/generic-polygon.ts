@@ -7,7 +7,7 @@ interface DefaultSegment<PointType = Point> {
 }
 
 interface DefaultPoint<PointType = Point> {
-	isEqual(point: PointType): boolean;
+	isEqual(point: DefaultPoint<PointType>): boolean;
 }
 
 export class GenericPolygon<

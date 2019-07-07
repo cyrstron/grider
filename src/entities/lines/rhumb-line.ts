@@ -3,10 +3,7 @@ import {Line} from './line';
 import {
   latToY, 
   lngToX, 
-  reduceLat,
   reduceLng,
-  formatLat,
-  formatLng,
 } from '../../utils/geo.utils';
 import {
   xToLng, yToLat

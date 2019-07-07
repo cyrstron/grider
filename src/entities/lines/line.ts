@@ -16,23 +16,28 @@ export class Line {
     return this.a === 0;
   }
 
-  hasPoint({x, y}: Point) {
-    const calcX = this.xByY(y);
-    const calcY = this.xByY(x);
 
-    return calcX === x && calcY === y;
+  hasPoint(point: Point): boolean {
+    const calcX = this.xByY(point.y);
+    const calcY = this.yByX(point.x);
+
+    if (calcX === undefined || calcY === undefined) return false;  
+
+    const calcedPoint = new Point(calcX, calcY);
+
+    return point.isEqual(calcedPoint);
   }
 
   xByY(y: number): number | undefined {
     if (this.isParallelToAxisY) return;
 
-    return -(this.c + this.b * y) / this.a; 
+    return (this.c - this.b * y) / this.a; 
   }
 
   yByX(x: number) {
     if (this.isParallelToAxisX) return;
 
-    return -(this.c + this.a * x) / this.b; 
+    return (this.c - this.a * x) / this.b; 
   }
 
   distanceToPoint(        
@@ -123,7 +128,7 @@ export class Line {
     } else if (this.isParallelToAxisY) {
       y = this.c / this.b;
     } else {
-      x = this.intersectionY(line);
+      y = this.intersectionY(line);
     }
 
     if (x === undefined && y !== undefined) {

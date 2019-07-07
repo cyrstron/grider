@@ -108,6 +108,10 @@ export class GeoSegment {
     return lng;
   }
 
+  get points() {
+    return [this.pointA, this.pointB];
+  }
+
   get isAntiMeridian(): boolean {
     return this.pointA.isCloserThroughAntiMeridian(this.pointB);
   }

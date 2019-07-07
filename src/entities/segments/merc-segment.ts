@@ -1,13 +1,18 @@
 import {Segment} from './segment';
 import {GeoSegment} from './geo-segment';
 import {MercPoint} from '../points/merc-point';
+import { MercLine } from '../lines/merc-line';
 
 export class MercSegment extends Segment {
+  line: MercLine;
+  
   constructor(
     public pointA: MercPoint,
     public pointB: MercPoint,
   ) {
     super(pointA, pointB);
+
+    this.line = MercLine.fromTwoPoints(pointA, pointB);
   }
 
   toSphere(): GeoSegment {

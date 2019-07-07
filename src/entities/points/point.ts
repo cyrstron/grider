@@ -16,6 +16,10 @@ export class Point {
     );
   }
 
+  toFormatted(): Point {
+    return this;
+  }
+
   containedByLine(line: Line): boolean {
     return line.hasPoint(this);
   }
@@ -24,8 +28,12 @@ export class Point {
     return segment.hasPoint(this);
   }
 
-  isEqual({x, y}: Point): boolean {
-    return this.x === x && this.y === y;
+  isEqual(point: Point): boolean {
+    const formattedA = this.toFormatted();
+    const formattedB = point.toFormatted();
+
+    return formattedA.x === formattedB.x && 
+      formattedA.y === formattedB.y;
   }
 
   distanceToLine(line: Line) {

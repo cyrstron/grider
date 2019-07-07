@@ -2,7 +2,7 @@ import {radToDeg} from './math.utils';
 
 export function yToLat(y: number): number {
   const latRad = 2 * (Math.atan(
-    Math.E ** (-(y * 2 - 1))
+    Math.E ** (-(y * 2 - 1) * Math.PI)
   ) - Math.PI / 4);
 
   return radToDeg(latRad);
@@ -27,5 +27,5 @@ export function xToSemiLng(x: number): number {
 export function reduceX(x: number) {
   x = x % 1;
 
-  return x < 0 ? 1 + x : 1;
+  return x < 0 ? 1 + x : x;
 }

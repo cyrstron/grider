@@ -16,6 +16,13 @@ export class MercPoint extends Point {
     super(x, y);
   }
 
+  toFormatted(): MercPoint {
+    return new MercPoint(
+      +this.x.toFixed(10),
+      +this.y.toFixed(10),
+    )
+  }
+
   toOppositeHemisphere(): MercPoint {
     const x = reduceX(this.x - 0.5);
 

@@ -94,12 +94,11 @@ export class Segment {
       pointB: {x: x2, y: y2},
     } = this;
 
-    return this.line.hasPoint(point) && (
-      Math.max(x1, x2) < x ||
-      Math.min(x1, x2) > x ||
-      Math.max(y1, y2) < y ||
-      Math.min(y1, y2) > y
-    );
+    return this.line.hasPoint(point) && 
+      Math.max(x1, x2) > x &&
+      Math.min(x1, x2) < x &&
+      Math.max(y1, y2) > y &&
+      Math.min(y1, y2) < y;
   }
 
   intersectionPoint(
@@ -107,12 +106,10 @@ export class Segment {
   ): Point | undefined {
     const intersection = this.line.intersectionPoint(segment.line);
 
-    if (
-      !intersection ||
-      !this.hasPoint(intersection) ||
-      !segment.hasPoint(intersection)
-    ) return;
+    const isIntersectValid = !!intersection &&
+      this.hasPoint(intersection) &&
+      segment.hasPoint(intersection);
 
-    return intersection;
+    return isIntersectValid ? intersection : undefined;
   } 
 }
