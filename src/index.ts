@@ -1,51 +1,36 @@
 /// <reference types="../src/@types" />
 
-import { CenterCalculator } from './center-calc';
-import { Converter, createConverter } from './converter';
-import { createFigureBuilder } from './figure-builder';
-import { BorderRenderer, createGridRenderer } from './grid-renderer';
-import { Grider } from './grider';
-import { Neighborer } from './neighborer';
-import { ParamsBuilder } from './params-builder';
-import { ShapeBuilder } from './shape-builder';
-import { StaticGrider } from './static-grider';
-import { createGriderUtils, GriderUtils } from './utils';
-
-export const utils: GriderUtils = createGriderUtils();
-
-const builder: ShapeBuilder = new ShapeBuilder(utils);
-const centerCalc: CenterCalculator = new CenterCalculator(utils);
-const paramsBuilder: ParamsBuilder = new ParamsBuilder(utils);
-const converter: Converter = createConverter(utils) ;
-
-export const grider = new Grider({
-  converter,
-  builder,
-  centerCalc,
-});
-
-export const neighbors: Neighborer = new Neighborer(grider);
-export const figureBuilder = createFigureBuilder(grider, utils);
-
-export const createBorderRenderer = (
-  gridParams: grider.GridParams,
-  figure: grider.GeoPoint[],
-  shape: grider.GeoPoint[],
-): BorderRenderer => {
-  return new BorderRenderer(gridParams, figure, shape, utils.math, utils.geography, utils.shape, grider);
-};
-
-export const createStaticGrider = (
-  config: grider.GridConfig,
-): StaticGrider => {
-  const params = paramsBuilder.build(config);
-  const gridRenderer = createGridRenderer(grider, utils.geography, utils.math, neighbors);
-
-  return new StaticGrider(grider, figureBuilder, neighbors, params, gridRenderer);
-};
-
 export {
-  Grider,
-  StaticGrider,
-  BorderRenderer,
-};
+  GridParams
+} from './entities/grid-params';
+export {
+  Line, 
+  RhumbLine
+} from './entities/lines';
+export {
+  PeakPoint, 
+  Point, 
+  GeoPoint, 
+  GridPoint, 
+  CenterPoint, 
+  TileMercPoint
+} from './entities/points';
+export {
+  Cell,
+  Figure,
+  GeoPolygon,
+  GenericPolygon,
+  MercPolygon,
+  Polygon,
+} from './entities/polygons';
+export {
+  CellSide,
+  GeoSegment,
+  MercSegment,
+  Segment
+} from './entities/segments';
+export {
+  GridPattern,
+  GridTile,
+  MapGridTile
+} from './entities/tiles';

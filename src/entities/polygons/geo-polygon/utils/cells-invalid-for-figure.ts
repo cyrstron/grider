@@ -64,8 +64,8 @@ function getClosestToPeakCells(
       nextCell.nextCellOnSegment(sideB) : 
       initCell;
 
-    const hasPrev = !!closestCells.find((cell) => prevCell && cell.isEqual(prevCell));
-    const hasNext = !!closestCells.find((cell) => nextCell && cell.isEqual(nextCell));
+    const hasPrev = !!closestCells.find((cell) => !!prevCell && cell.isEqual(prevCell));
+    const hasNext = !!closestCells.find((cell) => !!nextCell && cell.isEqual(nextCell));
 
     if (prevCell && !hasPrev) {
       closestCells.push(prevCell);
