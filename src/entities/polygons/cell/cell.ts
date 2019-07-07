@@ -319,4 +319,8 @@ export class Cell extends GeoPolygon<CellSide> {
 
     return new Cell(cellCenter);
   }
+
+  static fromCenterPoint(point: CenterPoint) {
+    return new Cell(point);
+  }
 }

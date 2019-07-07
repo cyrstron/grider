@@ -32,7 +32,7 @@ function getHexPoints(
     ),
     new PeakPoint(
       params,      
-      i - (1 / 3),
+      i + (1 / 3),
       j - (2 / 3),
       k as number + (1 / 3),
     ),

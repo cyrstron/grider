@@ -16,7 +16,6 @@ export class Line {
     return this.a === 0;
   }
 
-
   hasPoint(point: Point): boolean {
     const calcX = this.xByY(point.y);
     const calcY = this.yByX(point.x);

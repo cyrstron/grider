@@ -1,7 +1,6 @@
 import {constants} from '../../../constants';
 import {calcClosestMultiple} from '../../../utils/math.utils';
 
-const MERC_COOF = Math.PI / 2;
 const SIN60 = Math.sqrt(3) / 2;
 
 export const axesParams: {
@@ -38,8 +37,8 @@ export const initCoofs: {
   hex: {
     get merc(): grider.InitCoof {
       return {
-        vertical: MERC_COOF * SIN60,
-        horizontal: MERC_COOF,
+        vertical: SIN60,
+        horizontal: 1,
       };
     },
     get none(): grider.InitCoof {
@@ -58,8 +57,8 @@ export const initCoofs: {
   rect: {
     get merc(): grider.InitCoof {
       return {
-        vertical: MERC_COOF,
-        horizontal: MERC_COOF,
+        vertical: 1,
+        horizontal: 1,
       };
     },
     get none(): grider.InitCoof {

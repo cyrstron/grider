@@ -1,5 +1,5 @@
 import {GeoPoint} from '../points/geo-point';
-import {Line} from './line';
+import {MercLine} from './merc-line';
 import {
   latToY, 
   lngToX, 
@@ -9,7 +9,7 @@ import {
   xToLng, yToLat
 } from '../../utils/merc.utils';
 
-export class RhumbLine extends Line {
+export class RhumbLine extends MercLine {
   isAntiMeridian: boolean;
 
   constructor(
@@ -31,7 +31,7 @@ export class RhumbLine extends Line {
       pointB = pointB.toOppositeHemisphere();
     }
 
-    const {a, b, c} = Line.fromTwoPoints(pointA.toMerc(), pointB.toMerc());
+    const {a, b, c} = MercLine.fromTwoPoints(pointA.toMerc(), pointB.toMerc());
 
     return new RhumbLine(a, b, c, isAntiMeridian);
   }

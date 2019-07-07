@@ -56,6 +56,10 @@ export class GeoPoint {
     return mercPointA.distanceToPoint(mercPointB);
   }
 
+  toCell(params: GridParams) {
+    return this.toCenter(params).toCell();
+  }
+
   toMerc(): MercPoint {
     const x = lngToX(this.lng);
     const y = latToY(this.lat);

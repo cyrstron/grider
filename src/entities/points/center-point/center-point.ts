@@ -17,12 +17,24 @@ import {
 import {
   getNextCenterByCellSide
 } from './utils/center-finder';
+import { Cell } from '../../polygons';
 
 export class CenterPoint extends GridPoint {
   static fromGrid(point: GridPoint): CenterPoint {
-    const {i, j, k} = round(point);
+    // To get the same center value on antimeridian.
+    const {i: preI, j: preJ, k: preK} = round(point);
+
+    const reducedGridCenter = new GridPoint(point.params, preI, preJ, preK)
+      .toGeo()
+      .toGrid(point.params);
+
+    const {i, j, k} = round(reducedGridCenter);
 
     return new CenterPoint(point.params, i, j ,k);
+  }
+
+  toCell(): Cell {
+    return Cell.fromCenterPoint(this);
   }
 
   nextCenterByCellSide(cellSide: CellSide): CenterPoint {

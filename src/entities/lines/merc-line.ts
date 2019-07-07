@@ -13,6 +13,18 @@ export class MercLine extends Line {
     return point.isEqual(calcedPoint);
   }
 
+  closestToPoint(point: MercPoint): MercPoint {
+    const {x, y} = super.closestToPoint(point);
+
+    return new MercPoint(x, y);
+  }
+
+  perpendicularByPoint(point: MercPoint): MercLine {
+    const {a, b, c} = super.perpendicularByPoint(point);
+
+    return new MercLine(a, b, c);
+  }
+
   intersectionPoint(line: MercLine): MercPoint | undefined {
     const intersection = super.intersectionPoint(line);
 

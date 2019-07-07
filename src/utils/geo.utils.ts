@@ -1,10 +1,9 @@
 import {degToRad} from './math.utils';
 
-
 export function semiLatToY(lat: number): number {
   const latRad = degToRad(lat);
   
-  return -(latRad / Math.PI + 1) / 2;
+  return -(latRad / Math.PI - 1) / 2;
 }
 
 export function semiLngToX(lng: number): number {
