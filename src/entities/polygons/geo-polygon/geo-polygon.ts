@@ -63,6 +63,7 @@ export class GeoPolygon<
   intersectsSegment(segment: GeoSegment): boolean {
     return super.intersectsSegment(segment);
   }
+
   intersectsWithSegment(segment: GeoSegment): GeoPoint[] {
     return super.intersectsWithSegment(segment);
   }
@@ -105,9 +106,9 @@ export class GeoPolygon<
     const splitSegment = this.splitSectionsByLat(point.lat);
 
     return splitSegment.reduce((
-      isContained,
+      isContained: boolean,
       segment
-    ) => isContained && segment.containsLng(point.lng) , false);
+    ) => isContained || segment.containsLng(point.lng), false);
   }
 
   isValidForFigure(params: GridParams): boolean {
