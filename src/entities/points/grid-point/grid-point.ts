@@ -28,9 +28,13 @@ export class GridPoint {
     this.k = k;
   }
 
+  toFormatted(): GridPoint {
+    return this;
+  }
+
   isEqual(point: GridPoint): boolean {
-    const {i: iA, j: jA, k: kA} = this;
-    const {i: iB, j: jB, k: kB} = point;
+    const {i: iA, j: jA, k: kA} = this.toFormatted();
+    const {i: iB, j: jB, k: kB} = point.toFormatted();
 
     return (iA === iB) && (jA === jB) && (kA === kB);
   }

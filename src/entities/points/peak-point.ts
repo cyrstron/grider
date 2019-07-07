@@ -14,7 +14,10 @@ export class PeakPoint extends GridPoint {
     const restPeaks = nearestPeaks.reduce((restPeaks, peak) => {
       const cellSide = CellSide.fromPeaks(this, peak);
       const nextCell = cell.nextCellBySide(cellSide);
-      restPeaks.push(...nextCell.nearestPeaks(this));
+      const nearest = nextCell.nearestPeaks(this)
+        .filter((peakA) => !restPeaks.find((peakB) => peakA.isEqual(peakB)));
+
+      restPeaks.push(...nearest);
 
       return restPeaks;
     }, [] as PeakPoint[])
@@ -29,6 +32,17 @@ export class PeakPoint extends GridPoint {
 
   get nearestPeaksGeo() {
     return this.nearestPeaks.map((peak) => peak.toGeo());
+  }
+
+  toFormatted(): PeakPoint {
+    const {params, i, j, k} = this;
+
+    return new PeakPoint(
+      params,
+      +i.toFixed(6),
+      +j.toFixed(6),
+      k && +k.toFixed(6),
+    );
   }
 
   nearestNotSeparatedByPoly(polygon: GeoPolygon): PeakPoint[] {

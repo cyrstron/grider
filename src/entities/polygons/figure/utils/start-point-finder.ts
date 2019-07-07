@@ -68,10 +68,10 @@ function findFirstPointOfSomeCellPoints(
     const pointIndex = startCell.points.indexOf(point);
     const prevPoint = startCell.prevPointByIndex(pointIndex);
     const nextPoint = startCell.nextPointByIndex(pointIndex);
-    const prevConained = shape.containsPoint(prevPoint);
-    const nextConained = shape.containsPoint(nextPoint);
+    const prevContained = shape.containsPoint(prevPoint);
+    const nextContained = shape.containsPoint(nextPoint);
 
-    return prevConained === nextConained && 
+    return prevContained === nextContained && 
       !nextCell.points.find((nextPoint) => nextPoint.isEqual(point));
   });
 
