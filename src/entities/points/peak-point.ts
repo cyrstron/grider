@@ -15,7 +15,9 @@ export class PeakPoint extends GridPoint {
       const cellSide = CellSide.fromPeaks(this, peak);
       const nextCell = cell.nextCellBySide(cellSide);
       const nearest = nextCell.nearestPeaks(this)
-        .filter((peakA) => !restPeaks.find((peakB) => peakA.isEqual(peakB)));
+        .filter((peakA) => !restPeaks.find(
+          (peakB) => peakA.isEqual(peakB)
+        ));
 
       restPeaks.push(...nearest);
 
