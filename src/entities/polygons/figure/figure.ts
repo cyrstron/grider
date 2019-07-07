@@ -18,7 +18,7 @@ export class Figure extends GeoPolygon {
     super(points);
   }
 
-  fromShape(shape: GeoPolygon, params: GridParams, isInner: boolean) {
+  static fromShape(shape: GeoPolygon, params: GridParams, isInner: boolean = true) {
     const figurePoints = buildFigurePoints(shape, params, isInner);
     const points = simplifyFigure(figurePoints, shape, params);
     const fullPoints = new GeoPolygon(figurePoints);

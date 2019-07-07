@@ -57,11 +57,7 @@ export class GenericPolygon<
       }
 
       return intersects;
-    }, [])
-      .filter(
-        (intersect) => this.points
-          .find((point) => intersect.isEqual(point))
-      );
+    }, []);
   }
 
 	sideByIndex(index: number): SegmentType {

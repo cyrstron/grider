@@ -30,7 +30,11 @@ export class GeoPoint {
   }
 
   isEqual(point: GeoPoint): boolean {
-    return this.lat === point.lat && this.lng === point.lng;
+    const formattedA = this.toFormatted();
+    const formattedB = point.toFormatted();
+
+    return formattedA.lat === formattedB.lat && 
+      formattedA.lng === formattedB.lng;
   }
 
   isCloserThroughAntiMeridian(point: GeoPoint): boolean {
