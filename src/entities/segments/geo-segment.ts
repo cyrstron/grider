@@ -76,9 +76,9 @@ export class GeoSegment {
 
   isEqual({pointA, pointB}: GeoSegment) {
     return (
-      this.pointA.isEqual(pointA) && this.pointA.isEqual(pointB)
+      this.pointA.isEqual(pointA) && this.pointB.isEqual(pointB)
     ) || (
-      this.pointA.isEqual(pointB) && this.pointA.isEqual(pointA)
+      this.pointA.isEqual(pointB) && this.pointB.isEqual(pointA)
     );
   }
 
