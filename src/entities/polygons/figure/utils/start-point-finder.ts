@@ -84,12 +84,11 @@ function findFirstPointOfSomeCellPoints(
 }
 
 function findFirstPointForCell(
+  startCell: Cell,
   shape: GeoPolygon,
   params: GridParams,
   isInner: boolean = true,
 ): GeoPoint | undefined {
-  const startCell = Cell.fromGeoPoint(shape.points[0], params);
-
   const points = isInner ? 
     startCell.pointsInsidePoly(shape) : 
     startCell.pointsOutsidePoly(shape);
@@ -123,7 +122,7 @@ export function findStartPointForSide(
   let firstPoint: GeoPoint | undefined;
 
   while (startCell && (!firstPoint || !startCell.isEqual(endCell))) {
-    firstPoint = findFirstPointForCell(shape, params, isInner);
+    firstPoint = findFirstPointForCell(startCell, shape, params, isInner);
 
     if (firstPoint) break;
 

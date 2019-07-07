@@ -38,7 +38,7 @@ export class GeoPolygon<
       .sort(({lng: lngA}, {lng: lngB}) => lngA - lngB);
 
     const easternIndex = intersects.reduce((easternIndex, point, index) => {
-      return intersects[easternIndex].isEasternTo(point) ? easternIndex : index;
+      return intersects[easternIndex].isEasternTo(point) ? index : easternIndex;
     }, 0);
 
     return [
@@ -52,7 +52,7 @@ export class GeoPolygon<
     ): GeoSegment[] => {
       if (index % 2) return splitSegments;
 
-      const splitSegment = new GeoSegment(intersects[index - 1], point);
+      const splitSegment = new GeoSegment(intersects[index + 1], point);
 
       splitSegments.push(splitSegment);
 
