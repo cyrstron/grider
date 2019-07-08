@@ -20,7 +20,8 @@ export class Figure extends GeoPolygon {
 
   static fromShape(shape: GeoPolygon, params: GridParams, isInner: boolean = true) {
     const figurePoints = buildFigurePoints(shape, params, isInner);
-    const points = simplifyFigure(figurePoints, shape, params);
+    // const points = simplifyFigure(figurePoints, shape, params);
+    const points = figurePoints;
     const fullPoints = new GeoPolygon(figurePoints);
     const indexation = Indexation.fromPoints(points);
 

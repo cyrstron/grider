@@ -87,18 +87,21 @@ export class Segment {
     }
   }
 
-  hasPoint(point: Point) {
-    const {x, y} = point;
+  hasPoint(point: Point): boolean {
     const {
-      pointA: {x: x1, y: y1},
-      pointB: {x: x2, y: y2},
+      pointA,
+      pointB,
     } = this;
 
+    const {x, y} = point.toFormatted();
+    const {x: x1, y: y1} = pointA.toFormatted();
+    const {x: x2, y: y2} = pointB.toFormatted();
+
     return this.line.hasPoint(point) && 
-      Math.max(x1, x2) > x &&
-      Math.min(x1, x2) < x &&
-      Math.max(y1, y2) > y &&
-      Math.min(y1, y2) < y;
+      Math.max(x1, x2) >= x &&
+      Math.min(x1, x2) <= x &&
+      Math.max(y1, y2) >= y &&
+      Math.min(y1, y2) <= y;
   }
 
   intersectionPoint(

@@ -23,7 +23,9 @@ export function buildFigurePoints(
     calcSidePoints(shapeSide, shape, figurePoints, params, isInner)
   ), []);
 
-  return cleanFigure(figurePoints);
+  return figurePoints;
+
+  // return cleanFigure(figurePoints);
 }
 
 function calcSidePoints(
@@ -39,11 +41,13 @@ function calcSidePoints(
   
   if (points.length === 0) {
     firstPoint = findStartPointForSide(shapeSide, shape, params, isInner);
+
+    firstPoint && points.push(firstPoint);
+  } else {
+    firstPoint = points[points.length - 1];
   }
 
   if (!firstPoint) return [];
-
-  points.push(firstPoint);
 
   const endCell = Cell.fromGeoPoint(shapeSide.pointB, params);
 
@@ -93,7 +97,7 @@ function getFigurePointsFromCell(
   let isNextContained = shape.containsPoint(nextPoint);
 
   const isReversed = isIntersected || isNextContained !== isInner;
-  const points = [startPoint];
+  const points: GeoPoint[] = [];
 
   if (isReversed) {
     nextPoint = startCell.prevPointByIndex(index);
@@ -103,7 +107,7 @@ function getFigurePointsFromCell(
   }
 
   while(!isIntersected && isNextContained === isInner) {
-    const lastPoint = points[points.length - 1];
+    const lastPoint = points[points.length - 1] || startPoint;
     const cellPoint = startCell.points[index];
 
     if (!lastPoint.isEqual(cellPoint)) {

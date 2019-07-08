@@ -2,15 +2,10 @@ import {Line} from './line';
 import { MercPoint } from '../points';
 
 export class MercLine extends Line {
-  hasPoint(point: MercPoint): boolean {
-    const calcX = this.xByY(point.y);
-    const calcY = this.yByX(point.x);
+  calcAlikePoint(point: MercPoint): MercPoint {
+    const {x, y} = super.calcAlikePoint(point);
 
-    if (calcX === undefined || calcY === undefined) return false;  
-
-    const calcedPoint = new MercPoint(calcX, calcY);
-
-    return point.isEqual(calcedPoint);
+    return new MercPoint(x, y);
   }
 
   closestToPoint(point: MercPoint): MercPoint {

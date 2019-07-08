@@ -71,7 +71,7 @@ function findFirstPointOfSomeCellPoints(
     const prevContained = shape.containsPoint(prevPoint);
     const nextContained = shape.containsPoint(nextPoint);
 
-    return prevContained === nextContained && 
+    return prevContained !== nextContained && 
       !nextCell.points.find((nextPoint) => nextPoint.isEqual(point));
   });
 

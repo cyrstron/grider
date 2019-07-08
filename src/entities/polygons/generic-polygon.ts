@@ -1,4 +1,5 @@
 import {Point} from '../points/point';
+import { GeoPoint } from '../points';
 
 interface DefaultSegment<PointType = Point> {
 	pointA: PointType;
@@ -16,7 +17,21 @@ export class GenericPolygon<
 > {
 	constructor(
 		public points: PointType[],
-	) {}
+  ) {}
+  
+  intersectsPoly(poly: GenericPolygon<PointType, SegmentType>): PointType[] {
+    return this.reduceSides((intersects, sideA, indexA) => {
+      return poly.reduceSides((intersects, sideB, indexB) => {
+        const intersect = sideA.intersectionPoint(sideB);
+
+        if (intersect) {
+          intersects.push(intersect);
+        }
+
+        return intersects;
+      }, intersects);
+    }, [] as PointType[]);
+  }
 
 	intersectsSegment(segment: DefaultSegment<PointType>): boolean {
 		return this.reduceSides((

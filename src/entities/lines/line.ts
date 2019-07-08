@@ -16,15 +16,20 @@ export class Line {
     return this.a === 0;
   }
 
-  hasPoint(point: Point): boolean {
+  calcAlikePoint(point: Point): Point {
     const calcX = this.xByY(point.y);
     const calcY = this.yByX(point.x);
 
-    if (calcX === undefined || calcY === undefined) return false;  
+    return new Point(
+      calcX === undefined ? point.x : calcX, 
+      calcY === undefined ? point.y : calcY,
+    );
+  }
 
-    const calcedPoint = new Point(calcX, calcY);
+  hasPoint(point: Point): boolean {
+    const alikePoint = this.calcAlikePoint(point);
 
-    return point.isEqual(calcedPoint);
+    return alikePoint.isEqual(point);
   }
 
   xByY(y: number): number | undefined {
