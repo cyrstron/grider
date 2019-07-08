@@ -146,8 +146,17 @@ export class Cell extends GeoPolygon<CellSide> {
     return new Cell(nextCenter);
   }
 
+  containsPoint(point: GeoPoint): boolean {
+    const center = point.toCenter(this.center.params);
+
+    return this.center.isEqual(center);
+  }
+
   nearestToEndIntersectedSide(segment: GeoSegment): CellSide | undefined {
     const {pointB: endPoint} = segment;
+
+    if (this.containsPoint(endPoint)) return;
+
     const sidesByIntersectDistances = this.reduceSides((
       sidesByIntersectDistances: {[key: number]: CellSide},
       cellSide,

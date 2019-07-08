@@ -19,9 +19,7 @@ export function buildFigurePoints(
   const figurePoints = shape.reduceSides((
     figurePoints: GeoPoint[],
     shapeSide,
-  ): GeoPoint[] => (
-    calcSidePoints(shapeSide, shape, figurePoints, params, isInner)
-  ), []);
+  ): GeoPoint[] => calcSidePoints(shapeSide, shape, figurePoints, params, isInner), []);
 
   return figurePoints;
 
@@ -63,7 +61,9 @@ function calcSidePoints(
 
     if (!startPoint) break;
 
-    isPointFound = !isPointFound && !!startPoint;
+    if (!isPointFound && !!startPoint) {
+      isPointFound = true;
+    }
 
     const figurePointsFromCell = getFigurePointsFromCell(
       shapeSide, 

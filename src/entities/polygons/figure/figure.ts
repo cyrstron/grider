@@ -13,7 +13,7 @@ export class Figure extends GeoPolygon {
     public params: GridParams,
     public isInner: boolean,
     public fullPoints: GeoPolygon,
-    public indexation: Indexation,
+    // public indexation: Indexation,
   ) {
     super(points);
   }
@@ -23,7 +23,7 @@ export class Figure extends GeoPolygon {
     // const points = simplifyFigure(figurePoints, shape, params);
     const points = figurePoints;
     const fullPoints = new GeoPolygon(figurePoints);
-    const indexation = Indexation.fromPoints(points);
+    // const indexation = Indexation.fromPoints(points);
 
     return new Figure(
       points,
@@ -31,7 +31,7 @@ export class Figure extends GeoPolygon {
       params,
       isInner,
       fullPoints,
-      indexation,
+      // indexation,
     );
   }
 }
