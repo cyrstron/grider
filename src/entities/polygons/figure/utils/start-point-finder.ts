@@ -151,7 +151,7 @@ export function recalcStartCell(
     if (!startCell) break;
 
     const preLastPoint = points[points.length - 2];
-    const containsPrelast = !!startCell.findEqualGeoPoint(preLastPoint);
+    const containsPrelast = !!preLastPoint && !!startCell.findEqualGeoPoint(preLastPoint);
 
     if (containsPrelast) break;
 
