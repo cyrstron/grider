@@ -51,9 +51,13 @@ export class GeoPoint {
   }
 
   calcMercDistance(pointB: GeoPoint): number {
-    const pointA = this.isCloserThroughAntiMeridian(pointB) ?
-      this.toOppositeHemisphere() : this;
+    let pointA: GeoPoint = this;
 
+    if (this.isCloserThroughAntiMeridian(pointB)) {
+      pointA = this.toOppositeHemisphere();
+      pointB = pointB.toOppositeHemisphere();
+    }
+    
     const mercPointA = pointA.toMerc();
     const mercPointB = pointB.toMerc();
 

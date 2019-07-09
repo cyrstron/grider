@@ -27,5 +27,5 @@ export function xToSemiLng(x: number): number {
 export function reduceX(x: number) {
   x = x % 1;
 
-  return x < 0 ? 1 + x : x;
+  return x <= 0 ? 1 + x : x;
 }
