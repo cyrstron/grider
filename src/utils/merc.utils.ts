@@ -1,6 +1,8 @@
 import {radToDeg} from './math.utils';
 
 export function yToLat(y: number): number {
+  y = Math.max(Math.min(1, y), 0);
+
   const latRad = 2 * (Math.atan(
     Math.E ** (-(y * 2 - 1) * Math.PI)
   ) - Math.PI / 4);
@@ -15,17 +17,17 @@ export function xToLng(x: number): number {
 }
 
 export function yToSemiLat(y: number): number {
-  const latRad = -(y * 2 - 1) * Math.PI;
+  y = Math.max(Math.min(1, y), 0);
 
-  return radToDeg(latRad);
+  return -(y - 0.5) * 180;
 }
 
 export function xToSemiLng(x: number): number {
-  return xToLng(x);
+  return (x - 0.5) * 180;
 }
 
 export function reduceX(x: number) {
   x = x % 1;
 
-  return x <= 0 ? 1 + x : x;
+  return x < 0 ? x : x;
 }

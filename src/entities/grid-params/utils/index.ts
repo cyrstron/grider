@@ -37,8 +37,8 @@ export const initCoofs: {
   hex: {
     get merc(): grider.InitCoof {
       return {
-        vertical: SIN60,
-        horizontal: 1,
+        vertical: SIN60 * 0.5,
+        horizontal: 0.5,
       };
     },
     get none(): grider.InitCoof {
@@ -57,8 +57,8 @@ export const initCoofs: {
   rect: {
     get merc(): grider.InitCoof {
       return {
-        vertical: 1,
-        horizontal: 1,
+        vertical: 0.5,
+        horizontal: 0.5,
       };
     },
     get none(): grider.InitCoof {

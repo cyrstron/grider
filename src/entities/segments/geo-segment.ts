@@ -182,8 +182,8 @@ export class GeoSegment {
     if (!this.isAntiMeridian) {
       return maxLng > lng && minLng < lng;
     } else {
-      return (maxLng < lng && lng <= 180) ||
-        (minLng > lng && lng > -180);
+      return (maxLng < lng && lng < 180) ||
+        (minLng > lng && lng >= -180);
     }   
   }
 }

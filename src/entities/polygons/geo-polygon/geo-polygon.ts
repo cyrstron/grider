@@ -112,6 +112,8 @@ export class GeoPolygon<
   }
 
   isValidForFigure(params: GridParams): boolean {
+    if (this.outmapPoints.length > 0) return false;
+
     if (this.points.length < 3) return false;
     
     const {selfIntersections} = this;
@@ -127,6 +129,14 @@ export class GeoPolygon<
 
   cellsInvalidForFigure(params: GridParams): Cell[] {
     return getInvalidCells(this, params);
+  }
+
+  get outmapPoints() {
+    return this.points.filter((point) => {
+      const {y} = point.toMerc();
+
+      return y > 1 || y < 0;
+    });
   }
   
 	get easternPoint(): GeoPoint {

@@ -21,9 +21,7 @@ export function buildFigurePoints(
     shapeSide,
   ): GeoPoint[] => calcSidePoints(shapeSide, shape, figurePoints, params, isInner), []);
 
-  return figurePoints;
-
-  // return cleanFigure(figurePoints);
+  return cleanFigure(figurePoints);
 }
 
 function calcSidePoints(
