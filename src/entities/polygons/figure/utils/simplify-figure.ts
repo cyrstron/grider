@@ -166,9 +166,7 @@ function checkPoint(
       gridSegment.forEach((point, index) => {
         if (index === indexA || index === indexB) return;
 
-        const testPoint = point;
-
-        if (testPoint.onSameAxis(startPoint, endPoint)) {
+        if (point.onSameAxis(startPoint, endPoint)) {
           pointsInRow.push(
             [indexA, indexB, index]
               .sort((a, b) => a - b)

@@ -26,7 +26,8 @@ function checkStartPoint(
 
 function findFirstPointOfAllCellPoints(
   shape: GeoPolygon, 
-  startCell: Cell
+  startCell: Cell,
+  isInner: boolean,
 ): GeoPoint | undefined {
   const shapeSide = shape.sideByIndex(0);
   const lastShapeIndex = shape.points.length - 1;
@@ -48,7 +49,7 @@ function findFirstPointOfAllCellPoints(
     const distanceA = pointA.calcMercDistance(intersectA);
     const distanceB = pointA.calcMercDistance(intersectB);
 
-    return distanceA > distanceB ? pointB : pointA;
+    return isInner === distanceA > distanceB ? pointB : pointA;
   }, undefined);
 }
 
@@ -56,6 +57,7 @@ function findFirstPointOfSomeCellPoints(
   shape: GeoPolygon,
   startCell: Cell,
   points: GeoPoint[],
+  isInner: boolean,
 ): GeoPoint | undefined {  
   const shapeSide = shape.sideByIndex(0);
   const {params} = startCell.center;  
@@ -102,10 +104,10 @@ function findFirstPointForCell(
   }
 
   if (points.length === startCell.points.length) {
-    return findFirstPointOfAllCellPoints(shape, startCell);
+    return findFirstPointOfAllCellPoints(shape, startCell, isInner);
   }
 
-  return findFirstPointOfSomeCellPoints(shape, startCell, points);
+  return findFirstPointOfSomeCellPoints(shape, startCell, points, isInner);
 }
 
 export function findStartPointForSide(

@@ -112,7 +112,9 @@ function getFigurePointsFromCell(
       points.push(cellPoint);
     }
 
-    const cellSide = startCell.sideByIndex(index);
+    const cellSide = isReversed ? 
+      startCell.sideByIndexInversed(index) : 
+      startCell.sideByIndex(index);
 
     isIntersected = cellSide.intersects(shapeSide);
     index = isReversed ? 
