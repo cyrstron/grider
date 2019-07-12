@@ -70,6 +70,7 @@ function findFirstPointOfSomeCellPoints(
     const pointIndex = startCell.points.indexOf(point);
     const prevPoint = startCell.prevPointByIndex(pointIndex);
     const nextPoint = startCell.nextPointByIndex(pointIndex);
+    
     const prevContained = shape.containsPoint(prevPoint);
     const nextContained = shape.containsPoint(nextPoint);
 

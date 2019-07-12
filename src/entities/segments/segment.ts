@@ -72,15 +72,19 @@ export class Segment {
   }
 
   closestToPoint(point: Point): Point {
-    const closestToLine = this.line.closestToPoint(point);
+    const closestToLine = this.line.closestToPoint(point)
+      .toFormatted();
 
-    if (closestToLine.x < this.minX) {
+    const {x: x1, y: y1} = this.pointA.toFormatted();
+    const {x: x2, y: y2} = this.pointB.toFormatted();
+
+    if (closestToLine.x < Math.min(x1, x2)) {
       return this.minXPoint;
-    } else if (closestToLine.x > this.maxX) {
+    } else if (closestToLine.x > Math.max(x1, x2)) {
       return this.maxXPoint;
-    } else if (closestToLine.y < this.minY) {
+    } else if (closestToLine.y < Math.min(y1, y2)) {
       return this.minYPoint;
-    } else if (closestToLine.y > this.maxY) {
+    } else if (closestToLine.y > Math.max(y1, y2)) {
       return this.maxYPoint;
     } else {
       return closestToLine;

@@ -76,9 +76,15 @@ export class GridPoint {
   }
 
   onSameAxis(prevPoint: GridPoint, nextPoint: GridPoint) {
-    return 0 === Math.round((
-      (this.i - prevPoint.i) / (this.i - nextPoint.i) -
-      (this.j - prevPoint.j) / (this.j - nextPoint.j)
-    ));
+    let diff = (
+      (this.i - prevPoint.i) * (this.j - nextPoint.j) -
+      (this.i - nextPoint.i) * (this.j - prevPoint.j)
+    );
+
+    if (this.params.type === 'hex') {
+      diff *= 3;
+    }
+
+    return 0 === Math.round(diff);
   }
 }

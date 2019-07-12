@@ -104,12 +104,7 @@ function simplifyHexFigure(
     const prevPoint = simplifiedGrid[prevIndex];
     const nextPoint = simplifiedGrid[nextIndex];
 
-    const diff = Math.round((
-      (prevPoint.i - point.i) * (nextPoint.j - point.j) -
-      (nextPoint.i - point.i) * (prevPoint.j - point.j)
-    ) * 3);
-
-    if (diff !== 0) {
+    if (!point.onSameAxis(prevPoint, nextPoint)) {
       cleared.push(simplified[index]);
     }
 
@@ -182,7 +177,7 @@ function checkPoint(
   let toBeAdded;
 
   if (pointsInRow.length === 0) {
-    toBeAdded = true;
+    return true;
   } else if (pointsInRow.length > 1 && pointsInRow.every((row) => row.includes(index))) {
 
     const outOfRowIndexes = segmentIndexes.filter(
@@ -208,7 +203,7 @@ function checkPoint(
 
         return isPointFurther === isInner;
       }, false);
-  }
 
-  return toBeAdded;
+    return toBeAdded;
+  }
 }
