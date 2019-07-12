@@ -84,9 +84,9 @@ export class Line {
     const {x, y} = this.getNormalVector();
 
     return new Line(
-      -(1 / y),
       1 / x,
-      ((x1 / x) - (y1 / y)),
+      -(1 / y),
+      (x1 / x) - (y1 / y),
     );
   }
 
