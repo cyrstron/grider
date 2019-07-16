@@ -34,11 +34,19 @@ export class GridParams {
     this.correction = correction;
   }
 
-  minCellSize(tilePoint: TileMercPoint) {
+  minCellSize(tilePoint: TileMercPoint): number {
+    const {tileWidth, zoomCoofX} = tilePoint;
     const {initSize, initHeight, isHorizontal} = this;
     const cellSize = isHorizontal ? initSize : initHeight;
     const initSizeDeg = cellSize / 10000000;
 
-    return initSizeDeg * tilePoint.zoomCoofX / 360;
+    return initSizeDeg * tileWidth * zoomCoofX / 360;
+  }
+
+  isEqual(params: GridParams) {
+    return this.isHorizontal === params.isHorizontal &&
+      this.type === params.type &&
+      this.correction === params.correction &&
+      this.initSize === params.initSize;
   }
 }

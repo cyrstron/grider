@@ -36,6 +36,8 @@ function simplifyHexFigure(
   shape: GeoPolygon,
   params: GridParams,
 ): GeoPoint[] {
+  if (points.length === 0) return points;
+  
   if (params.type === 'rect') return points;
 
   const len = points.length;

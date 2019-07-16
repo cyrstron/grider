@@ -1,19 +1,13 @@
 import { TileMercPoint } from "../../../points/tile-merc-point";
 import { GridPattern } from "../../grid-pattern";
 import { GridParams } from "../../../grid-params";
+import { Point } from "../../../points";
 
 export function createPatterns(
     tilePoint: TileMercPoint,
     params: GridParams,
 ): GridPattern[] {
-    let start = tilePoint.gridPatternStartPoint(params);
-    const {
-        tileX,
-        tileY,
-        tileHeight,
-        tileWidth,
-        zoom,
-    } = tilePoint
+    let start: Point = tilePoint.gridPatternStartPoint(params);
 
     if (params.correction === 'merc') {
         const pattern = GridPattern.fromTileCoords(tilePoint, start, params);
@@ -24,20 +18,14 @@ export function createPatterns(
     }
 
     const patterns: GridPattern[] = [];
-    const yEnd = tileY + 1;
+    const yEnd = 1;
 
-    while(start.tileY < yEnd) {
+    while(start.y < yEnd) {
         const pattern = GridPattern.fromTileCoords(tilePoint, start, params);
 
         patterns.push(pattern);
 
-        start = TileMercPoint.fromTile(
-            tileX,
-            pattern.end.tileY,
-            tileWidth,
-            tileHeight,
-            zoom,
-        );
+        start = new Point(start.x, start.y + pattern.tile.tileHeight);
     }
 
     return patterns;

@@ -1,6 +1,7 @@
 import { MercPoint } from "./merc-point";
 import {constants} from '../../constants';
 import { GridParams } from "../grid-params";
+import { Point } from "./point";
 
 export class TileMercPoint extends MercPoint {
   tileX: number; 
@@ -27,25 +28,22 @@ export class TileMercPoint extends MercPoint {
     this.zoom = zoom;
   }
 
-  gridPatternStartPoint(params: GridParams): TileMercPoint {
+  gridPatternStartPoint(params: GridParams): Point {
     const gridCenter = this.toSphere().toCenter(params);
     const {northWest} = gridCenter.northWestNeighbors;
     const gridTileTopLeft = northWest.toGeo().toMerc();
 
-    const tilePoint = TileMercPoint.fromMerc(
+    const startTilePoint = TileMercPoint.fromMerc(
       gridTileTopLeft,
       this.tileWidth,
       this.tileHeight,
       this.zoom,
     );
 
-    return TileMercPoint.fromTile(
-      tilePoint.tileX - this.tileX,
-      tilePoint.tileY - this.tileY,
-      this.tileWidth,
-      this.tileHeight,
-      this.zoom,
-    );
+    const x = startTilePoint.tileX - this.tileX;
+    const y = startTilePoint.tileY - this.tileY;
+
+    return new Point(x, y);
   }
 
   get zoomCoofX(): number {
