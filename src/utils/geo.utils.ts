@@ -3,11 +3,11 @@ import {degToRad} from './math.utils';
 export function semiLatToY(lat: number): number {
   const y = -(lat / 180) + 0.5;
 
-  return Math.max(Math.min(1, y), 0)
+  return y;
 }
 
 export function semiLngToX(lng: number): number {
-  return (lng / 180) + 0.5;
+  return (lng / 360) + 0.5;
 }
 
 export function latToY(lat: number): number {

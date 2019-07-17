@@ -14,12 +14,17 @@ import {CenterPoint} from './center-point';
 import {GridParams} from '../grid-params';
 
 export class GeoPoint {
-  lat: number;
-  lng: number;
+  constructor(
+    public lat: number, 
+    public lng: number
+  ) {
+  }
 
-  constructor(lat: number, lng: number) {
-    this.lat = reduceLat(lat); 
-    this.lng = reduceLng(lng);
+  fromUnsafeCoords(lat: number, lng: number): GeoPoint {
+    lat = reduceLat(lat); 
+    lng = reduceLng(lng);
+
+    return new GeoPoint(lat, lng);
   }
 
   inSameCell(point: GeoPoint, params: GridParams): boolean {

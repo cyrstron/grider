@@ -7,7 +7,9 @@ export function correctForGrid(
   {correction}: GridParams,
 ): GeoPoint {
   if (correction === 'merc') {
-    return point.toSemiSphere();
+    const {lat, lng} = point.toSemiSphere();
+
+    return new GeoPoint(lat, lng / 2);
   } else {
     return point;
   }
@@ -20,7 +22,9 @@ export function correctForGeo(
   const {correction} = gridParams;
 
   if (correction === 'merc') {
-    return point.fromSemiSphere().toFormatted();
+    const {lat, lng} = point;
+    
+    return new GeoPoint(lat, lng * 2).fromSemiSphere().toFormatted();
   } else {
     return point.toFormatted();
   }
