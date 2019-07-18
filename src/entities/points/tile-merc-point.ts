@@ -40,6 +40,10 @@ export class TileMercPoint extends MercPoint {
       this.zoom,
     );
 
+    return this.startPointDiff(startTilePoint);
+  }
+
+  startPointDiff(startTilePoint: TileMercPoint): Point {    
     let x = startTilePoint.tileX - this.tileX;
     const y = startTilePoint.tileY - this.tileY;
 

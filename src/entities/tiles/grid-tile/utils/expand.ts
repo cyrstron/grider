@@ -33,7 +33,15 @@ export function expandTile(
         startTilePoint.zoom,
       );
 
-      const x = (tilePoint.tileX - startTilePoint.tileX) / tileWidth;
+      let xDiff = tilePoint.tileX - startTilePoint.tileX;
+
+      if (xDiff > 1) {
+        xDiff = Math.abs(
+          Math.ceil(tilePoint.tileX) - (tilePoint.tileX - startTilePoint.tileX)
+        );
+      }
+
+      const x = (xDiff) / tileWidth;
       const y = (tilePoint.tileY - startTilePoint.tileY) / tileHeight;
 
       return new Point(x, y);
