@@ -42,7 +42,7 @@ export function spreadPointsBySides(
         });
       } else {
         spreadedPoints.push([
-          sidePoints[points.length - 1],
+          sidePoints[sidePoints.length - 1],
           {
             index: pointIndex,
             point,

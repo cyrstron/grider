@@ -176,7 +176,7 @@ export class TileMercPoint extends MercPoint {
   }
 
   get northBound(): number {
-    return this.north.toSphere().lat;
+    return this.toSphere().lat;
   }
 
   get southBound(): number {
@@ -188,6 +188,6 @@ export class TileMercPoint extends MercPoint {
   }
 
   get westBound(): number {
-    return this.west.toSphere().lng;
+    return this.toSphere().lng;
   }
 }

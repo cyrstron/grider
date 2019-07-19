@@ -1,7 +1,6 @@
 import { GridPoint } from "../../../points/grid-point";
 import { GeoPoint } from "../../../points/geo-point";
 import { GridParams } from "../../../grid-params";
-import { MercPoint } from "../../../points/merc-point";
 import { TileMercPoint } from "../../../points/tile-merc-point";
 import { Point } from "../../../points";
 
@@ -36,9 +35,11 @@ export function expandTile(
       let xDiff = tilePoint.tileX - startTilePoint.tileX;
 
       if (xDiff > 1) {
-        xDiff = Math.abs(
+        const xDiffAlter = Math.abs(
           Math.ceil(tilePoint.tileX) - (tilePoint.tileX - startTilePoint.tileX)
         );
+
+        xDiff = Math.min(xDiff, xDiffAlter);
       }
 
       const x = (xDiff) / tileWidth;

@@ -18,6 +18,7 @@ export {
 export {
   Cell,
   Figure,
+  IndexatedFigure,
   GeoPolygon,
   GenericPolygon,
   MercPolygon,

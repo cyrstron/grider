@@ -27,13 +27,13 @@ export class SideIndexation {
     const eastBound = this.boundIntersection(tilePoint.eastBound, 'east');
     const westBound = this.boundIntersection(tilePoint.westBound, 'west');
 
-    if (!northBound || !southBound || !eastBound || !westBound) return;
+    if (!northBound && !southBound && !eastBound && !westBound) return;
 
     return new TileIntersection(
-      [northBound],
-      [southBound],
-      [eastBound],
-      [westBound],
+      northBound ? [northBound] : [],
+      southBound ? [southBound] : [],
+      eastBound ? [eastBound] : [],
+      westBound ? [westBound] : [],
     );
   }
 

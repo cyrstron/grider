@@ -19,17 +19,27 @@ export class TileIntersection {
 
   normalize(): TileIntersection {
     return new TileIntersection(
-      [...this.north].sort(({intersection: {lat: latA}}, {intersection: {lat: latB}}) => latA - latB),
-      [...this.south].sort(({intersection: {lat: latA}}, {intersection: {lat: latB}}) => latA - latB),
-      [...this.east].sort(
-        ({intersection: pointA}, {intersection: pointB}) => pointA.isCloserThroughAntiMeridian(pointB) ? 
-          pointB.lng - pointA.lng : 
-          pointA.lng - pointB.lng
+      [...this.north].sort(({
+        intersection: {lat: latA}}, 
+        {intersection: {lat: latB}}
+      ) => latA - latB),
+      [...this.south].sort((
+        {intersection: {lat: latA}}, 
+        {intersection: {lat: latB}}
+      ) => latA - latB),
+      [...this.east].sort((
+        {intersection: pointA}, 
+        {intersection: pointB}
+      ) => pointA.isCloserThroughAntiMeridian(pointB) ? 
+        pointB.lng - pointA.lng : 
+        pointA.lng - pointB.lng
       ),
-      [...this.west].sort(
-        ({intersection: pointA}, {intersection: pointB}) => pointA.isCloserThroughAntiMeridian(pointB) ? 
-          pointB.lng - pointA.lng : 
-          pointA.lng - pointB.lng
+      [...this.west].sort((
+        {intersection: pointA}, 
+        {intersection: pointB}
+      ) => pointA.isCloserThroughAntiMeridian(pointB) ? 
+        pointB.lng - pointA.lng : 
+        pointA.lng - pointB.lng
       ),
     )
   }
