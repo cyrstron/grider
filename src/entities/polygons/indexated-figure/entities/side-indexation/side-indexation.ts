@@ -86,18 +86,19 @@ export class SideIndexation {
     const fromMin = Math.min(...fromIndexes);
     const fromMax = Math.max(...fromIndexes);
 
-    if (Math.abs(toMin - fromMax) === 1) {
+    const toMinDiff = Math.abs(toMin - fromMax);
+    const toMaxDiff = Math.abs(toMax - fromMin);
+
+    if (
+      toMinDiff === 1 || (
+        toMaxDiff !== 1 && toMaxDiff < toMinDiff
+      )
+    ) {
       toIndex = toMin;
       fromIndex = fromMax;
-    } else if (Math.abs(toMax - fromMin) === 1) {
-      toIndex = toMax;
-      fromIndex = fromMin;
-    } else if (Math.abs(toMax - fromMin) > Math.abs(toMin - fromMax)) {
-      toIndex = toMax;
-      fromIndex = fromMin;
     } else {
-      toIndex = toMin;
-      fromIndex = fromMax;
+      toIndex = toMax;
+      fromIndex = fromMin;
     }
 
     return BoundIntersection.fromPoints(

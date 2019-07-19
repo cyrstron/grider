@@ -17,15 +17,7 @@ export class GeoPoint {
   constructor(
     public lat: number, 
     public lng: number
-  ) {
-  }
-
-  fromUnsafeCoords(lat: number, lng: number): GeoPoint {
-    lat = reduceLat(lat); 
-    lng = reduceLng(lng);
-
-    return new GeoPoint(lat, lng);
-  }
+  ) {}
 
   inSameCell(point: GeoPoint, params: GridParams): boolean {
     const cellCenterA = this.toGrid(params);
@@ -50,7 +42,7 @@ export class GeoPoint {
   }
 
   toOppositeHemisphere(): GeoPoint {
-    const lng = this.lng - 180;
+    const lng = reduceLng(this.lng - 180);
 
     return new GeoPoint(this.lat, lng);
   }
@@ -133,6 +125,13 @@ export class GeoPoint {
   ): GeoPoint {
     lat = formatLat(lat);
     lng = formatLng(lng);
+
+    return new GeoPoint(lat, lng);
+  }
+
+  static fromUnsafeCoords(lat: number, lng: number): GeoPoint {
+    lat = reduceLat(lat); 
+    lng = reduceLng(lng);
 
     return new GeoPoint(lat, lng);
   }
