@@ -28,8 +28,11 @@ export class GeoPolygon<
     ): GeoPoint[] => {
       const lat = side.latByLng(lng);
 
-      if (lat !== undefined) {
-        const intersect = new GeoPoint(lat, lng);
+      if (lat === undefined) return intersects;
+      
+      const intersect = new GeoPoint(lat, lng);
+
+      if (!intersects.find((point) => point.isEqual(intersect))) {
         intersects.push(intersect);
       }
 

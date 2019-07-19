@@ -85,11 +85,14 @@ export class SideIndexation {
     const toMax = Math.max(...toIndexes);
     const fromMin = Math.min(...fromIndexes);
     const fromMax = Math.max(...fromIndexes);
-    
-    if (
-      Math.abs(toMax - fromMin) || 
-      Math.abs(toMax - fromMin) > Math.abs(toMin - fromMax)
-    ) {
+
+    if (Math.abs(toMin - fromMax) === 1) {
+      toIndex = toMin;
+      fromIndex = fromMax;
+    } else if (Math.abs(toMax - fromMin) === 1) {
+      toIndex = toMax;
+      fromIndex = fromMin;
+    } else if (Math.abs(toMax - fromMin) > Math.abs(toMin - fromMax)) {
       toIndex = toMax;
       fromIndex = fromMin;
     } else {
