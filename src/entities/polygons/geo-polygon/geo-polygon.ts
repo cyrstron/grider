@@ -21,6 +21,38 @@ export class GeoPolygon<
     return new GeoSegment(pointA, pointB) as SegmentType;
   }
 
+  splitSectionsByLng(lng: number): GeoSegment[] {
+    const intersects = this.reduceSides((
+      intersects: GeoPoint[],
+      side: GeoSegment,
+    ): GeoPoint[] => {
+      const lat = side.latByLng(lng);
+
+      if (lat !== undefined) {
+        const intersect = new GeoPoint(lat, lng);
+        intersects.push(intersect);
+      }
+
+      return intersects;
+    }, [])
+      .sort(({lat: latA}, {lat: latB}) => latA - latB);
+
+    return intersects.reduce((
+        splitSegments: GeoSegment[], 
+        point, 
+        index, 
+        intersects
+      ): GeoSegment[] => {
+        if (index % 2) return splitSegments;
+  
+        const splitSegment = new GeoSegment(intersects[index + 1], point);
+  
+        splitSegments.push(splitSegment);
+  
+        return splitSegments;
+      }, []);;
+  }
+
   splitSectionsByLat(lat: number): GeoSegment[] {
     const intersects = this.reduceSides((
       intersects: GeoPoint[],

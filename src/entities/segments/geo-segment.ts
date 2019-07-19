@@ -2,6 +2,7 @@ import {MercSegment} from './merc-segment';
 import {GeoPoint} from '../points/geo-point';
 import {RhumbLine} from '../lines/rhumb-line';
 import {GeoPolygon} from '../polygons/geo-polygon/geo-polygon';
+import {formatLat, formatLng} from '../../utils/geo.utils';
 
 export class GeoSegment {
   rhumbLine: RhumbLine;
@@ -89,6 +90,8 @@ export class GeoSegment {
   }
 
   latByLng(lng: number): number | undefined {
+    if (!this.containsLng(lng)) return;
+
     const lat = this.rhumbLine.latByLng(lng);
 
     if (lat === undefined) return;
@@ -99,6 +102,8 @@ export class GeoSegment {
   }
 
   lngByLat(lat: number): number | undefined {
+    if (!this.containsLat(lat)) return;
+    
     const lng = this.rhumbLine.lngByLat(lat);
 
     if (lng === undefined) return;
@@ -165,25 +170,29 @@ export class GeoSegment {
   }
 
   containsLat(lat: number): boolean {
-    const {lat: latA} = this.pointA;
-    const {lat: latB} = this.pointB;
+    lat = formatLat(lat);
 
-    return Math.max(latA, latB) > lat &&
-      Math.min(latA, latB) < lat;
+    const {lat: latA} = this.pointA.toFormatted();
+    const {lat: latB} = this.pointB.toFormatted();
+
+    return Math.max(latA, latB) >= lat &&
+      Math.min(latA, latB) <= lat;
   }
 
   containsLng(lng: number): boolean {
-    const {lng: lngA} = this.pointA;
-    const {lng: lngB} = this.pointB;
+    lng = formatLng(lng);
+
+    const {lng: lngA} = this.pointA.toFormatted();
+    const {lng: lngB} = this.pointB.toFormatted();
 
     const maxLng = Math.max(lngA, lngB);
     const minLng = Math.min(lngA, lngB);
 
     if (!this.isAntiMeridian) {
-      return maxLng > lng && minLng < lng;
+      return maxLng >= lng && minLng <= lng;
     } else {
-      return (maxLng < lng && lng < 180) ||
-        (minLng > lng && lng >= -180);
+      return (maxLng <= lng && lng < 180) ||
+        (minLng >= lng && lng >= -180);
     }   
   }
 }
