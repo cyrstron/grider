@@ -38,15 +38,15 @@ export class MapGridTile {
   }
 
   get southWest(): GeoPoint {
-    return this.tilePoint.south.toSphere();
+    return this.tilePoint.southTile.toSphere();
   }
 
   get northEast(): GeoPoint {
-    return this.tilePoint.east.toSphere();
+    return this.tilePoint.eastTile.toSphere();
   }
 
   get southEast(): GeoPoint {
-    return this.tilePoint.south.east.toSphere();
+    return this.tilePoint.southTile.eastTile.toSphere();
   }
 
   get north(): number {

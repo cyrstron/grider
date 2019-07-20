@@ -12,6 +12,7 @@ import {MercPoint} from './merc-point';
 import {GridPoint} from './grid-point';
 import {CenterPoint} from './center-point';
 import {GridParams} from '../grid-params';
+import { TileMercPoint } from './tile-merc-point';
 
 export class GeoPoint {
   constructor(
@@ -71,6 +72,19 @@ export class GeoPoint {
 
     return new MercPoint(x, y);
   }
+
+  // toTile(
+  //   tileWidth: number, 
+  //   tileHeight: number, 
+  //   zoom: number
+  // ): TileMercPoint {
+  //   return TileMercPoint.fromMerc(
+  //     this.toMerc(),
+  //     tileWidth,
+  //     tileHeight,
+  //     zoom,
+  //   );
+  // }
 
   toGrid(params: GridParams): GridPoint {
     return GridPoint.fromGeo(this, params);

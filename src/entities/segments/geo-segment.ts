@@ -14,6 +14,51 @@ export class GeoSegment {
     this.rhumbLine = RhumbLine.fromTwoGeoPoints(pointA, pointB);
   }
 
+  static segmentsFromPointsByLng(points: GeoPoint[]) {
+    const sorted = points.sort(({lng: lngA}, {lng: lngB}) => lngA - lngB);
+
+    const easternIndex = sorted.reduce((easternIndex, point, index) => {
+      return sorted[easternIndex].isEasternTo(point) ? index : easternIndex;
+    }, 0);
+
+    return [
+      ...sorted.slice(easternIndex),
+      ...sorted.slice(0, easternIndex)
+    ].reduce((
+      splitSegments: GeoSegment[], 
+      point, 
+      index, 
+      sorted
+    ): GeoSegment[] => {
+      if (index % 2) return splitSegments;
+
+      const splitSegment = new GeoSegment(sorted[index + 1], point);
+
+      splitSegments.push(splitSegment);
+
+      return splitSegments;
+    }, []);
+  }
+
+  static segmentsFromPointsByLat(points: GeoPoint[]) {    
+    const sorted = points.sort(({lat: latA}, {lat: latB}) => latA - latB);
+
+    return sorted.reduce((
+        splitSegments: GeoSegment[], 
+        point, 
+        index, 
+        sorted
+      ): GeoSegment[] => {
+        if (index % 2) return splitSegments;
+  
+        const splitSegment = new GeoSegment(sorted[index + 1], point);
+  
+        splitSegments.push(splitSegment);
+  
+        return splitSegments;
+      }, []);;
+  }
+
   toMerc(): MercSegment {
     const pointA = this.pointA.toMerc();
     const pointB = this.pointB.toMerc();
@@ -194,5 +239,24 @@ export class GeoSegment {
       return (maxLng <= lng && lng < 180) ||
         (minLng >= lng && lng >= -180);
     }   
+  }
+
+  containsPoint({lat, lng}: GeoPoint): boolean {
+    return this.containsLat(lat) && this.containsLng(lng);
+  }
+
+  containsSegment({pointA, pointB}: GeoSegment): boolean {
+    return this.containsPoint(pointA) && this.containsPoint(pointB);
+  }
+
+  overlapsSegment(segment: GeoSegment) {
+    const {pointA, pointB} = segment;
+
+    return (
+      this.containsPoint(pointA) ||
+      this.containsPoint(pointB) ||
+      segment.containsPoint(this.pointB) ||
+      segment.containsPoint(this.pointB)
+    );
   }
 }

@@ -1,7 +1,7 @@
 import {Figure} from '../figure';
 import { GeoPolygon } from '../geo-polygon';
 import { GridParams } from '../../grid-params';
-import { GeoPoint, TileMercPoint } from '../../points';
+import { GeoPoint, TileMercPoint, Point } from '../../points';
 import { Indexation } from './entities/indexation';
 import { simplifyFigure } from './utils/simplify-figure';
 
@@ -23,10 +23,10 @@ export class IndexatedFigure extends Figure {
     this.indexation = indexation;
   }
 
-  tilePoints(tilePoint: TileMercPoint): GeoPolygon {
+  tilePoints(tilePoint: TileMercPoint): Point[] {
     const points = this.indexation.tileBorderPoints(tilePoint);
 
-    return new GeoPolygon(points);
+    return points;
   }
 
   static fromShape(

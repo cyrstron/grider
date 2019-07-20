@@ -3,10 +3,9 @@ import {GeoSegment} from '../../../../segments/geo-segment';
 import {floorNumStrByOrder} from '../../../../../utils/math.utils';
 
 import {indexateKeys} from './utils/indexate-keys';
-import { TileMercPoint } from '../../../../points/tile-merc-point';
 import { GeoPoint } from '../../../../points/geo-point';
 import { BoundIntersection } from '../bound-intersection';
-import { TileIntersection } from '../tile-intersection';
+import { GeoPolygon } from '../../../geo-polygon';
 
 export class SideIndexation {
   constructor(
@@ -19,26 +18,9 @@ export class SideIndexation {
     public approximation: GeoSegment,
   ) {}
 
-  tileIntersection(
-    tilePoint: TileMercPoint,
-  ): TileIntersection | undefined {
-    const northBound = this.boundIntersection(tilePoint.northBound, 'north');
-    const southBound = this.boundIntersection(tilePoint.southBound, 'south');
-    const eastBound = this.boundIntersection(tilePoint.eastBound, 'east');
-    const westBound = this.boundIntersection(tilePoint.westBound, 'west');
-
-    if (!northBound && !southBound && !eastBound && !westBound) return;
-
-    return new TileIntersection(
-      northBound ? [northBound] : [],
-      southBound ? [southBound] : [],
-      eastBound ? [eastBound] : [],
-      westBound ? [westBound] : [],
-    );
-  }
-
   boundIntersection(
     bound: number, 
+    tilePoly: GeoPolygon,
     boundKey: grider.Cardinal
   ): BoundIntersection | undefined {
     const isLat = boundKey === 'north' || boundKey === 'south';
@@ -76,6 +58,7 @@ export class SideIndexation {
         this.points, 
         fromIndex, 
         toIndex, 
+        tilePoly,
         bound, 
         boundKey
       );
@@ -105,6 +88,7 @@ export class SideIndexation {
       this.points, 
       fromIndex, 
       toIndex, 
+      tilePoly,
       bound, 
       boundKey
     );

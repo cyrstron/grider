@@ -2,8 +2,13 @@ import { MercPoint } from "./merc-point";
 import {constants} from '../../constants';
 import { GridParams } from "../grid-params";
 import { Point } from "./point";
+import { GeoPolygon } from "../polygons";
+import { GeoSegment } from "../segments";
+import { GeoPoint } from "./geo-point";
 
-export class TileMercPoint extends MercPoint {
+type Bounds = {[key in grider.Cardinal]: GeoSegment};
+
+export class TileMercPoint extends MercPoint implements Bounds {
   tileX: number; 
   tileY: number;
   tileWidth: number;
@@ -62,6 +67,43 @@ export class TileMercPoint extends MercPoint {
     return 2 ** this.zoom * constants.googleTileSize / this.tileHeight;    
   }
 
+  toPoly(): GeoPolygon {
+    const eastPoint = this.eastTile;
+
+    return new GeoPolygon([
+      this.toSphere(),
+      eastPoint.toSphere(),
+      eastPoint.southTile.toSphere(),
+      this.southTile.toSphere(),
+    ]);
+  }
+
+  containsPoint({lat, lng}: GeoPoint): boolean {
+    return (
+      lat <= this.northBound && 
+      lat >= this.southBound &&
+      lng <= this.eastBound &&
+      lng >= this.westBound
+    );
+  }
+
+  projectGeoPoints(points: GeoPoint[]): Point[] {
+    return points.map((geoPoint) => {
+      const mercPoint = geoPoint.toMerc();
+      const {tileX, tileY} = TileMercPoint.fromMerc(
+        mercPoint,
+        this.tileWidth,
+        this.tileHeight,
+        this.zoom,
+      );
+
+      return new Point(
+        tileX - this.tileX,
+        tileY - this.tileY
+      );
+    });
+  }
+
   static fromTile(    
     tileX: number, 
     tileY: number, 
@@ -103,7 +145,7 @@ export class TileMercPoint extends MercPoint {
     );
   }
 
-  get north(): TileMercPoint {
+  get northTile(): TileMercPoint {
     const {
         tileX,
         tileY,
@@ -121,7 +163,7 @@ export class TileMercPoint extends MercPoint {
     );
   }
 
-  get south(): TileMercPoint {
+  get southTile(): TileMercPoint {
     const {
         tileX,
         tileY,
@@ -139,7 +181,7 @@ export class TileMercPoint extends MercPoint {
     );
   }
 
-  get east(): TileMercPoint {
+  get eastTile(): TileMercPoint {
     const {
         tileX,
         tileY,
@@ -157,7 +199,7 @@ export class TileMercPoint extends MercPoint {
     );
   }
 
-  get west(): TileMercPoint {
+  get westTile(): TileMercPoint {
     const {
         tileX,
         tileY,
@@ -180,14 +222,34 @@ export class TileMercPoint extends MercPoint {
   }
 
   get southBound(): number {
-    return this.south.toSphere().lat;
+    return this.southTile.toSphere().lat;
   }
 
   get eastBound(): number {
-    return this.east.toSphere().lng;
+    return this.eastTile.toSphere().lng;
   }
 
   get westBound(): number {
     return this.toSphere().lng;
+  }
+
+  get north(): GeoSegment {
+    return new GeoSegment(this.toSphere(), this.eastTile.toSphere());
+  }
+
+  get south(): GeoSegment {
+    const southPoint = this.southTile;
+
+    return new GeoSegment(southPoint.eastTile.toSphere(), southPoint.toSphere());
+  }
+
+  get east(): GeoSegment {
+    const eastPoint = this.eastTile;
+
+    return new GeoSegment(eastPoint.toSphere(), eastPoint.southTile.toSphere());
+  }
+
+  get west(): GeoSegment {
+    return new GeoSegment( this.southTile.toSphere(), this.toSphere());
   }
 }

@@ -25,15 +25,19 @@ export class Point {
   }
 
   containedBySegment(segment: Segment): boolean {
-    return segment.hasPoint(this);
+    const isContained = segment.hasPoint(this);
+
+    return isContained;
   }
 
   isEqual(point: Point): boolean {
     const formattedA = this.toFormatted();
     const formattedB = point.toFormatted();
 
-    return formattedA.x === formattedB.x && 
+    const isEqual = formattedA.x === formattedB.x && 
       formattedA.y === formattedB.y;
+
+    return isEqual;
   }
 
   distanceToLine(line: Line) {

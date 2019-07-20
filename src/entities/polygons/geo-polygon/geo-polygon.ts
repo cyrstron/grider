@@ -37,23 +37,9 @@ export class GeoPolygon<
       }
 
       return intersects;
-    }, [])
-      .sort(({lat: latA}, {lat: latB}) => latA - latB);
-
-    return intersects.reduce((
-        splitSegments: GeoSegment[], 
-        point, 
-        index, 
-        intersects
-      ): GeoSegment[] => {
-        if (index % 2) return splitSegments;
-  
-        const splitSegment = new GeoSegment(intersects[index + 1], point);
-  
-        splitSegments.push(splitSegment);
-  
-        return splitSegments;
-      }, []);;
+    }, []);
+      
+    return GeoSegment.segmentsFromPointsByLat(intersects);
   }
 
   splitSectionsByLat(lat: number): GeoSegment[] {
@@ -69,30 +55,9 @@ export class GeoPolygon<
       }
 
       return intersects;
-    }, [])
-      .sort(({lng: lngA}, {lng: lngB}) => lngA - lngB);
-
-    const easternIndex = intersects.reduce((easternIndex, point, index) => {
-      return intersects[easternIndex].isEasternTo(point) ? index : easternIndex;
-    }, 0);
-
-    return [
-      ...intersects.slice(easternIndex),
-      ...intersects.slice(0, easternIndex)
-    ].reduce((
-      splitSegments: GeoSegment[], 
-      point, 
-      index, 
-      intersects
-    ): GeoSegment[] => {
-      if (index % 2) return splitSegments;
-
-      const splitSegment = new GeoSegment(intersects[index + 1], point);
-
-      splitSegments.push(splitSegment);
-
-      return splitSegments;
     }, []);
+
+    return GeoSegment.segmentsFromPointsByLng(intersects);
   }
 
   intersectsSegment(segment: GeoSegment): boolean {

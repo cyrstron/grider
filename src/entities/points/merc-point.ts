@@ -1,3 +1,5 @@
+import {Point} from './point';
+
 import {
   yToLat, 
   xToLng,
@@ -6,7 +8,6 @@ import {
   reduceX,
 } from '../../utils/merc.utils';
 
-import {Point} from './point';
 import {GeoPoint} from './geo-point';
 
 export class MercPoint extends Point {
