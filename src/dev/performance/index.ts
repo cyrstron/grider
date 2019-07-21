@@ -10,9 +10,11 @@ export function startMeasure(mark: string) {
   perf.mark(`${mark} Start`);
 }
 
-export function endMeasure(mark: string) {
+export function endMeasure(mark: string, info?: string) {
   if (!perf) return;
+
+  const markInfo = info ? `${mark}: ${info}` : mark;
   
   perf.mark(`${mark} End`);
-  perf.measure(mark, `${mark} Start`, `${mark} End`);
+  perf.measure(markInfo, `${mark} Start`, `${mark} End`);
 }

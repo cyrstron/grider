@@ -24,6 +24,8 @@ export class IndexatedFigure extends Figure {
   }
 
   tilePoints(tilePoint: TileMercPoint): Point[] {
+    if (this.points.length === 0) return [];
+
     const points = this.indexation.tileBorderPoints(tilePoint);
 
     return points;

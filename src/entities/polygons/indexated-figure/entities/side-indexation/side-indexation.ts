@@ -26,12 +26,16 @@ export class SideIndexation {
     const isLat = boundKey === 'north' || boundKey === 'south';
     const keys = isLat ? this.closestLatKeys(bound) : this.closestLngKeys(bound);
 
-    if (!keys) return;
+    if (!keys) {
+      return;
+    };
 
     let fromKey = keys[0];
     let toKey = keys[keys.length - 1];
     
-    if (bound < fromKey || bound > toKey) return;
+    if (bound < fromKey || bound > toKey) {
+      return;
+    };
     
     keys.forEach((key) => {
       if (key > bound && key < toKey) {
@@ -54,7 +58,7 @@ export class SideIndexation {
       fromIndex = fromIndexes[0];
       toIndex = toIndexes[0];
       
-      return BoundIntersection.fromPoints(
+      const intersection = BoundIntersection.fromPoints(
         this.points, 
         fromIndex, 
         toIndex, 
@@ -62,6 +66,8 @@ export class SideIndexation {
         bound, 
         boundKey
       );
+      
+      return intersection;
     }
 
     const toMin = Math.min(...toIndexes);
@@ -84,7 +90,7 @@ export class SideIndexation {
       fromIndex = fromMin;
     }
 
-    return BoundIntersection.fromPoints(
+    const intersection = BoundIntersection.fromPoints(
       this.points, 
       fromIndex, 
       toIndex, 
@@ -92,8 +98,9 @@ export class SideIndexation {
       bound, 
       boundKey
     );
+    
+    return intersection;
   }
-
 
   closestLatKeys(lat: number): number[] | undefined {
     let latStr = lat + '';
