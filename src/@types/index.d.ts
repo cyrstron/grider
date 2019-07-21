@@ -1,4 +1,6 @@
 declare namespace grider {
+  export type Cardinal = 'north' | 'south' | 'east' | 'west';
+  
   export interface Point {
     x: number;
     y: number;
@@ -93,6 +95,7 @@ declare namespace grider {
     equatorLength: number;
     radius: number;
     meridianLength: number;
+    googleTileSize: number;
   }  
 
   export interface PatternConfig {
