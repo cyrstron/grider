@@ -1,6 +1,7 @@
 import { GeoPoint } from "../../../points/geo-point";
 import { GeoSegment } from "../../../segments/geo-segment";
 import { GeoPolygon } from "../../geo-polygon";
+import {startMeasure, endMeasure} from '../../../../dev/performance';
 
 export class BoundIntersection {
   constructor(
@@ -19,15 +20,18 @@ export class BoundIntersection {
 		bound: number,
 		boundKey: grider.Cardinal,
 	): BoundIntersection | undefined {
-		const pointA = points[indexA];
-		const pointB = points[indexB];
+		// startMeasure('BoundIntersection.fromPoints');
+
+		let pointA = points[indexA];
+		let pointB = points[indexB];
+		const isLat = boundKey === 'north' || boundKey === 'south';
 
 		let lat: number | undefined;
 		let lng: number | undefined;
 
-		const geoSegment = new GeoSegment(pointA, pointB);
+		let geoSegment = new GeoSegment(pointA, pointB);
 
-		if (boundKey === 'north' || boundKey === 'south') {
+		if (isLat) {
 			lat = bound;
 			lng = geoSegment.lngByLat(lat);
 		} else {
@@ -37,10 +41,58 @@ export class BoundIntersection {
 
 		if (lat === undefined || lng === undefined) return;
 
-		const intersection = new GeoPoint(lat, lng);
-
+		let intersection = new GeoPoint(lat, lng);
 		let toPoint: GeoPoint | undefined;
 		let toIndex: number | undefined;
+		let isReplaced: boolean = false;
+
+		const diff = indexA - indexB;
+
+		if (
+			isLat && (intersection.lat === pointA.lat) || 
+			!isLat && (intersection.lng === pointA.lng)
+		) {
+			const nextIndexA = indexA + diff;
+			const nextPointA = points[nextIndexA];
+			const needToReplace = isLat ?
+				pointA.lat === nextPointA.lat :
+				pointA.lng === nextPointA.lng;
+
+			isReplaced = needToReplace;
+			indexA = needToReplace ? nextIndexA : indexA;
+			pointA = needToReplace ? nextPointA : pointA;
+		}
+
+		if (
+			isLat && (intersection.lat === pointB.lat) || 
+			!isLat && (intersection.lng === pointB.lng)
+		) {
+			const nextIndexB = indexB - diff;
+			const nextPointB = points[nextIndexB];
+			const needToReplace = isLat ?
+				pointB.lat === nextPointB.lat :
+				pointB.lng === nextPointB.lng;
+
+			isReplaced = needToReplace;
+			indexA = needToReplace ? nextIndexB : indexB;
+			pointA = needToReplace ? nextPointB : pointB;
+		}
+		
+		if (isReplaced) {			
+			geoSegment = new GeoSegment(pointA, pointB);
+		} 
+		
+		if (isReplaced && isLat) {
+			lng = geoSegment.lngByLat(lat);
+		} else if (isReplaced && !isLat) {
+			lat = geoSegment.latByLng(lng);
+		}
+
+		if (lat === undefined || lng === undefined) return;
+
+		if (isReplaced) {
+			intersection = new GeoPoint(lat, lng);
+		}
 
 		if (tilePoly.containsPoint(pointA)) {
 			toPoint = pointA;
@@ -50,12 +102,16 @@ export class BoundIntersection {
 			toIndex = indexB;
 		}
 
-		return new BoundIntersection(
+		const boundIntersection = new BoundIntersection(
 			intersection,
 			bound,
 			boundKey,
 			toIndex,
 			toPoint,
 		);
+
+		// endMeasure('BoundIntersection.fromPoints');
+
+		return boundIntersection;
 	}
 }
