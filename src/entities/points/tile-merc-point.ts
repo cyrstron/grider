@@ -97,10 +97,10 @@ export class TileMercPoint extends MercPoint implements Bounds {
         this.zoom,
       );
 
-      return new Point(
-        tileX - this.tileX,
-        tileY - this.tileY
-      );
+      const x = Math.round((tileX - this.tileX) * this.tileWidth);
+      const y = Math.round((tileY - this.tileY) * this.tileHeight);
+      
+      return new Point(x, y);
     });
   }
 

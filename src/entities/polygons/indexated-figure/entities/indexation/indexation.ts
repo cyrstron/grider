@@ -5,6 +5,7 @@ import { TileMercPoint } from '../../../../points/tile-merc-point';
 import { TileIntersection } from '../tile-intersection';
 import { BoundIntersection } from '../bound-intersection';
 import { Point } from '../../../../points';
+import {startMeasure, endMeasure} from '../../../../../dev/performance';
 
 export type SpreadedPoint = {index: number, point: GeoPoint};
 export type SpreadedSide = SpreadedPoint[];
@@ -23,8 +24,11 @@ export class Indexation {
     const east: BoundIntersection[] = [];
     const west: BoundIntersection[] = [];
 
+    startMeasure('TileMercPoint.toPoly');
     const tilePoly = tilePoint.toPoly();
+    endMeasure('TileMercPoint.toPoly');
 
+    startMeasure('Indexation.tileIntersection: BoundIntersection creation');
     this.indexations.forEach((
       sideIndexation,
     ) => {
@@ -46,27 +50,41 @@ export class Indexation {
         west.push(westIntersect);
       }
     });
+    endMeasure('Indexation.tileIntersection: BoundIntersection creation');
 
-    return TileIntersection.fromBounds(
+    startMeasure('TileIntersect.fromBounds');
+    const intersection = TileIntersection.fromBounds(
       tilePoint,
       north,
       south,
       east,
       west
-    ).normalize();
+    );
+    endMeasure('TileIntersect.fromBounds');
+
+    startMeasure('TileIntersect.normalize');
+    const normalized = intersection.normalize();
+    endMeasure('TileIntersect.normalize');
+
+    return normalized;
   }
 
   tileBorderPoints(tilePoint: TileMercPoint): Point[] {
+    startMeasure('Indexation.tileBorderPoints');
     let tileIntersects = this.tileIntersection(tilePoint);
 
     if (tileIntersects.isEmpty) {
-      return tilePoint.toPoly().containsPoint(this.points[0]) ? 
+      const points = tilePoint.toPoly().containsPoint(this.points[0]) ? 
         tilePoint.projectGeoPoints(this.points) : 
         [];
+      
+      return points;
     }
 
     if (tileIntersects.isContained) {
-      return tilePoint.projectGeoPoints(tilePoint.toPoly().points);
+      const points = tilePoint.projectGeoPoints(tilePoint.toPoly().points);
+
+      return points;
     }
 
     const points = tileIntersects.reduce((
@@ -122,7 +140,7 @@ export class Indexation {
           const directionIndex = keys.indexOf(direction);
           const directions = [
             ...keys.slice(directionIndex + 1), 
-            ...keys.slice(0, directionIndex)
+            ...keys.slice(0, directionIndex + 1)
           ];
 
           const nextDirection = directions.find((key) => tileIntersects[key].length > 0);
@@ -151,7 +169,7 @@ export class Indexation {
         } else {
           borderPoints = [
             ...this.points.slice(maxIndex), 
-            ...this.points.slice(0, minIndex)
+            ...this.points.slice(0, minIndex + 1)
           ]
         }
 
@@ -169,7 +187,11 @@ export class Indexation {
       return points;
     }, []);
 
-    return tilePoint.projectGeoPoints(points);
+    const projectedPoints = tilePoint.projectGeoPoints(points);
+
+    endMeasure('Indexation.tileBorderPoints');
+
+    return projectedPoints;
   }
 
   static fromPoints(points: GeoPoint[]) {
