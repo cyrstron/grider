@@ -1,7 +1,6 @@
 import { GeoPoint } from "../../../points/geo-point";
 import { GeoSegment } from "../../../segments/geo-segment";
 import { GeoPolygon } from "../../geo-polygon";
-import {startMeasure, endMeasure} from '../../../../dev/performance';
 
 export class BoundIntersection {
   constructor(
@@ -20,8 +19,6 @@ export class BoundIntersection {
 		bound: number,
 		boundKey: grider.Cardinal,
 	): BoundIntersection | undefined {
-		// startMeasure('BoundIntersection.fromPoints');
-
 		let pointA = points[indexA];
 		let pointB = points[indexB];
 		const isLat = boundKey === 'north' || boundKey === 'south';
@@ -109,8 +106,6 @@ export class BoundIntersection {
 			toIndex,
 			toPoint,
 		);
-
-		// endMeasure('BoundIntersection.fromPoints');
 
 		return boundIntersection;
 	}

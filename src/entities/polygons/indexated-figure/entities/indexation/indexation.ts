@@ -5,7 +5,6 @@ import { TileMercPoint } from '../../../../points/tile-merc-point';
 import { TileIntersection } from '../tile-intersection';
 import { BoundIntersection } from '../bound-intersection';
 import { Point } from '../../../../points';
-import {startMeasure, endMeasure} from '../../../../../dev/performance';
 
 export type SpreadedPoint = {index: number, point: GeoPoint};
 export type SpreadedSide = SpreadedPoint[];
@@ -24,29 +23,15 @@ export class Indexation {
     const east: BoundIntersection[] = [];
     const west: BoundIntersection[] = [];
 
-    // startMeasure('TileMercPoint.toPoly');
     const tilePoly = tilePoint.toPoly();
-    // endMeasure('TileMercPoint.toPoly');
-
-    // startMeasure('Indexation.tileIntersection: BoundIntersection creation external');
 
     this.indexations.forEach((
       sideIndexation,
     ) => {
-      // startMeasure('Indexation.tileIntersection: BoundIntersection creation internal');
-      // startMeasure('Indexation.tileIntersection: BoundIntersection creation internal north');
       const northIntersect = sideIndexation.boundIntersection(tilePoint.northBound, tilePoly, 'north');
-      // endMeasure('Indexation.tileIntersection: BoundIntersection creation internal north');
-      // startMeasure('Indexation.tileIntersection: BoundIntersection creation internal south');
       const southIntersect = sideIndexation.boundIntersection(tilePoint.southBound, tilePoly, 'south');
-      // endMeasure('Indexation.tileIntersection: BoundIntersection creation internal south');
-      // startMeasure('Indexation.tileIntersection: BoundIntersection creation internal east');
       const eastIntersect = sideIndexation.boundIntersection(tilePoint.eastBound, tilePoly, 'east');
-      // endMeasure('Indexation.tileIntersection: BoundIntersection creation internal east');
-      // startMeasure('Indexation.tileIntersection: BoundIntersection creation internal west');
       const westIntersect = sideIndexation.boundIntersection(tilePoint.westBound, tilePoly, 'west');
-      // endMeasure('Indexation.tileIntersection: BoundIntersection creation internal west');
-      // endMeasure('Indexation.tileIntersection: BoundIntersection creation internal');
 
       if (northIntersect) {
         north.push(northIntersect);
@@ -61,9 +46,7 @@ export class Indexation {
         west.push(westIntersect);
       }
     });
-    // endMeasure('Indexation.tileIntersection: BoundIntersection creation external');
 
-    // startMeasure('TileIntersect.fromBounds');
     const intersection = TileIntersection.fromBounds(
       tilePoint,
       north,
@@ -71,17 +54,13 @@ export class Indexation {
       east,
       west
     );
-    // endMeasure('TileIntersect.fromBounds');
 
-    // startMeasure('TileIntersect.normalize');
     const normalized = intersection.normalize();
-    // endMeasure('TileIntersect.normalize');
 
     return normalized;
   }
 
   tileBorderPoints(tilePoint: TileMercPoint): Point[] {
-    // startMeasure('Indexation.tileBorderPoints');
     let tileIntersects = this.tileIntersection(tilePoint);
 
     if (tileIntersects.isEmpty) {
@@ -199,8 +178,6 @@ export class Indexation {
     }, []);
 
     const projectedPoints = tilePoint.projectGeoPoints(points);
-
-    // endMeasure('Indexation.tileBorderPoints');
 
     return projectedPoints;
   }

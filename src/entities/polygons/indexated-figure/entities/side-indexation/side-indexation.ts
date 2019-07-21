@@ -6,7 +6,6 @@ import {indexateKeys} from './utils/indexate-keys';
 import { GeoPoint } from '../../../../points/geo-point';
 import { BoundIntersection } from '../bound-intersection';
 import { GeoPolygon } from '../../../geo-polygon';
-import {startMeasure, endMeasure} from '../../../../../dev/performance';
 
 export class SideIndexation {
   constructor(
@@ -24,12 +23,10 @@ export class SideIndexation {
     tilePoly: GeoPolygon,
     boundKey: grider.Cardinal
   ): BoundIntersection | undefined {
-    // startMeasure('SideIndexation.boundIntersection');
     const isLat = boundKey === 'north' || boundKey === 'south';
     const keys = isLat ? this.closestLatKeys(bound) : this.closestLngKeys(bound);
 
     if (!keys) {
-      // endMeasure('SideIndexation.boundIntersection', 'no keys');
       return;
     };
 
@@ -37,7 +34,6 @@ export class SideIndexation {
     let toKey = keys[keys.length - 1];
     
     if (bound < fromKey || bound > toKey) {
-      // endMeasure('SideIndexation.boundIntersection', 'out of bounds');
       return;
     };
     
@@ -71,8 +67,6 @@ export class SideIndexation {
         boundKey
       );
       
-      // endMeasure('SideIndexation.boundIntersection', 'single indexes');
-
       return intersection;
     }
 
@@ -83,7 +77,6 @@ export class SideIndexation {
 
     const toMinDiff = Math.abs(toMin - fromMax);
     const toMaxDiff = Math.abs(toMax - fromMin);
-
 
     if (
       toMinDiff === 1 || (
@@ -106,8 +99,6 @@ export class SideIndexation {
       boundKey
     );
     
-    // endMeasure('SideIndexation.boundIntersection', 'full calculation');
-
     return intersection;
   }
 
