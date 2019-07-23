@@ -101,7 +101,8 @@ function getFigurePointsFromCell(
     nextPoint = startCell.prevPointByIndex(index);
     isNextContained = shape.containsPoint(nextPoint);
     cellSide = startCell.sideByIndex(startCell.prevIndex(index));
-    isIntersected = shape.containsPoint(nextPoint);
+    // isIntersected = shape.containsPoint(nextPoint);
+    isIntersected = shape.intersectsSegment(cellSide);
   }
 
   while(!isIntersected && isNextContained === isInner) {
