@@ -5,3 +5,4 @@ export {GeoPolygon} from './geo-polygon';
 export {GenericPolygon} from './generic-polygon';
 export {MercPolygon} from './merc-polygon';
 export {Polygon} from './polygon';
+export {Area} from './area';

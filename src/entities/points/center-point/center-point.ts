@@ -14,6 +14,7 @@ import {
   getSouthWest,
   getWest,
 } from './utils/neighborer';
+import {isNeighbor} from './utils/is-neighbor';
 import {
   getNextCenterByCellSide
 } from './utils/center-finder';
@@ -40,6 +41,10 @@ export class CenterPoint extends GridPoint {
   nextCenterByCellSide(cellSide: CellSide): CenterPoint {
     return getNextCenterByCellSide(this, cellSide);
   }
+
+  isNeighbor(center: CenterPoint): boolean {
+    return isNeighbor(this, center);
+  } 
 
   get neighbors() {
     return getAll(this);

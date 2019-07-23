@@ -23,6 +23,7 @@ export {
   GenericPolygon,
   MercPolygon,
   Polygon,
+  Area
 } from './entities/polygons';
 export {
   CellSide,

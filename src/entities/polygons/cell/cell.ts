@@ -197,6 +197,10 @@ export class Cell extends GeoPolygon<CellSide> {
     return this.nextCellBySide(nextSide);
   }
 
+  isNeighbor(cell: Cell): boolean {
+    return this.center.isNeighbor(cell.center);
+  } 
+
   get neighbors() {
     const {      
       west,
