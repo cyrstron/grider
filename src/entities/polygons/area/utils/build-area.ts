@@ -326,6 +326,54 @@ function getInnerCentersMatrixes(
   }, [] as Array<CenterPoint | undefined>[][]);
 }
 
+function orderIndexesByBorder(
+  i: number,
+  j: number,
+  matrix: Array<CenterPoint | undefined>[],
+  params: GridParams,
+  indexes?: number[][]
+) {
+  if (!indexes) {
+    indexes = [];
+  }
+
+  // const nearests = calcNearestIndexes(i, j, params)
+  //   .filter(([i, j]) => matrix[i] && matrix[i][j]);
+
+  // const [prevI, prevJ] = indexes[indexes.length - 1] || [] as Array<number | undefined>;
+
+  // indexes.push([i, j]);
+
+  // let nextI;
+  // let nextJ;
+
+  // if (nearests.length === 1 || (prevI === undefined && prevJ === undefined)) {
+  //   [nextI, nextJ] = nearests[0];
+  // } else if (nearests) {
+  //   [nextI, nextJ] = nearests.find(([i, j]) => i !== prevI && j !== prevJ);
+  // }
+
+  // const [startI, startJ] = indexes[0];
+
+  // if (nextI === startI && nextJ === startJ) return indexes;
+
+  // orderIndexesByBorder(nextI, nextJ, matrix, params, indexes);
+
+  // return indexes;
+}
+
+// function matrixToArray(
+//   matrix: Array<CenterPoint | undefined>[],
+//   params: GridParams,
+// ): CenterPoint[] {
+//   const firstI = 0;
+//   const firstJ = matrix[firstI].findIndex((center) => !!center);
+
+//   const indexes = orderIndexesByBorder(firstI, firstJ, matrix, params);
+
+//   return indexes.map(([i, j]) => matrix[i][j] as CenterPoint);
+// }
+
 export function buildArea(centers: CenterPoint[]) {
   if (centers.length === 0) return [];
   if (centers.length === 1) return centers[0].toCell().points;
@@ -341,8 +389,13 @@ export function buildArea(centers: CenterPoint[]) {
   const outerMatrix = getOuterCentersMatrix(filteredMatrix, borderEmpties, params);
   const innerMatrixes = getInnerCentersMatrixes(filteredMatrix, innerEmpties, params);
 
-  console.log(outerMatrix);
-  console.log(innerMatrixes);
+  // const outerArray = matrixToArray(outerMatrix, params);
+  // const innerArrays = innerMatrixes.map(
+  //   (innerMatrix) => matrixToArray(innerMatrix, params)
+  // );
+
+  // console.log(outerArray);
+  // console.log(innerArrays);
 }
 
 function calcNearestIndexes(
