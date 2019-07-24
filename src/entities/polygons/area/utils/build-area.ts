@@ -1,10 +1,33 @@
 import { CenterPoint } from "../../../points";
 
+function isOnAntiMeridian(centers: CenterPoint[]): boolean {
+  let eastern: CenterPoint = centers[0];
+  let western: CenterPoint = centers[0];
+
+  centers.forEach((center) => {
+    if (center.isEasternTo(eastern)) {
+      eastern = center;
+    }
+
+    if (center.isEasternTo(western)) {
+      eastern = center;
+    }
+  });
+
+  return eastern.isCloserThroughAntiMeridian(western);
+}
+
 function buildMatrix(centers: CenterPoint[]) {
+  const isAntimeridian = isOnAntiMeridian(centers);
+
+  centers = isAntimeridian ?
+    centers.map((center) => center.toOppositeHemishpere()) :
+    [...centers];
+
   const sortedByI = [...centers]
     .sort(({i: i1}, {i: i2}) => i1 - i2);
   const sortedByJ = [...centers]
-  .sort(({j: j1}, {j: j2}) => j1 - j2);
+    .sort(({j: j1}, {j: j2}) => j1 - j2);
 
   const {i: iMin} = sortedByI[0];
   const {i: iMax} = sortedByI[sortedByI.length - 1];
@@ -20,47 +43,51 @@ function buildMatrix(centers: CenterPoint[]) {
     const i = center.i - iMin;
     const j = center.j - jMin;
 
-    matrix[i][j] = center;
+    matrix[i][j] = isAntimeridian ?
+      center.toOppositeHemishpere() :
+      center;
   });
 
   return matrix;
 }
 
 function getBiggestSet(
-  matrix: CenterPoint[][]
+  centers: CenterPoint[]
 ) {
-  const setsByPoint = new Map<CenterPoint, CenterPoint[]>();
-  const sets: CenterPoint[][] = [];
+  const sets = [];
+  const sorted = [...centers]
+    .sort((centerA, centerB) => {
+      const iDiff = centerA.i - centerB.i;
 
-  matrix.forEach((row, rowIndex) => row.forEach(
-    (centerA, cellIndex) => {
-      if (!centerA) return;
+      return iDiff === 0 ?
+        centerA.j - centerB.j :
+        iDiff
+    });
 
-      if (sets.length !== 0) {
-        const prevNeighbors = [
-          ...(matrix[rowIndex - 1] || [])
-            .slice(cellIndex - 1, cellIndex + 2),
-          matrix[rowIndex][cellIndex - 1],
-        ]
-          .filter((centerB) => centerB && centerB.isNeighbor(centerA));
+  
+  // const setsByPoint = new Map<CenterPoint, CenterPoint[]>();
+  // const sets: CenterPoint[][] = [];
 
-        const neighbor = prevNeighbors[0];
-        const set = setsByPoint.get(neighbor);
+  // matrix.forEach((row, i) => row.forEach(
+  //   (centerA, j) => {
+  //     if (!centerA) return;
 
-        if (set) {
-          set.push(centerA);
-          return;
-        } 
-      }
+  //     if (sets.length !== 0) {
+
+  //       if (set) {
+  //         set.push(centerA);
+  //         return;
+  //       } 
+  //     }
             
-      const set = [centerA];
+  //     const set = [centerA];
 
-      setsByPoint.set(centerA, set);
-      sets.push(set);
-    })
-  );
+  //     setsByPoint.set(centerA, set);
+  //     sets.push(set);
+  //   })
+  // );
 
-  console.log(sets);
+  // console.log(sets);
 }
 
 export function buildArea(centers: CenterPoint[]) {
@@ -69,5 +96,5 @@ export function buildArea(centers: CenterPoint[]) {
 
   const matrix = buildMatrix(centers);
   console.log(matrix);
-  const biggestSet = getBiggestSet(matrix);
+  const biggestSet = getBiggestSet(centers);
 }

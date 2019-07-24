@@ -32,6 +32,22 @@ export class GridPoint {
     return this;
   }
 
+  isEasternTo(center: GridPoint): boolean {
+    return this.toGeo().isEasternTo(center.toGeo());
+  }
+
+  isWesternTo(center: GridPoint): boolean {
+    return this.toGeo().isWesternTo(center.toGeo());
+  }
+
+  isNorthernTo(center: GridPoint): boolean {
+    return this.toGeo().isNorthernTo(center.toGeo());
+  }
+
+  isSouthernTo(center: GridPoint): boolean {
+    return this.toGeo().isSouthernTo(center.toGeo());
+  }
+
   isEqual(point: GridPoint): boolean {
     const {i: iA, j: jA, k: kA} = this.toFormatted();
     const {i: iB, j: jB, k: kB} = point.toFormatted();
