@@ -190,7 +190,7 @@ function getNearestEmpties(
 
   emptiesCoords.push([i, j]);
 
-  const nearestEmptiesCords = calcNearestIndexes(i, j, params)
+  const nearestEmptiesCords = calcNearestAndTouchedIndexes(i, j, params)
     .filter(([i, j]) => {
       if (!matrix[i]) return false;
 
@@ -273,7 +273,7 @@ function getOuterCentersMatrix(
         j === 0
       ) return center;
 
-      const nearestEmpties = calcNearestIndexes(i, j, params)
+      const nearestEmpties = calcNearestAndTouchedIndexes(i, j, params)
         .filter(([i, j]) => {
           if (!matrix[i]) return false;
 
@@ -301,7 +301,7 @@ function getInnerCentersMatrixes(
       (center, j) => {
         if (!center) return center;
   
-        const nearestEmpties = calcNearestIndexes(i, j, params)
+        const nearestEmpties = calcNearestAndTouchedIndexes(i, j, params)
           .filter(([i, j]) => {
             if (!matrix[i]) return false;
   
@@ -362,6 +362,30 @@ function calcNearestIndexes(
   indexes.push(
     [i - 1, j + 1],
     [i + 1, j - 1],
+  );
+
+  return indexes;
+}
+
+function calcNearestAndTouchedIndexes(
+  i: number, 
+  j: number, 
+  params: GridParams
+): number[][] {
+  const indexes = [
+    [i + 1, j],
+    [i, j + 1],
+    [i - 1, j],
+    [i, j - 1],
+    [i - 1, j + 1],
+    [i + 1, j - 1],
+  ];
+
+  if (params.type !== 'rect') return indexes;
+
+  indexes.push(
+    [i + 1, j + 1],
+    [i - 1, j - 1],
   );
 
   return indexes;
