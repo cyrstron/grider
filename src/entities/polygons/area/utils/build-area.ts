@@ -1,4 +1,5 @@
 import { CenterPoint } from "../../../points";
+import { GridParams } from "../../../grid-params";
 
 function isOnAntiMeridian(centers: CenterPoint[]): boolean {
   let eastern: CenterPoint = centers[0];
@@ -32,12 +33,16 @@ function buildMatrix(centers: CenterPoint[]) {
   const {i: iMin} = sortedByI[0];
   const {i: iMax} = sortedByI[sortedByI.length - 1];
   const {j: jMin} = sortedByJ[0];
+  const {j: jMax} = sortedByJ[sortedByJ.length - 1];
 
   const iDiff = iMax - iMin;
+  const jDiff = jMax - jMin;
 
   const matrix = new Array(iDiff + 1)
     .fill(undefined)
-    .map(() => []) as CenterPoint[][];
+    .map(
+      () => new Array(jDiff + 1).fill(undefined)
+    ) as Array<CenterPoint | undefined>[];
 
   sortedByI.forEach((center) => {
     const i = center.i - iMin;
@@ -51,44 +56,84 @@ function buildMatrix(centers: CenterPoint[]) {
   return matrix;
 }
 
-function getBiggestSet(
-  centers: CenterPoint[]
-) {
-  const sets = [];
-  const sorted = [...centers]
-    .sort((centerA, centerB) => {
-      const iDiff = centerA.i - centerB.i;
+function unionNearestCenters(
+  i: number,
+  j: number, 
+  matrix: Array<CenterPoint | undefined>[], 
+  set?: Set<CenterPoint>
+): Set<CenterPoint> {
+  if (!set) {    
+    set = new Set<CenterPoint>();
+  }
 
-      return iDiff === 0 ?
-        centerA.j - centerB.j :
-        iDiff
-    });
+  const point = matrix[i] && matrix[i][j];
 
+  if (!point) return set;
+
+  if (set.has(point)) return set;
+
+  set.add(point);
   
-  // const setsByPoint = new Map<CenterPoint, CenterPoint[]>();
-  // const sets: CenterPoint[][] = [];
+  const indexes = calcNearestIndexes(i, j, point.params);
 
-  // matrix.forEach((row, i) => row.forEach(
-  //   (centerA, j) => {
-  //     if (!centerA) return;
+  indexes.forEach(([i, j]) => {
+    unionNearestCenters(i, j, matrix, set);
+  });
 
-  //     if (sets.length !== 0) {
-
-  //       if (set) {
-  //         set.push(centerA);
-  //         return;
-  //       } 
-  //     }
-            
-  //     const set = [centerA];
-
-  //     setsByPoint.set(centerA, set);
-  //     sets.push(set);
-  //   })
-  // );
-
-  // console.log(sets);
+  return set;
 }
+
+function getBiggestSet(
+  matrix: Array<CenterPoint | undefined>[]
+) {  
+  const sets = matrix.reduce((sets, row, i) => row.reduce(
+    (sets, center, j) => {
+      if (!center) return sets;
+
+      if (sets.some((set) => set.has(center))) return sets;
+
+      const set = unionNearestCenters(i, j, matrix);
+
+      sets.push(set);
+
+      return sets;
+    }, sets), [] as Set<CenterPoint>[])
+    .sort((setA, setB) => setB.size - setA.size);
+
+  return sets[0];
+}
+
+function filterMatrixBySet(
+  matrix: Array<CenterPoint | undefined>[], 
+  set: Set<CenterPoint>
+): Array<CenterPoint | undefined>[] {
+  const filteredMatrix = matrix.map((row) => row.map(
+    (point) => {
+      return point && set.has(point) ? 
+        point : 
+        undefined;
+    } 
+  ))
+    .filter((row) => !row.every(point => !point));
+
+  const emptyColumnsIndexes: number[] = [];
+
+  for (let i = 0; i < filteredMatrix[0].length; i += 1) {
+    const isColumnEmpty = filteredMatrix.reduce((isColumnEmpty, row) => {
+      if (!isColumnEmpty) return isColumnEmpty;
+
+      return !row[i];
+    }, true);
+
+    if (isColumnEmpty) {
+      emptyColumnsIndexes.push(i);
+    }
+  }
+
+  return filteredMatrix.map((row) => row
+    .filter((_center, index) => !emptyColumnsIndexes.includes(index))
+  );
+} 
 
 export function buildArea(centers: CenterPoint[]) {
   if (centers.length === 0) return [];
@@ -96,5 +141,30 @@ export function buildArea(centers: CenterPoint[]) {
 
   const matrix = buildMatrix(centers);
   console.log(matrix);
-  const biggestSet = getBiggestSet(centers);
+  const set = getBiggestSet(matrix);
+  console.log(set);
+  const filteredMatrix = filterMatrixBySet(matrix, set);
+  console.log(filteredMatrix);
+}
+
+function calcNearestIndexes(
+  i: number, 
+  j: number, 
+  params: GridParams
+): number[][] {
+  const indexes = [
+    [i + 1, j],
+    [i, j + 1],
+    [i - 1, j],
+    [i, j - 1],
+  ];
+
+  if (params.type !== 'hex') return indexes;
+
+  indexes.push(
+    [i - 1, j + 1],
+    [i + 1, j - 1],
+  );
+
+  return indexes;
 }
