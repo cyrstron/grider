@@ -27,7 +27,7 @@ function getStartPoints(
   nearestCentersIndexes.sort(([iA, jA], [iB, jB]) => iB - iA || jA - jB);
 
   const [i, j] = nearestCentersIndexes[0];
-  const sampleCell = (payload[i][j] as CenterPoint).toCell();
+  const sampleCell = matrix.topLeft.toCell();
   const diffI = i - startI;
   const diffJ = j - startJ;
 
@@ -70,23 +70,16 @@ function getOuterPoints(
   matrix: OuterCentersMatrix,
   startI: number,
   startJ: number,
-  params: GridParams,
   points?: GeoPoint[],
   prevI?: number,
   prevJ?: number,
 ): GeoPoint[] {
-  const {payload} = matrix;
 
-  const nearestIndexes = calcNearestAndTouchedIndexes(startI, startJ, params);
-  const nearestCentersIndexes = nearestIndexes
-    .filter(([i, j]) => !!payload[i] && !!payload[i][j] && payload[i][j] !== 'outer');
-  const nearestOuterIndexes = nearestIndexes
-    .filter(([i, j]) => !!payload[i] && payload[i][j] === 'outer');
+  const touchedCentersIndexes = matrix.touchedCenters(startI, startJ);
+  const touchedOuterIndexes =  matrix.touchedOuterEmpties(startI, startJ);
 
   if (!points) {
-    points = getStartPoints(matrix, nearestCentersIndexes, startI, startJ);
-
-
+    points = getStartPoints(matrix, touchedCentersIndexes, startI, startJ);
   }
 
   return points;
@@ -95,24 +88,10 @@ function getOuterPoints(
 export function getOuterPoly(
   matrix: OuterCentersMatrix,
 ): GeoPoint[] {
-  const {
-    payload,
-    topLeft: {params}
-  } = matrix;
 
-  const startI: number = 0;
-  const startJ = payload[0].reduce((startJ, _value, j) => {
-    if (startJ !== undefined) return startJ;
+  const [startI, startJ] = matrix.startIndexes;
 
-    const nearest = calcNearestAndTouchedIndexes(startI, j, params);
-    const hasNearest = nearest.reduce((hasNearest, [i, j]) => {
-      return hasNearest || (!!payload[i] && !!payload[i][j] && payload[i][j] !== 'outer');
-    }, false);
-
-    return hasNearest ? j : startJ;
-  }, undefined as undefined | number) as number;
-
-  return getOuterPoints(matrix, startI, startJ, params);
+  return getOuterPoints(matrix, startI, startJ);
 
   // const nearests = calcNearestIndexes(i, j, params)
   //   .filter(([i, j]) => matrix[i] && matrix[i][j]);
