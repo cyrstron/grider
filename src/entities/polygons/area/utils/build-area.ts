@@ -104,8 +104,8 @@ function getBiggestSet(
 }
 
 function removeEmptyRowsAndColumns(
-  matrix: Array<CenterPoint | undefined>[]
-): Array<CenterPoint | undefined>[] {
+  matrix: Array<CenterPoint | 'inner' | 'outer' | undefined>[]
+): Array<CenterPoint | 'inner' | 'outer' | undefined>[] {
   const filtered = matrix.filter((row) => !row.every(point => !point));
 
   const emptyColumnsIndexes: number[] = [];
@@ -114,7 +114,9 @@ function removeEmptyRowsAndColumns(
     const isColumnEmpty = filtered.reduce((isColumnEmpty, row) => {
       if (!isColumnEmpty) return isColumnEmpty;
 
-      return !row[i];
+      const value = row[i];
+
+      return !value || value === 'inner' || value === 'outer';
     }, true);
 
     if (isColumnEmpty) {
@@ -139,7 +141,7 @@ function filterMatrixBySet(
     } 
   ));
 
-  return removeEmptyRowsAndColumns(matrixBySet);
+  return removeEmptyRowsAndColumns(matrixBySet) as Array<CenterPoint | undefined>[];
 } 
 
 function getOuterCoords(
@@ -258,12 +260,17 @@ function getOuterCentersMatrix(
   matrix: Array<CenterPoint | undefined>[],
   borderEmpties: number[][],
   params: GridParams,
-): Array<CenterPoint | undefined>[] {
+): Array<CenterPoint | 'outer' | undefined>[] {
   const maxI = matrix.length - 1;
   const maxJ = matrix[0].length - 1;
 
-  return matrix.map((row, i) => row.map(
+  const outerCenters = matrix.map((row, i) => row.map(
     (center, j) => {
+      if (
+        !center && 
+        borderEmpties.some(([i2, j2]) => i === i2 && j === j2)
+      ) return 'outer';
+        
       if (!center) return center;
 
       if (
@@ -289,18 +296,35 @@ function getOuterCentersMatrix(
       return isOnBorder ? center : undefined;
     })
   );
+
+  outerCenters.forEach((row) => {
+    row.unshift('outer');
+    row.push('outer');
+  });
+
+  const rowLength = outerCenters[0].length;
+
+  outerCenters.unshift(new Array(rowLength).fill('outer'));
+  outerCenters.push(new Array(rowLength).fill('outer'));
+
+  return outerCenters;
 }
 
 function getInnerCentersMatrixes(  
   matrix: Array<CenterPoint | undefined>[],
   innerEmpties: number[][][],
   params: GridParams,
-): Array<CenterPoint | undefined>[][] {
+): Array<CenterPoint | undefined | 'inner'>[][] {
   return innerEmpties.reduce((innerMatrixes, empties) => {
     const innerMatrix = matrix.map((row, i) => row.map(
       (center, j) => {
-        if (!center) return center;
-  
+        if (
+          !center && 
+          empties.some(([i2, j2]) => i === i2 && j === j2)
+        ) return 'inner';
+
+        if (!center) return center;  
+
         const nearestEmpties = calcNearestAndTouchedIndexes(i, j, params)
           .filter(([i, j]) => {
             if (!matrix[i]) return false;
@@ -318,24 +342,29 @@ function getInnerCentersMatrixes(
       })
     );
 
-    const filtered = removeEmptyRowsAndColumns(innerMatrix);
+    const filtered = removeEmptyRowsAndColumns(innerMatrix) as Array<CenterPoint | undefined | 'inner'>[];
 
     innerMatrixes.push(filtered);
 
     return innerMatrixes;
-  }, [] as Array<CenterPoint | undefined>[][]);
+  }, [] as Array<CenterPoint | 'inner' |undefined>[][]);
 }
 
-function orderIndexesByBorder(
-  i: number,
-  j: number,
-  matrix: Array<CenterPoint | undefined>[],
+function getOuterContour(
+  matrix: Array<CenterPoint | undefined | 'outer'>[],
   params: GridParams,
-  indexes?: number[][]
 ) {
-  if (!indexes) {
-    indexes = [];
-  }
+  const startI: number = 0;
+  const startJ = matrix[0].reduce((startJ, _value, j) => {
+    if (startJ !== undefined) return startJ;
+
+    const nearest = calcNearestAndTouchedIndexes(startI, j, params);
+    const hasNearest = nearest.reduce((hasNearest, [i, j]) => {
+      return hasNearest || (!!matrix[i] && !!matrix[i][j]);
+    }, false);
+
+    return hasNearest ? j : startJ;
+  }, undefined as undefined | number);
 
   // const nearests = calcNearestIndexes(i, j, params)
   //   .filter(([i, j]) => matrix[i] && matrix[i][j]);
@@ -389,13 +418,13 @@ export function buildArea(centers: CenterPoint[]) {
   const outerMatrix = getOuterCentersMatrix(filteredMatrix, borderEmpties, params);
   const innerMatrixes = getInnerCentersMatrixes(filteredMatrix, innerEmpties, params);
 
-  // const outerArray = matrixToArray(outerMatrix, params);
+  const outerPoints = getOuterContour(outerMatrix, params);
   // const innerArrays = innerMatrixes.map(
   //   (innerMatrix) => matrixToArray(innerMatrix, params)
   // );
 
-  // console.log(outerArray);
-  // console.log(innerArrays);
+  console.log(outerMatrix);
+  console.log(innerMatrixes);
 }
 
 function calcNearestIndexes(
