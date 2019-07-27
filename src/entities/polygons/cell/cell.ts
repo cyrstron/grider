@@ -9,7 +9,7 @@ import { PeakPoint } from '../../points/peak-point';
 
 import {expand} from './utils/cell-expander';
 import {getIntersectedWithSegmentNeighbor} from './utils/intersected-neighbors'
-import { TileMercPoint } from '../../points/tile-merc-point';
+import {getCommonPoints} from './utils/common-points';
 
 export class Cell extends GeoPolygon<CellSide> {
   center: CenterPoint;
@@ -200,6 +200,16 @@ export class Cell extends GeoPolygon<CellSide> {
   isNeighbor(cell: Cell): boolean {
     return this.center.isNeighbor(cell.center);
   } 
+
+  commonPoints(cell: Cell): GeoPoint[] {
+    return getCommonPoints(this, cell);
+  }
+
+  moveByDiff(iDiff: number, jDiff: number): Cell {
+    const center = this.center.moveByDiff(iDiff, jDiff);
+
+    return center.toCell();
+  }
 
   get neighbors() {
     const {      

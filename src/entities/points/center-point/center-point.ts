@@ -53,6 +53,18 @@ export class CenterPoint extends GridPoint {
       .toCenter(this.params);
   }
 
+  moveByDiff(iDiff: number, jDiff: number): CenterPoint {
+    const i = this.i + iDiff;
+    const j = this.j + jDiff;
+    const k = this.k === undefined ?
+      undefined :
+      this.k - (iDiff + jDiff);
+
+    return new CenterPoint(this.params, i, j ,k)
+      .toGeo()
+      .toCenter(this.params);
+  }
+
   get neighbors() {
     return getAll(this);
   }
