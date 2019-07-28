@@ -21,17 +21,17 @@ function getStartPoints(
   startI: number,
   startJ: number,
 ) {
-  const {payload} = matrix;
+  const {
+    payload, 
+    topLeft: {
+      params: {isHorizontal}
+    }
+  } = matrix;
   const points: GeoPoint[] = [];
   
   nearestCentersIndexes.sort(([iA, jA], [iB, jB]) => iB - iA || jA - jB);
 
-  const [i, j] = nearestCentersIndexes[0];
-  const sampleCell = matrix.topLeft.toCell();
-  const diffI = i - startI;
-  const diffJ = j - startJ;
-
-  const outerCell = sampleCell.moveByDiff(diffI, diffJ);
+  const outerCell = matrix.equivalentCell(startI, startJ);
   const refCenter = outerCell.center.moveByDiff(-1, -1);
 
   const isNorthern = outerCell.center.isNorthernTo(refCenter);
@@ -42,7 +42,13 @@ function getStartPoints(
 
     return cell.commonPoints(outerCell)
         .sort((pointA, pointB) => {
-          if (pointA.lng !== pointB.lng) {
+          const isByEastern = (
+            !isHorizontal && pointA.lng !== pointB.lng
+          ) || (
+            isHorizontal && pointA.lat === pointB.lat
+          );
+
+          if (isByEastern) {
             return pointA.isEasternTo(pointB) === isEastern ? 1 : -1;
           } else {
             return pointA.isNorthernTo(pointB) === isNorthern ? 1 : -1

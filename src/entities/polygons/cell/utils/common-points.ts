@@ -7,8 +7,8 @@ export function getCommonPoints(
 ): GeoPoint[] {
     const {params} = cellA.center;
 
-    const diffI = cellA.center.i - cellB.center.i;
-    const diffJ = cellA.center.j - cellB.center.j;
+    const diffI = cellB.center.i - cellA.center.i;
+    const diffJ = cellB.center.j - cellA.center.j;
 
     const indexes = params.type === 'hex' ?
         getHexCommonPointsIndexes(diffI, diffJ) :
@@ -51,17 +51,17 @@ function getHexCommonPointsIndexes(
     if (diffI === 0 && diffJ === 0) {
         return [0, 1, 2, 3, 4, 5];
     } else if (diffI === 1 && diffJ === 0) {
-        return [2, 3];
+        return [3, 4];
     } else if (diffI === -1 && diffJ === 0) {
-        return [5, 0];        
+        return [0, 1];        
     } else if (diffI === 0 && diffJ === 1) {
-        return [1, 2];
+        return [4, 5];
     } else if (diffI === 0 && diffJ === -1) {
-        return [4, 5];   
+        return [1, 2];   
     } else if (diffI === -1 && diffJ === 1) {
-        return [0, 1];   
+        return [5, 0];   
     } else if (diffI === 1 && diffJ === -1) {
-        return [3, 4];        
+        return [2, 3];        
     } else {
         return [];
     }

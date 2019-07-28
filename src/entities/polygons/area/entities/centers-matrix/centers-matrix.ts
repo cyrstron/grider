@@ -4,6 +4,7 @@ import {buildMatrix} from './utils/build-matrix';
 import {calcTopLeft} from '../../utils/calc-top-left';
 import { getNearestEmpties } from "./utils/nearest-empties";
 import { calcNearestAndTouchedIndexes, calcNearestIndexes } from "../../utils/nearest-indexes";
+import { Cell } from "../../../cell";
 // import { OuterCentersMatrix } from "../outer-centers-matrix/outer-centers-matrix";
 // import { InnerCentersMatrix } from "../inner-centers-matrix/inner-centers-matrix";
 
@@ -14,14 +15,6 @@ export class CentersMatrix {
     public payload: MatrixPayload,
     public topLeft: CenterPoint,
   ) {}
-
-  static fromCenters(centers: CenterPoint[]): CentersMatrix {  
-    const isAntiMeridian = isOnAntiMeridian(centers);
-    const matrix = buildMatrix(centers, isAntiMeridian);
-    const topLeft = calcTopLeft(matrix);
-
-    return new CentersMatrix(matrix, topLeft);
-  }
 
   removeEmptyLines(): CentersMatrix {
     const filtered = this.payload.filter((row) => 
@@ -65,6 +58,78 @@ export class CentersMatrix {
       .removeEmptyLines();
   }
 
+  equivalentCenter(i: number, j: number): CenterPoint {
+    return this.topLeft.moveByDiff(i, j);
+  }
+
+  equivalentCell(i: number, j: number): Cell {
+    return this.equivalentCenter(i, j).toCell();
+  }
+
+  touchedCenters(i: number, j: number): number[][] {
+    return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
+      .filter(
+        ([i, j]) => this.payload[i] && (
+          this.payload[i][j] instanceof CenterPoint
+      ));
+  }
+
+  nearestCenters(i: number, j: number): number[][] {
+    return calcNearestIndexes(i, j, this.topLeft.params)
+      .filter(
+        ([i, j]) => this.payload[i] && (
+          this.payload[i][j] instanceof CenterPoint
+      ));
+  }
+
+  touchedEmpties(i: number, j: number): number[][] {
+    return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
+      .filter(
+        ([i, j]) => this.payload[i] && !(
+          this.payload[i][j] instanceof CenterPoint
+      ));
+  }
+
+  nearestEmpties(i: number, j: number): number[][] {
+    return calcNearestIndexes(i, j, this.topLeft.params)
+      .filter(
+        ([i, j]) => this.payload[i] && !(
+          this.payload[i][j] instanceof CenterPoint
+      ));
+  }
+
+  touchedInnerEmpties(i: number, j: number): number[][] {
+    return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
+      .filter(
+        ([i, j]) => this.payload[i] && !(
+          this.payload[i][j] === 'inner'
+      ));
+  }
+
+  nearestInnerEmpties(i: number, j: number): number[][] {
+    return calcNearestIndexes(i, j, this.topLeft.params)
+      .filter(
+        ([i, j]) => this.payload[i] && !(
+          this.payload[i][j] === 'inner'
+      ));
+  }
+
+  touchedOuterEmpties(i: number, j: number): number[][] {
+    return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
+      .filter(
+        ([i, j]) => this.payload[i] && !(
+          this.payload[i][j] === 'outer'
+      ));
+  }
+
+  nearestOuterEmpties(i: number, j: number): number[][] {
+    return calcNearestIndexes(i, j, this.topLeft.params)
+      .filter(
+        ([i, j]) => this.payload[i] && !(
+          this.payload[i][j] === 'outer'
+      ));
+  }
+  
   get outerCoords(): number[][] {  
     const outerEmptinessIndexes: number[][] = [];
   
@@ -140,67 +205,11 @@ export class CentersMatrix {
     [] as number[][][]);
   }
   
-  touchedCenters(i: number, j: number): number[][] {
-    return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
-      .filter(
-        ([i, j]) => this.payload[i] && (
-          this.payload[i][j] instanceof CenterPoint
-      ));
-  }
+  static fromCenters(centers: CenterPoint[]): CentersMatrix {  
+    const isAntiMeridian = isOnAntiMeridian(centers);
+    const matrix = buildMatrix(centers, isAntiMeridian);
+    const topLeft = calcTopLeft(matrix);
 
-  nearestCenters(i: number, j: number): number[][] {
-    return calcNearestIndexes(i, j, this.topLeft.params)
-      .filter(
-        ([i, j]) => this.payload[i] && (
-          this.payload[i][j] instanceof CenterPoint
-      ));
-  }
-
-  touchedEmpties(i: number, j: number): number[][] {
-    return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
-      .filter(
-        ([i, j]) => this.payload[i] && !(
-          this.payload[i][j] instanceof CenterPoint
-      ));
-  }
-
-  nearestEmpties(i: number, j: number): number[][] {
-    return calcNearestIndexes(i, j, this.topLeft.params)
-      .filter(
-        ([i, j]) => this.payload[i] && !(
-          this.payload[i][j] instanceof CenterPoint
-      ));
-  }
-
-  touchedInnerEmpties(i: number, j: number): number[][] {
-    return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
-      .filter(
-        ([i, j]) => this.payload[i] && !(
-          this.payload[i][j] === 'inner'
-      ));
-  }
-
-  nearestInnerEmpties(i: number, j: number): number[][] {
-    return calcNearestIndexes(i, j, this.topLeft.params)
-      .filter(
-        ([i, j]) => this.payload[i] && !(
-          this.payload[i][j] === 'inner'
-      ));
-  }
-
-  touchedOuterEmpties(i: number, j: number): number[][] {
-    return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
-      .filter(
-        ([i, j]) => this.payload[i] && !(
-          this.payload[i][j] === 'outer'
-      ));
-  }
-
-  nearestOuterEmpties(i: number, j: number): number[][] {
-    return calcNearestIndexes(i, j, this.topLeft.params)
-      .filter(
-        ([i, j]) => this.payload[i] && !(
-          this.payload[i][j] === 'outer'
-      ));
+    return new CentersMatrix(matrix, topLeft);
   }
 }
