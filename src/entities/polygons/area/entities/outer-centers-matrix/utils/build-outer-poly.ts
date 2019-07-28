@@ -24,6 +24,8 @@ function calcNextOuter(
     touchedOuterIndexes = touchedOuterIndexes.filter(
       ([i, j]) => i !== prevI || j !== prevJ
     );
+  } else if (touchedOuterIndexes.length > 1) {
+    return touchedOuterIndexes.sort(([, jA], [, jB]) => jB - jA)[0] as [number, number];
   }
 
   if (touchedOuterIndexes.length > 1) {
