@@ -12,7 +12,9 @@ export class Area extends GeoPolygon {
     super(points);
   }
 
-  static fromCellCenters(centers: CenterPoint[]) {
-    buildArea(centers)
+  static fromCellCenters(centers: CenterPoint[]): Area {
+    const [points, ...holes] = buildArea(centers);
+
+    return new Area(points, holes, centers);
   }
 }

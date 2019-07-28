@@ -101,7 +101,7 @@ export class CentersMatrix {
   touchedInnerEmpties(i: number, j: number): number[][] {
     return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
       .filter(
-        ([i, j]) => this.payload[i] && !(
+        ([i, j]) => this.payload[i] && (
           this.payload[i][j] === 'inner'
       ));
   }
@@ -109,7 +109,7 @@ export class CentersMatrix {
   nearestInnerEmpties(i: number, j: number): number[][] {
     return calcNearestIndexes(i, j, this.topLeft.params)
       .filter(
-        ([i, j]) => this.payload[i] && !(
+        ([i, j]) => this.payload[i] && (
           this.payload[i][j] === 'inner'
       ));
   }
@@ -117,7 +117,7 @@ export class CentersMatrix {
   touchedOuterEmpties(i: number, j: number): number[][] {
     return calcNearestAndTouchedIndexes(i, j, this.topLeft.params)
       .filter(
-        ([i, j]) => this.payload[i] && !(
+        ([i, j]) => this.payload[i] && (
           this.payload[i][j] === 'outer'
       ));
   }
@@ -125,7 +125,7 @@ export class CentersMatrix {
   nearestOuterEmpties(i: number, j: number): number[][] {
     return calcNearestIndexes(i, j, this.topLeft.params)
       .filter(
-        ([i, j]) => this.payload[i] && !(
+        ([i, j]) => this.payload[i] && (
           this.payload[i][j] === 'outer'
       ));
   }
