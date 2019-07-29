@@ -24,6 +24,7 @@ export function buildArea(centers: CenterPoint[]): GeoPoint[][] {
     (innerMatrix) => innerMatrix.toPoly()
   );
 
+  console.log(outerMatrix);
   console.log(innerMatrixes);
   console.log(outerPoints);
   console.log(innerPolys);
