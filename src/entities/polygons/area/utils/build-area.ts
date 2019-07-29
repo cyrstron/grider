@@ -20,6 +20,13 @@ export function buildArea(centers: CenterPoint[]): GeoPoint[][] {
     (empties) => InnerCentersMatrix.fromCentersMatrix(filteredMatrix, empties)
   );
   const outerPoints = outerMatrix.toPoly();
+  const innerPolys = innerMatrixes.map(
+    (innerMatrix) => innerMatrix.toPoly()
+  );
 
-  return [outerPoints];
+  console.log(innerMatrixes);
+  console.log(outerPoints);
+  console.log(innerPolys);
+
+  return [outerPoints, ...innerPolys];
 }

@@ -4,7 +4,7 @@ import {
 } from './nearest-indexes';
 import { CentersMatrix } from "../entities/centers-matrix";
 
-function unionNearestCenters(
+export function unionNearestCenters(
   i: number,
   j: number, 
   matrix: CentersMatrix, 

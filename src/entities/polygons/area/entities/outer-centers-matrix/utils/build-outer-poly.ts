@@ -199,8 +199,6 @@ function getOuterPoints(
     nextJ = j;
   }
 
-  console.log(points);
-
   return points;
 }
 

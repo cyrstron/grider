@@ -50,4 +50,16 @@ export class OuterCentersMatrix extends CentersMatrix {
 
     return [startI, startJ];
   }
+
+  removeEmptyLines(): OuterCentersMatrix {
+    const {
+      payload, 
+      topLeft
+    } = super.removeEmptyLines();
+
+    return new OuterCentersMatrix(
+      payload as OuterCentersMatrixPayload, 
+      topLeft
+    );
+  }
 }

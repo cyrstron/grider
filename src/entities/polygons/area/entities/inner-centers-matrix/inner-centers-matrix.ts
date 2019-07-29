@@ -1,7 +1,8 @@
-import { CenterPoint } from "../../../../points";
+import { CenterPoint, GeoPoint } from "../../../../points";
 import { CentersMatrix } from "../centers-matrix";
 import { getInnerCentersMatrix } from "./utils/get-inner-centers";
 import { calcTopLeft } from "../../utils/calc-top-left";
+import { OuterCentersMatrix } from "../outer-centers-matrix";
 
 type InnerCentersMatrixPayload = Array<CenterPoint | 'inner' | undefined>[];
 
@@ -25,6 +26,10 @@ export class InnerCentersMatrix extends CentersMatrix {
     const topLeft = calcTopLeft(payload);
 
     return new InnerCentersMatrix(payload, topLeft).removeEmptyLines();
+  }
+
+  toPoly(): GeoPoint[] {
+    return [];
   }
 
   removeEmptyLines(): InnerCentersMatrix {
