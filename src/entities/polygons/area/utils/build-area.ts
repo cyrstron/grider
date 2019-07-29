@@ -3,7 +3,7 @@ import { CenterPoint, GeoPoint } from "../../../points";
 import {getBiggestSet} from './biggest-set';
 import { CentersMatrix } from "../entities/centers-matrix";
 import { OuterCentersMatrix } from "../entities/outer-centers-matrix";
-import { InnerCentersMatrix } from "../entities/inner-centers-matrix/inner-centers-matrix";
+import { InnerCentersMatrix } from "../entities/inner-centers-matrix";
 
 export function buildArea(centers: CenterPoint[]): GeoPoint[][] {
   if (centers.length === 0) return [[]];

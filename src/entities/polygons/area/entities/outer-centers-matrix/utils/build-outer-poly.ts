@@ -1,5 +1,6 @@
 import { CenterPoint, GeoPoint } from "../../../../../points";
 import { OuterCentersMatrix } from "../../outer-centers-matrix";
+import { Cell } from "../../../../cell";
 
 function calcNextOuter(
   matrix: OuterCentersMatrix,
@@ -99,29 +100,57 @@ function getNextPoints(
   outerJ: number,
 ) {
   const outerCell = matrix.equivalentCell(outerI, outerJ);
-  const commonPoints = matrix.nearestCenters(outerI, outerJ)
-    .map(([i, j]) => {
-      const cell = (matrix.payload[i][j] as CenterPoint).toCell();
+  const nearestCenters = matrix.touchedCenters(outerI, outerJ);
 
-      return cell.commonPoints(outerCell);
-    });
-  
   let lastPoint = points[points.length - 1];
+  let prevCell: Cell | undefined;
   const nextPoints = [];
 
-  while(commonPoints.length > 0) {
+  let commonCells = nearestCenters.map(([i, j]) => {
+    return (matrix.payload[i][j] as CenterPoint).toCell();
+  });
+
+  while(commonCells.length > 0) {
     lastPoint = nextPoints[nextPoints.length - 1] || lastPoint;
+    
+    let commonCellIndex: number;
 
-    const commonIndex = commonPoints.findIndex((commonSide) => (
-      commonSide.some((point) => point.isEqual(lastPoint))
-    ));
+    if (prevCell) {
+      commonCellIndex = commonCells.findIndex((cell) => (
+        !!cell.findEqualGeoPoint(lastPoint) && (
+          !prevCell || prevCell.isNeighbor(cell)
+        )
+      ));
+    } else {
 
-    const newPoint = commonPoints[commonIndex].find(
-      (point) => !point.isEqual(lastPoint)
-    ) as GeoPoint;
+      const cells = commonCells.filter((cell) => (
+        !!cell.findEqualGeoPoint(lastPoint)
+      ));
 
-    nextPoints.push(newPoint);
-    commonPoints.splice(commonIndex, 1);
+      if (cells.length === 1) {
+        commonCellIndex = commonCells.indexOf(cells[0])
+      } else {
+        const preLastPoint = nextPoints[nextPoints.length - 2] || 
+        points[points.length - 2];
+
+        commonCellIndex = commonCells.findIndex((cell) => (
+          !!cell.findEqualGeoPoint(lastPoint) && 
+            !!cell.findEqualGeoPoint(preLastPoint)        
+        ));
+      };
+    }
+
+    if (commonCellIndex === -1) break;
+
+    const cell = commonCells[commonCellIndex];
+    const commonPoints = cell.commonPoints(outerCell)
+      .filter((point) => (
+        !point.isEqual(lastPoint)
+      ));
+
+    nextPoints.push(...commonPoints);
+    prevCell = cell;
+    commonCells.splice(commonCellIndex, 1);
   }
 
   return nextPoints;
@@ -169,6 +198,8 @@ function getOuterPoints(
     nextI = i;
     nextJ = j;
   }
+
+  console.log(points);
 
   return points;
 }
