@@ -2,12 +2,12 @@ import { CenterPoint, GeoPoint } from "../../../../points";
 import { CentersMatrix } from "../centers-matrix";
 import { getInnerCentersMatrix } from "./utils/get-inner-centers";
 import { calcTopLeft } from "../../utils/calc-top-left";
-import {getInnerPoly} from './utils/build-inner-poly';
 import { calcNearestAndTouchedIndexes } from "../../utils/nearest-indexes";
+import {PolyMatrix} from '../poly-matrix';
 
 type InnerCentersMatrixPayload = Array<CenterPoint | 'inner' | undefined>[];
 
-export class InnerCentersMatrix extends CentersMatrix {
+export class InnerCentersMatrix extends PolyMatrix {
   payload: InnerCentersMatrixPayload;
 
   constructor(
@@ -19,29 +19,20 @@ export class InnerCentersMatrix extends CentersMatrix {
     this.payload = payload;
   }
 
+  touchedInnerIndexes(i: number, j: number): number[][] {
+    return this.touchedInnerEmpties(i, j);
+  }
+
+  touchedOuterIndexes(i: number, j: number): number[][] {
+    return this.touchedCenters(i, j);
+  }
+
   toPoly(): GeoPoint[] {
-    return getInnerPoly(this);
+    return super.toPoly(true).reverse();
   }
 
   get startIndexes(): [number, number] {
-    const {
-      payload,
-      topLeft: {params}
-    } = this;
-    
-    const startI: number = 0;
-    const startJ = payload[0].reduce((startJ, _value, j) => {
-      if (startJ !== undefined) return startJ;
-
-      const nearest = calcNearestAndTouchedIndexes(startI, j, params);
-      const hasNearest = nearest.reduce((hasNearest, [i, j]) => {
-        return hasNearest || (!!payload[i] && payload[i][j] === 'inner');
-      }, false);
-
-      return hasNearest ? j : startJ;
-    }, undefined as undefined | number) as number;
-
-    return [startI, startJ];
+    return this.startIndexesBy((value) => value === 'inner');
   }
 
   static fromCentersMatrix(

@@ -2,12 +2,12 @@ import { CentersMatrix } from "../centers-matrix";
 import { CenterPoint, GeoPoint } from "../../../../points";
 import { getOuterCentersMatrix } from "./utils/get-outer-centers";
 import { calcTopLeft } from "../../utils/calc-top-left";
-import { getOuterPoly } from "./utils/build-outer-poly";
 import { calcNearestAndTouchedIndexes } from "../../utils/nearest-indexes";
+import { PolyMatrix } from "../poly-matrix";
 
 type OuterCentersMatrixPayload = Array<(CenterPoint | "outer" | undefined)>[]
 
-export class OuterCentersMatrix extends CentersMatrix {
+export class OuterCentersMatrix extends PolyMatrix {
   payload: OuterCentersMatrixPayload;
 
   constructor(
@@ -19,38 +19,18 @@ export class OuterCentersMatrix extends CentersMatrix {
     this.payload = payload;
   }
 
-  static fromCentersMatrix(matrix: CentersMatrix): OuterCentersMatrix {
-    const payload = getOuterCentersMatrix(matrix);
-    const topLeft = calcTopLeft(payload);
+  touchedInnerIndexes(i: number, j: number): number[][] {
+    return this.touchedCenters(i, j);
+  }
 
-    return new OuterCentersMatrix(payload, topLeft);
+  touchedOuterIndexes(i: number, j: number): number[][] {
+    return this.touchedOuterEmpties(i, j);
   }
 
   toPoly(): GeoPoint[] {
-    return getOuterPoly(this);
+    return super.toPoly();
   }
-
-  get startIndexes(): [number, number] {
-    const {
-      payload,
-      topLeft: {params}
-    } = this;
-    
-    const startI: number = 0;
-    const startJ = payload[0].reduce((startJ, _value, j) => {
-      if (startJ !== undefined) return startJ;
-
-      const nearest = calcNearestAndTouchedIndexes(startI, j, params);
-      const hasNearest = nearest.reduce((hasNearest, [i, j]) => {
-        return hasNearest || (!!payload[i] && payload[i][j] instanceof CenterPoint);
-      }, false);
-
-      return hasNearest ? j : startJ;
-    }, undefined as undefined | number) as number;
-
-    return [startI, startJ];
-  }
-
+  
   removeEmptyLines(): OuterCentersMatrix {
     const {
       payload, 
@@ -62,4 +42,16 @@ export class OuterCentersMatrix extends CentersMatrix {
       topLeft
     );
   }
+
+  get startIndexes(): [number, number] {
+    return this.startIndexesBy((value) => value instanceof CenterPoint);
+  }
+
+  static fromCentersMatrix(matrix: CentersMatrix): OuterCentersMatrix {
+    const payload = getOuterCentersMatrix(matrix);
+    const topLeft = calcTopLeft(payload);
+
+    return new OuterCentersMatrix(payload, topLeft);
+  }
+
 }
