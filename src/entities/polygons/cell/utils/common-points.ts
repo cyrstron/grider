@@ -7,8 +7,21 @@ export function getCommonPoints(
 ): GeoPoint[] {
     const {params} = cellA.center;
 
-    const diffI = cellB.center.i - cellA.center.i;
-    const diffJ = cellB.center.j - cellA.center.j;
+    const isAntimeridian = cellA.center.isCloserThroughAntiMeridian(cellB.center);
+
+    let diffI: number;
+    let diffJ: number;
+    
+    if (isAntimeridian) {
+        const oppositeA = cellA.center.toOppositeHemishpere();
+        const oppositeB = cellB.center.toOppositeHemishpere();
+        
+        diffI = oppositeB.i - oppositeA.i;
+        diffJ = oppositeB.j - oppositeA.j;
+    } else {
+        diffI = cellB.center.i - cellA.center.i;
+        diffJ = cellB.center.j - cellA.center.j;
+    }
 
     const indexes = params.type === 'hex' ?
         getHexCommonPointsIndexes(diffI, diffJ) :

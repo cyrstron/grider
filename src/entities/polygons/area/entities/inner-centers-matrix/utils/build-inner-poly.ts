@@ -115,17 +115,17 @@ function getNextPoints(
     
     let commonCellIndex: number;
 
-    if (prevCell) {
-      commonCellIndex = commonCells.findIndex((cell) => (
-        !!cell.findEqualGeoPoint(lastPoint) && (
-          !prevCell || !prevCell.isNeighbor(cell)
-        )
-      ));
-    } else {
-      const cells = commonCells.filter((cell) => (
-        !!cell.findEqualGeoPoint(lastPoint)
-      ));
+    const cells = commonCells.filter((cell) => (
+      !!cell.findEqualGeoPoint(lastPoint)
+    ));
 
+    if (prevCell) {
+      const cell = cells.length > 1 ?
+        cells.find((cell) => !!prevCell && !prevCell.isNeighbor(cell)) :
+        cells[0];
+
+      commonCellIndex = commonCells.indexOf(cell as Cell);
+    } else {
       if (cells.length === 1) {
         commonCellIndex = commonCells.indexOf(cells[0])
       } else {

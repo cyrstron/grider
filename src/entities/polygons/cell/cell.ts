@@ -20,7 +20,7 @@ export class Cell extends GeoPolygon<CellSide> {
   ) {
     const peaks = expand(center);
 
-    super(peaks.map((peak) => peak.toGeo()));
+    super(peaks.map((peak) => peak.toGeo().toFormatted()));
 
     this.peaks = peaks;
     this.center = center;

@@ -9,8 +9,8 @@ export function isOnAntiMeridian(centers: CenterPoint[]): boolean {
       eastern = center;
     }
 
-    if (center.isEasternTo(western)) {
-      eastern = center;
+    if (center.isWesternTo(western)) {
+      western = center;
     }
   });
 
