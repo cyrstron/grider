@@ -1,7 +1,6 @@
 const path = require('path');
-const  DeclarationBundlerPlugin = require('declaration-bundler-webpack-plugin');
 
-module.exports = {
+module.exports = (env, argv) => ({
   entry: './src/index.ts',
   output: {
     path: path.join(__dirname, '/.dist'),
@@ -17,9 +16,6 @@ module.exports = {
       { 
         test: /\.ts$/, 
         loader: 'ts-loader',
-        options: {
-          allowTsInNodeModules: true
-        }
       },
       {
         test: /\.worker\.js$/,
@@ -27,6 +23,6 @@ module.exports = {
       }
     ]
   },
-  devtool: 'source-map',
+  devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
   plugins: []
-}
+})
