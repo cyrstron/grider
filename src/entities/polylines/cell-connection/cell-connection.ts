@@ -1,6 +1,6 @@
 import { CenterPoint } from '../../points/center-point';
 import { GeoPoint } from '../../points/geo-point';
-import { Cell } from '../../polygons';
+import { Cell } from '../../polygons/cell';
 import { GeoSegment } from '../../segments';
 
 export class CellConnection {
@@ -11,12 +11,12 @@ export class CellConnection {
   ): CellConnection {
     const geoPointA = centerA.toGeo();
     const geoPointB = centerB.toGeo();
-    const endCell = centerB.toCell();
+    const endCell = Cell.fromCenter(centerB);
     const innerCenters = [];
     const points = [geoPointA];
 
     let segment = new GeoSegment(geoPointA, geoPointB);
-    let nextCell: Cell | undefined = centerA.toCell().nextCellOnSegment(segment);
+    let nextCell: Cell | undefined = Cell.fromCenter(centerA).nextCellOnSegment(segment);
 
     while (nextCell && !nextCell.isEqual(endCell)) {
       const nextGeoPoint = nextCell.center.toGeo();

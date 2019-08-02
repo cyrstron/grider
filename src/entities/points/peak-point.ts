@@ -1,5 +1,5 @@
 import { GridParams } from '../grid-params';
-import {Cell} from '../polygons/cell';
+import { Cell } from '../polygons/cell';
 import { GeoPolygon } from '../polygons/geo-polygon';
 import {CellSide} from '../segments/cell-side';
 import { GeoPoint } from './geo-point';
@@ -37,7 +37,7 @@ export class PeakPoint extends GridPoint {
   }
 
   static fromGeo(point: GeoPoint, params: GridParams) {
-    const {i, j, k} = point.toGrid(params);
+    const {i, j, k} = GridPoint.fromGeo(point, params);
 
     return new PeakPoint(params, i, j, k);
   }

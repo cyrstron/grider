@@ -132,14 +132,18 @@ export class Cell extends GeoPolygon<CellSide> {
     };
   }
 
+  static fromCenter(center: CenterPoint): Cell {
+    return new Cell(center);
+  }
+
   static fromGeoPoint(point: GeoPoint, params: GridParams): Cell {
-    const cellCenter = point.toCenter(params);
+    const cellCenter = CenterPoint.fromGeo(point, params);
 
     return new Cell(cellCenter);
   }
 
   static fromGridPoint(point: GridPoint) {
-    const cellCenter = point.round();
+    const cellCenter = CenterPoint.fromGrid(point);
 
     return new Cell(cellCenter);
   }
@@ -292,7 +296,7 @@ export class Cell extends GeoPolygon<CellSide> {
   }
 
   containsPoint(point: GeoPoint): boolean {
-    const center = point.toCenter(this.center.params);
+    const center = CenterPoint.fromGeo(point, this.center.params);
 
     return this.center.isEqual(center);
   }
@@ -333,7 +337,12 @@ export class Cell extends GeoPolygon<CellSide> {
       pointB: endPoint,
     } = segment;
 
-    if (startPoint.inSameCell(endPoint, this.center.params)) return;
+    const centerA = CenterPoint.fromGeo(startPoint, this.center.params);
+    const centerB = CenterPoint.fromGeo(endPoint, this.center.params);
+
+    const areInSameCell = centerA.isEqual(centerB);
+
+    if (areInSameCell) return;
 
     const nextSide = this.nearestToEndIntersectedSide(segment);
 
@@ -353,6 +362,6 @@ export class Cell extends GeoPolygon<CellSide> {
   moveByDiff(iDiff: number, jDiff: number): Cell {
     const center = this.center.moveByDiff(iDiff, jDiff);
 
-    return center.toCell();
+    return Cell.fromCenter(center);
   }
 }

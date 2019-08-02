@@ -8,19 +8,19 @@ import {createPatterns} from './utils/create-patterns';
 export class MapGridTile {
 
   get northWest(): GeoPoint {
-    return this.tilePoint.toSphere();
+    return GeoPoint.fromMerc(this.tilePoint);
   }
 
   get southWest(): GeoPoint {
-    return this.tilePoint.southTile.toSphere();
+    return GeoPoint.fromMerc(this.tilePoint.southTile);
   }
 
   get northEast(): GeoPoint {
-    return this.tilePoint.eastTile.toSphere();
+    return GeoPoint.fromMerc(this.tilePoint.eastTile);
   }
 
   get southEast(): GeoPoint {
-    return this.tilePoint.southTile.eastTile.toSphere();
+    return GeoPoint.fromMerc(this.tilePoint.southTile.eastTile);
   }
 
   get north(): number {

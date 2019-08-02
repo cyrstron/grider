@@ -1,5 +1,6 @@
 import { GridParams } from '../../../grid-params';
 import { GeoPoint } from '../../../points/geo-point';
+import { GridPoint } from '../../../points/grid-point';
 import { GeoPolygon } from '../../geo-polygon';
 
 export function simplifyFigure(
@@ -94,7 +95,7 @@ function simplifyHexFigure(
   }, []);
 
   const simpleLen = simplified.length;
-  const simplifiedGrid = simplified.map((point) => point.toGrid(params));
+  const simplifiedGrid = simplified.map((point) => GridPoint.fromGeo(point, params));
 
   const cleared = simplifiedGrid.reduce((
     cleared: GeoPoint[],
@@ -143,7 +144,7 @@ function checkPoint(
     segment = segment.map((point) => point.toOppositeHemisphere());
   }
 
-  const gridSegment = segment.map((point) => point.toGrid(params));
+  const gridSegment = segment.map((point) => GridPoint.fromGeo(point, params));
 
   const pointsInRow = gridSegment.reduce((
     pointsInRow: number[][],

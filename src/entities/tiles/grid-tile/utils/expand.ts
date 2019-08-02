@@ -1,4 +1,5 @@
 import { GridParams } from '../../../grid-params';
+import { CenterPoint } from '../../../points/center-point';
 import { GeoPoint } from '../../../points/geo-point';
 import { GridPoint } from '../../../points/grid-point';
 import { Point } from '../../../points/point';
@@ -11,7 +12,9 @@ export function expandTile(
   tileHeight: number,
   params: GridParams,
 ): Point[][] {
-  const {northWestNeighbors: {northWest}} = geoPoint.toCenter(params);
+  const {
+    northWestNeighbors: {northWest},
+  } = CenterPoint.fromGeo(geoPoint, params);
 
   let gridTilePoints: grider.GridPoint[][];
 

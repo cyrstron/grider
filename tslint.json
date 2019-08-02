@@ -13,7 +13,6 @@
       "severity": "warning",
       "options": ["log", "time", "timeEnd"]
     },
-    "extends": ["tslint-no-circular-imports"],
     "object-literal-sort-keys": [false]
   }
 }

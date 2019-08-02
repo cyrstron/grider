@@ -154,7 +154,7 @@ export class GeoSegment {
 
     if (!mercInersection) return;
 
-    const intersection = mercInersection.toSphere();
+    const intersection = GeoPoint.fromMerc(mercInersection);
 
     return isAntiMeridian ? intersection.toOppositeHemisphere() : intersection;
   }
@@ -171,7 +171,8 @@ export class GeoSegment {
 
     const mercPoint = point.toMerc();
     const mercSegment = segment.toMerc();
-    const closest = mercSegment.closestToPoint(mercPoint).toSphere();
+    const mercClosest = mercSegment.closestToPoint(mercPoint);
+    const closest = GeoPoint.fromMerc(mercClosest);
 
     return isAntiMeridian ? closest.toOppositeHemisphere() : closest;
   }

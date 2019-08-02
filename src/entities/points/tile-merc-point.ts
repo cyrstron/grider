@@ -1,7 +1,8 @@
 import {constants} from '../../constants';
 import { GridParams } from '../grid-params';
-import { GeoPolygon } from '../polygons';
-import { GeoSegment } from '../segments';
+import { GeoPolygon } from '../polygons/geo-polygon';
+import { GeoSegment } from '../segments/geo-segment';
+import { CenterPoint } from './center-point';
 import { GeoPoint } from './geo-point';
 import { MercPoint } from './merc-point';
 import { Point } from './point';
@@ -91,39 +92,51 @@ export class TileMercPoint extends MercPoint implements Bounds {
   }
 
   get northBound(): number {
-    return this.toSphere().lat;
+    return GeoPoint.fromMerc(this).lat;
   }
 
   get southBound(): number {
-    return this.southTile.toSphere().lat;
+    return GeoPoint.fromMerc(this.southTile).lat;
   }
 
   get eastBound(): number {
-    return this.eastTile.toSphere().lng;
+    return GeoPoint.fromMerc(this.eastTile).lng;
   }
 
   get westBound(): number {
-    return this.toSphere().lng;
+    return GeoPoint.fromMerc(this).lng;
   }
 
   get north(): GeoSegment {
-    return new GeoSegment(this.toSphere(), this.eastTile.toSphere());
+    return new GeoSegment(
+      GeoPoint.fromMerc(this),
+      GeoPoint.fromMerc(this.eastTile),
+    );
   }
 
   get south(): GeoSegment {
     const southPoint = this.southTile;
 
-    return new GeoSegment(southPoint.eastTile.toSphere(), southPoint.toSphere());
+    return new GeoSegment(
+      GeoPoint.fromMerc(southPoint.eastTile),
+      GeoPoint.fromMerc(southPoint),
+    );
   }
 
   get east(): GeoSegment {
     const eastPoint = this.eastTile;
 
-    return new GeoSegment(eastPoint.toSphere(), eastPoint.southTile.toSphere());
+    return new GeoSegment(
+      GeoPoint.fromMerc(eastPoint),
+      GeoPoint.fromMerc(eastPoint.southTile),
+    );
   }
 
   get west(): GeoSegment {
-    return new GeoSegment( this.southTile.toSphere(), this.toSphere());
+    return new GeoSegment(
+      GeoPoint.fromMerc(this.southTile),
+      GeoPoint.fromMerc(this),
+    );
   }
 
   static fromTile(
@@ -191,7 +204,8 @@ export class TileMercPoint extends MercPoint implements Bounds {
   }
 
   gridPatternStartPoint(params: GridParams): Point {
-    const gridCenter = this.toSphere().toCenter(params);
+    const geoPoint = GeoPoint.fromMerc(this);
+    const gridCenter = CenterPoint.fromGeo(geoPoint, params);
     const {northWest} = gridCenter.northWestNeighbors;
     const gridTileTopLeft = northWest.toGeo().toMerc();
 
@@ -220,10 +234,10 @@ export class TileMercPoint extends MercPoint implements Bounds {
     const eastPoint = this.eastTile;
 
     return new GeoPolygon([
-      this.toSphere(),
-      eastPoint.toSphere(),
-      eastPoint.southTile.toSphere(),
-      this.southTile.toSphere(),
+      GeoPoint.fromMerc(this),
+      GeoPoint.fromMerc(eastPoint),
+      GeoPoint.fromMerc(eastPoint.southTile),
+      GeoPoint.fromMerc(this.southTile),
     ]);
   }
 

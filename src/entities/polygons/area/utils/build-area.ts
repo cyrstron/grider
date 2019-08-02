@@ -1,6 +1,7 @@
 import { CenterPoint } from '../../../points/center-point';
 import { GeoPoint } from '../../../points/geo-point';
 
+import { Cell } from '../../cell';
 import { CentersMatrix } from '../entities/centers-matrix';
 import { InnerCentersMatrix } from '../entities/inner-centers-matrix';
 import { OuterCentersMatrix } from '../entities/outer-centers-matrix';
@@ -8,7 +9,7 @@ import {getBiggestSet} from './biggest-set';
 
 export function buildArea(centers: CenterPoint[]): GeoPoint[][] {
   if (centers.length === 0) return [[]];
-  if (centers.length === 1) return [centers[0].toCell().points];
+  if (centers.length === 1) return [Cell.fromCenter(centers[0]).points];
 
   const matrix = CentersMatrix.fromCenters(centers);
   const set = getBiggestSet(matrix);

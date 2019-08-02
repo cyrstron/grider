@@ -1,5 +1,7 @@
 import { GridParams } from '../../grid-params';
 
+import { CenterPoint } from '../../points/center-point';
+import { GeoPoint } from '../../points/geo-point';
 import { Point } from '../../points/point';
 import { TileMercPoint } from '../../points/tile-merc-point';
 import {expandTile} from './utils/expand';
@@ -27,8 +29,9 @@ export class GridTile {
       zoom,
     );
 
-    const startGridCenter = startTilePoint.toSphere()
-      .toCenter(params);
+    const startGeo = GeoPoint.fromMerc(startTilePoint);
+
+    const startGridCenter = CenterPoint.fromGeo(startGeo, params);
 
     const {
       southEast: patternGridCenter,

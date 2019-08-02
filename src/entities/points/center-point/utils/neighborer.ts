@@ -1,14 +1,14 @@
 import {CenterPoint} from '../center-point';
 
 export interface Neighbors {
-  west?: CenterPoint;
-  southWest: CenterPoint;
-  east?: CenterPoint;
-  southEast: CenterPoint;
-  south?: CenterPoint;
-  northEast: CenterPoint;
-  north?: CenterPoint;
-  northWest: CenterPoint;
+  west?: grider.GridPoint;
+  southWest: grider.GridPoint;
+  east?: grider.GridPoint;
+  southEast: grider.GridPoint;
+  south?: grider.GridPoint;
+  northEast: grider.GridPoint;
+  north?: grider.GridPoint;
+  northWest: grider.GridPoint;
 }
 
 export function getAll(
@@ -57,7 +57,7 @@ export function getAll(
 
 export function getNorthWest(
   center: CenterPoint,
-): {northWest: CenterPoint} {
+): {northWest: grider.GridPoint} {
   const {
     type,
     geoAxes,
@@ -82,13 +82,13 @@ export function getNorthWest(
   }
 
   return {
-    northWest: new CenterPoint(center.params, i, j, k),
+    northWest: {i, j, k},
   };
 }
 
 export function getNorthEast(
   center: CenterPoint,
-): {northEast: CenterPoint} {
+): {northEast: grider.GridPoint} {
   const {
     type,
   } = center.params;
@@ -104,13 +104,13 @@ export function getNorthEast(
   }
 
   return {
-    northEast: new CenterPoint(center.params, i, j, k),
+    northEast: {i, j, k},
   };
 }
 
 export function getSouthWest(
   center: CenterPoint,
-): {southWest: CenterPoint} {
+): {southWest: grider.GridPoint} {
   const {
     type,
   } = center.params;
@@ -126,13 +126,13 @@ export function getSouthWest(
   }
 
   return {
-    southWest: new CenterPoint(center.params, i, j, k),
+    southWest: {i, j, k},
   };
 }
 
 export function getSouthEast(
   center: CenterPoint,
-): {southEast: CenterPoint} {
+): {southEast: grider.GridPoint} {
   const {
     type,
     geoAxes,
@@ -157,16 +157,16 @@ export function getSouthEast(
   }
 
   return {
-    southEast: new CenterPoint(center.params, i, j, k),
+    southEast: {i, j, k},
   };
 }
 
 export function getNorth(
   center: CenterPoint,
 ): {
-  north?: CenterPoint,
-  northEast?: CenterPoint,
-  northWest?: CenterPoint,
+  north?: grider.GridPoint,
+  northEast?: grider.GridPoint,
+  northWest?: grider.GridPoint,
 } {
   const {
     type,
@@ -191,16 +191,16 @@ export function getNorth(
   }
 
   return {
-    north: new CenterPoint(center.params, i, j, k),
+    north: {i, j, k},
   };
 }
 
 export function getSouth(
   center: CenterPoint,
 ): {
-  south?: CenterPoint,
-  southEast?: CenterPoint,
-  southWest?: CenterPoint,
+  south?: grider.GridPoint,
+  southEast?: grider.GridPoint,
+  southWest?: grider.GridPoint,
 } {
   const {
     type,
@@ -225,16 +225,16 @@ export function getSouth(
   }
 
   return {
-    south: new CenterPoint(center.params, i, j, k),
+    south: {i, j, k},
   };
 }
 
 export function getEast(
   center: CenterPoint,
 ): {
-  east?: CenterPoint,
-  southEast?: CenterPoint,
-  northEast?: CenterPoint,
+  east?: grider.GridPoint,
+  southEast?: grider.GridPoint,
+  northEast?: grider.GridPoint,
 } {
   const {
     type,
@@ -259,16 +259,16 @@ export function getEast(
   }
 
   return {
-    east: new CenterPoint(center.params, i, j, k),
+    east: {i, j, k},
   };
 }
 
 export function getWest(
   center: CenterPoint,
 ): {
-  west?: CenterPoint,
-  southWest?: CenterPoint,
-  northWest?: CenterPoint,
+  west?: grider.GridPoint,
+  southWest?: grider.GridPoint,
+  northWest?: grider.GridPoint,
 } {
   const {
     type,
@@ -293,6 +293,6 @@ export function getWest(
   }
 
   return {
-    west: new CenterPoint(center.params, i, j, k),
+    west: {i, j, k},
   };
 }

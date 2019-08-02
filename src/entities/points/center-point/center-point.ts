@@ -1,5 +1,6 @@
-import { Cell } from '../../polygons/cell';
+import { GridParams } from '../../grid-params';
 import {CellSide} from '../../segments/cell-side';
+import { GeoPoint } from '../geo-point';
 import {GridPoint} from '../grid-point';
 import {
   getNextCenterByCellSide,
@@ -22,61 +23,191 @@ import {
 
 export class CenterPoint extends GridPoint {
 
-  get neighbors() {
-    return getAll(this);
+  get neighbors(): {
+    south?: CenterPoint,
+    north?: CenterPoint,
+    west?: CenterPoint,
+    east?: CenterPoint,
+    southEast: CenterPoint,
+    southWest: CenterPoint,
+    northEast: CenterPoint,
+    northWest: CenterPoint,
+  } {
+    const {
+      south,
+      north,
+      west,
+      east,
+      southEast,
+      southWest,
+      northEast,
+      northWest,
+    } = getAll(this);
+
+    return {
+      south: south && CenterPoint.fromObject(south, this.params),
+      north: north && CenterPoint.fromObject(north, this.params),
+      west: west && CenterPoint.fromObject(west, this.params),
+      east: east && CenterPoint.fromObject(east, this.params),
+      southEast: CenterPoint.fromObject(southEast, this.params),
+      southWest: CenterPoint.fromObject(southWest, this.params),
+      northEast: CenterPoint.fromObject(northEast, this.params),
+      northWest: CenterPoint.fromObject(northWest, this.params),
+    };
   }
 
-  get northNeighbors() {
-    return getNorth(this);
+  get northNeighbors(): {
+    north?: CenterPoint,
+    northEast?: CenterPoint,
+    northWest?: CenterPoint,
+  } {
+    const {
+      northWest,
+      north,
+      northEast,
+    } = getNorth(this);
+
+    return {
+      northWest: northWest && CenterPoint.fromObject(northWest, this.params),
+      north: north && CenterPoint.fromObject(north, this.params),
+      northEast: northEast && CenterPoint.fromObject(northEast, this.params),
+    };
   }
 
-  get southNeighbors() {
-    return getSouth(this);
+  get southNeighbors(): {
+    south?: CenterPoint,
+    southEast?: CenterPoint,
+    southWest?: CenterPoint,
+  } {
+    const {
+      southWest,
+      south,
+      southEast,
+    } = getSouth(this);
+
+    return {
+      southWest: southWest && CenterPoint.fromObject(southWest, this.params),
+      south: south && CenterPoint.fromObject(south, this.params),
+      southEast: southEast && CenterPoint.fromObject(southEast, this.params),
+    };
   }
 
-  get westNeighbors() {
-    return getWest(this);
+  get westNeighbors(): {
+    west?: CenterPoint,
+    northWest?: CenterPoint,
+    southWest?: CenterPoint,
+  } {
+    const {
+      southWest,
+      west,
+      northWest,
+    } = getWest(this);
+
+    return {
+      southWest: southWest && CenterPoint.fromObject(southWest, this.params),
+      west: west && CenterPoint.fromObject(west, this.params),
+      northWest: northWest && CenterPoint.fromObject(northWest, this.params),
+    };
   }
 
-  get eastNeighbors() {
-    return getEast(this);
+  get eastNeighbors(): {
+    east?: CenterPoint,
+    southEast?: CenterPoint,
+    northEast?: CenterPoint,
+  } {
+    const {
+      southEast,
+      east,
+      northEast,
+    } = getEast(this);
+
+    return {
+      southEast: southEast && CenterPoint.fromObject(southEast, this.params),
+      east: east && CenterPoint.fromObject(east, this.params),
+      northEast: northEast && CenterPoint.fromObject(northEast, this.params),
+    };
   }
 
-  get northEastNeighbors() {
-    return getNorthEast(this);
+  get northEastNeighbors(): {
+    northEast: CenterPoint,
+  } {
+    const {
+      northEast,
+    } = getNorthEast(this);
+
+    return {
+      northEast: CenterPoint.fromObject(northEast, this.params),
+    };
   }
 
-  get southWestNeighbors() {
-    return getSouthWest(this);
+  get southWestNeighbors(): {
+    southWest: CenterPoint,
+  } {
+    const {
+      southWest,
+    } = getSouthWest(this);
+
+    return {
+      southWest: CenterPoint.fromObject(southWest, this.params),
+    };
   }
 
-  get northWestNeighbors() {
-    return getNorthWest(this);
+  get northWestNeighbors(): {
+    northWest: CenterPoint,
+  } {
+    const {
+      northWest,
+    } = getNorthWest(this);
+
+    return {
+      northWest: CenterPoint.fromObject(northWest, this.params),
+    };
   }
 
-  get southEastNeighbors() {
-    return getSouthEast(this);
+  get southEastNeighbors(): {
+    southEast: CenterPoint,
+  } {
+    const {
+      southEast,
+    } = getSouthEast(this);
+
+    return {
+      southEast: CenterPoint.fromObject(southEast, this.params),
+    };
+  }
+
+  static fromObject(
+    {i, j, k}: grider.GridPoint,
+    params: GridParams,
+  ): CenterPoint {
+    return new CenterPoint(params, i, j, k);
+  }
+
+  static fromGeo(point: GeoPoint, params: GridParams): CenterPoint {
+    return CenterPoint.fromGeo(point, params);
   }
 
   static fromGrid(point: GridPoint): CenterPoint {
     // To get the same center value on antimeridian.
     const {i: preI, j: preJ, k: preK} = round(point);
 
-    const reducedGridCenter = new GridPoint(point.params, preI, preJ, preK)
-      .toGeo()
-      .toGrid(point.params);
+    const reducedGeoCenter = new GridPoint(point.params, preI, preJ, preK)
+      .toGeo();
+
+    const reducedGridCenter = GridPoint.fromGeo(reducedGeoCenter, point.params);
 
     const {i, j, k} = round(reducedGridCenter);
 
     return new CenterPoint(point.params, i, j , k);
   }
 
-  toCell(): Cell {
-    return Cell.fromCenterPoint(this);
-  }
-
   nextCenterByCellSide(cellSide: CellSide): CenterPoint {
-    return getNextCenterByCellSide(this, cellSide);
+    const {i, j, k} = getNextCenterByCellSide(this, cellSide);
+
+    const geoCenter = new GridPoint(this.params, i, j, k)
+      .toGeo();
+
+    return CenterPoint.fromGeo(geoCenter, this.params);
   }
 
   isNeighbor(center: CenterPoint): boolean {
@@ -97,9 +228,10 @@ export class CenterPoint extends GridPoint {
   }
 
   toOppositeHemishpere(): CenterPoint {
-    return this.toGeo()
-      .toOppositeHemisphere()
-      .toCenter(this.params);
+    const oppositeGeo = this.toGeo()
+      .toOppositeHemisphere();
+
+    return CenterPoint.fromGeo(oppositeGeo, this.params);
   }
 
   moveByDiff(iDiff: number, jDiff: number): CenterPoint {
@@ -109,8 +241,9 @@ export class CenterPoint extends GridPoint {
       undefined :
       this.k - (iDiff + jDiff);
 
-    return new CenterPoint(this.params, i, j , k)
-      .toGeo()
-      .toCenter(this.params);
+    const centerGeo = new CenterPoint(this.params, i, j , k)
+      .toGeo();
+
+    return CenterPoint.fromGeo(centerGeo, this.params);
   }
 }

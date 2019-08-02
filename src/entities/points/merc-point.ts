@@ -44,18 +44,18 @@ export class MercPoint extends Point {
     return maxX - minX > 1;
   }
 
-  toSphere(): GeoPoint {
+  toSphereLiteral(): grider.GeoPoint {
     const lat = yToLat(this.y);
     const lng = xToLng(this.x);
 
-    return new GeoPoint(lat, lng);
+    return {lat, lng};
   }
 
-  toSemiSphere(): GeoPoint {
+  toSemiSphereLiteral(): grider.GeoPoint {
     const lat = yToSemiLat(this.y);
     const lng = xToSemiLng(this.x);
 
-    return new GeoPoint(lat, lng);
+    return {lat, lng};
   }
 
   isEasternTo(point: MercPoint): boolean {

@@ -144,7 +144,9 @@ export class CentersMatrix {
   }
 
   equivalentCell(i: number, j: number): Cell {
-    return this.equivalentCenter(i, j).toCell();
+    const equivalentCenter =  this.equivalentCenter(i, j);
+
+    return Cell.fromCenter(equivalentCenter);
   }
 
   touchedCenters(i: number, j: number): number[][] {

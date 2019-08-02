@@ -8,13 +8,9 @@ import {
   semiLatToY,
   semiLngToX,
 } from '../../utils/geo.utils';
-import {GridParams} from '../grid-params';
-import {CenterPoint} from './center-point';
-import {GridPoint} from './grid-point';
 import {MercPoint} from './merc-point';
 
 export class GeoPoint {
-
   static createFormatted(
     lat: number,
     lng: number,
@@ -31,17 +27,17 @@ export class GeoPoint {
 
     return new GeoPoint(lat, lng);
   }
+
+  static fromMerc(point: MercPoint): GeoPoint {
+    const {lat, lng} = point.toSphereLiteral();
+
+    return new GeoPoint(lat, lng);
+  }
+
   constructor(
     public lat: number,
     public lng: number,
   ) {}
-
-  inSameCell(point: GeoPoint, params: GridParams): boolean {
-    const cellCenterA = this.toGrid(params);
-    const cellCenterB = point.toGrid(params);
-
-    return cellCenterA.isEqual(cellCenterB);
-  }
 
   isEqual(point: GeoPoint): boolean {
     const formattedA = this.toFormatted();
@@ -78,10 +74,6 @@ export class GeoPoint {
     return mercPointA.distanceToPoint(mercPointB);
   }
 
-  toCell(params: GridParams) {
-    return this.toCenter(params).toCell();
-  }
-
   toMerc(): MercPoint {
     const x = lngToX(this.lng);
     const y = latToY(this.lat);
@@ -89,24 +81,19 @@ export class GeoPoint {
     return new MercPoint(x, y);
   }
 
-  toGrid(params: GridParams): GridPoint {
-    return GridPoint.fromGeo(this, params);
-  }
-
-  toCenter(params: GridParams): CenterPoint {
-    return GridPoint.fromGeo(this, params).round();
-  }
-
   toSemiSphere(): GeoPoint {
-    return this.toMerc()
-      .toSemiSphere();
+    const {lat, lng} = this.toMerc().toSemiSphereLiteral();
+
+    return new GeoPoint(lat, lng);
   }
 
   fromSemiSphere(): GeoPoint {
     const x = semiLngToX(this.lng);
     const y = semiLatToY(this.lat);
 
-    return new MercPoint(x, y).toSphere();
+    const {lat, lng} = new MercPoint(x, y).toSphereLiteral();
+
+    return new GeoPoint(lat, lng);
   }
 
   toFormatted(): GeoPoint {

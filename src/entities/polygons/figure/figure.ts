@@ -39,6 +39,7 @@ export class Figure extends GeoPolygon {
       isInner,
     );
   }
+
   constructor(
     points: GeoPoint[],
     public shape: GeoPolygon,

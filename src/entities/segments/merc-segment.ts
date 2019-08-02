@@ -1,6 +1,5 @@
 import { MercLine } from '../lines/merc-line';
 import {MercPoint} from '../points/merc-point';
-import {GeoSegment} from './geo-segment';
 import {Segment} from './segment';
 
 export class MercSegment extends Segment {
@@ -15,12 +14,12 @@ export class MercSegment extends Segment {
     this.line = MercLine.fromTwoPoints(pointA, pointB);
   }
 
-  toSphere(): GeoSegment {
-    const pointA = this.pointA.toSphere();
-    const pointB = this.pointB.toSphere();
+  // toSphere(): GeoSegment {
+  //   const pointA = this.pointA.toSphere();
+  //   const pointB = this.pointB.toSphere();
 
-    return new GeoSegment(pointA, pointB);
-  }
+  //   return new GeoSegment(pointA, pointB);
+  // }
 
   toOppositeHemisphere(): MercSegment {
     const pointA = this.pointA.toOppositeHemisphere();

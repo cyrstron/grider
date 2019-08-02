@@ -1,10 +1,10 @@
 import {GeoPoint} from '../../points/geo-point';
 import {GeoSegment} from '../../segments/geo-segment';
-import { Cell } from '../cell';
+// import { Cell } from '../cell';
 import {GenericPolygon} from '../generic-polygon';
 
 import { GridParams } from '../../grid-params';
-import {getInvalidCells} from './utils/cells-invalid-for-figure';
+// import {getInvalidCells} from './utils/cells-invalid-for-figure';
 
 export class GeoPolygon<
   SegmentType extends GeoSegment = GeoSegment
@@ -120,16 +120,16 @@ export class GeoPolygon<
 
     if (selfIntersections.length > 0) return false;
 
-    const invalidCells = this.cellsInvalidForFigure(params);
+    // const invalidCells = this.cellsInvalidForFigure(params);
 
-    if (invalidCells.length > 0) return false;
+    // if (invalidCells.length > 0) return false;
 
     return true;
   }
 
-  cellsInvalidForFigure(params: GridParams): Cell[] {
-    return getInvalidCells(this, params);
-  }
+  // cellsInvalidForFigure(params: GridParams): Cell[] {
+  //   return getInvalidCells(this, params);
+  // }
 
   get outmapPoints() {
     return this.points.filter((point) => {

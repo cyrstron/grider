@@ -1,5 +1,5 @@
 import {GridParams} from '../../grid-params';
-import {CenterPoint} from '../center-point';
+// import {CenterPoint} from '../center-point';
 import {GeoPoint} from '../geo-point';
 import {
   correctForGeo,
@@ -26,6 +26,7 @@ export class GridPoint {
 
     return new GridPoint(params, i, j, k);
   }
+
   i: number;
   j: number;
   k?: number;
@@ -87,9 +88,9 @@ export class GridPoint {
     return correctForGeo(geoPoint, this.params);
   }
 
-  round(): CenterPoint {
-    return CenterPoint.fromGrid(this);
-  }
+  // round(): CenterPoint {
+  //   return CenterPoint.fromGrid(this);
+  // }
 
   onSameAxis(prevPoint: GridPoint, nextPoint: GridPoint) {
     let diff = (

@@ -4,8 +4,14 @@ import { GeoSegment } from '../../../segments/geo-segment';
 import { Cell } from '../../cell';
 import { GeoPolygon } from '../../geo-polygon/geo-polygon';
 
+import {
+  getInvalidCells,
+} from './cells-invalid-for-figure';
 import {cleanFigure} from './clean-figure';
-import {findStartPointForSide, recalcStartCell} from './start-point-finder';
+import {
+  findStartPointForSide,
+  recalcStartCell,
+} from './start-point-finder';
 
 export function buildFigurePoints(
   shape: GeoPolygon,
@@ -15,6 +21,10 @@ export function buildFigurePoints(
   if (!shape.isValidForFigure(params)) {
     return [];
   }
+
+  const invalidCells = getInvalidCells(shape, params);
+
+  if (invalidCells.length > 0) return [];
 
   const figurePoints = shape.reduceSides((
     figurePoints: GeoPoint[],
