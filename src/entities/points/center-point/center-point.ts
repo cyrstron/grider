@@ -22,7 +22,6 @@ import {
 } from './utils/rounder';
 
 export class CenterPoint extends GridPoint {
-
   get neighbors(): {
     south?: CenterPoint,
     north?: CenterPoint,
@@ -184,7 +183,9 @@ export class CenterPoint extends GridPoint {
   }
 
   static fromGeo(point: GeoPoint, params: GridParams): CenterPoint {
-    return CenterPoint.fromGeo(point, params);
+    const gridPoint = GridPoint.fromGeo(point, params);
+
+    return CenterPoint.fromGrid(gridPoint);
   }
 
   static fromGrid(point: GridPoint): CenterPoint {

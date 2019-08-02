@@ -34,8 +34,8 @@ module.exports = (env, argv) => ({
   plugins: [
     new CircularDependencyPlugin({
       exclude: /a\.js|node_modules/,
-      // failOnError: true,
-      // allowAsyncCycles: false,
+      failOnError: true,
+      allowAsyncCycles: false,
       cwd: process.cwd(),
     })
   ]

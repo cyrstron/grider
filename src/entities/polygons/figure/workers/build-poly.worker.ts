@@ -8,17 +8,19 @@ const ctx: Worker = self as any;
 
 const worker = new CtxService(ctx);
 
-worker.post({ foo: 'foo' });
-
 worker.onMessage((event: MessageEvent) => {
-  const [
-    shapePoints,
+  const {
+    shape,
     params,
     isInner,
-  ] = event.data as [grider.GeoPoint[], grider.GridParams, boolean];
+  } = event.data as {
+    shape: grider.GeoPoint[],
+    params: grider.GridParams,
+    isInner: boolean,
+  };
 
   const points = buildFigurePoints(
-    new GeoPolygon(shapePoints.map(({lat, lng}) => new GeoPoint(lat, lng))),
+    new GeoPolygon(shape.map(({lat, lng}) => new GeoPoint(lat, lng))),
     new GridParams(params),
     isInner,
   );
