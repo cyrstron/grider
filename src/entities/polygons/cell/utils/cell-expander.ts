@@ -1,6 +1,5 @@
 import {CenterPoint} from '../../../points/center-point';
 import {PeakPoint} from '../../../points/peak-point';
-import {GeoPoint} from '../../../points/geo-point';
 
 export function expand(
   center: CenterPoint

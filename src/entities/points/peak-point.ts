@@ -3,7 +3,7 @@ import {CellSide} from '../segments/cell-side';
 import {Cell} from '../polygons/cell';
 import { GeoPoint } from './geo-point';
 import { GridParams } from '../grid-params';
-import { GeoPolygon } from '../polygons/geo-polygon/geo-polygon';
+import { GeoPolygon } from '../polygons/geo-polygon';
 
 export class PeakPoint extends GridPoint {
   get nearestPeaks(): PeakPoint[] {
@@ -64,6 +64,7 @@ export class PeakPoint extends GridPoint {
       return okPoints;
     }, [] as PeakPoint[]);
   }
+
 
   static fromGeo(point: GeoPoint, params: GridParams) {
     const {i, j, k} = point.toGrid(params);

@@ -1,5 +1,4 @@
 import { GridParams } from "../../../grid-params";
-import { CenterPoint } from "../../../points";
 
 export function calcNearestIndexes(
   i: number, 

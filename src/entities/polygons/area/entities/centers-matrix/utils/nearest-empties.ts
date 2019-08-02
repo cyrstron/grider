@@ -1,5 +1,5 @@
 import { GridParams } from "../../../../../grid-params";
-import { CenterPoint } from "../../../../../points";
+import { CenterPoint } from "../../../../../points/center-point";
 import { calcNearestAndTouchedIndexes } from "../../../utils/nearest-indexes";
 
 export function getNearestEmpties(

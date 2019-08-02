@@ -2,7 +2,8 @@ import { CentersMatrix } from "../centers-matrix";
 import {getStartPoints} from './utils/start-point';
 import {callNextIndexes} from './utils/next-indexes';
 import {getNextPoints} from './utils/next-points';
-import { GeoPoint, CenterPoint } from "../../../../points";
+import { GeoPoint } from "../../../../points/geo-point";
+import { CenterPoint } from "../../../../points/center-point";
 import { buildPoly } from "./utils/build-poly";
 import { getStartIndexesTouchedBy } from "./utils/start-indexes";
 

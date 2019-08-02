@@ -1,4 +1,4 @@
-import { CenterPoint } from "../../../../../points";
+import { CenterPoint } from "../../../../../points/center-point";
 
 export function isOnAntiMeridian(centers: CenterPoint[]): boolean {
   let eastern: CenterPoint = centers[0];

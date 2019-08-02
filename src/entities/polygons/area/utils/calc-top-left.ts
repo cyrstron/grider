@@ -1,4 +1,4 @@
-import { CenterPoint } from "../../../points";
+import { CenterPoint } from "../../../points/center-point";
 
 export function calcTopLeft(
   matrix: Array<CenterPoint | 'outer' | 'inner' | undefined>[]

@@ -1,12 +1,10 @@
-import { CenterPoint } from "../../../../points";
+import { CenterPoint } from "../../../../points/center-point";
 import {isOnAntiMeridian} from './utils/is-anti-meridian';
 import {buildMatrix} from './utils/build-matrix';
 import {calcTopLeft} from '../../utils/calc-top-left';
 import { getNearestEmpties } from "./utils/nearest-empties";
 import { calcNearestAndTouchedIndexes, calcNearestIndexes } from "../../utils/nearest-indexes";
 import { Cell } from "../../../cell";
-// import { OuterCentersMatrix } from "../outer-centers-matrix/outer-centers-matrix";
-// import { InnerCentersMatrix } from "../inner-centers-matrix/inner-centers-matrix";
 
 type MatrixPayload = Array<CenterPoint | 'outer' | 'inner' | undefined>[];
 

@@ -18,7 +18,7 @@ import {isNeighbor} from './utils/is-neighbor';
 import {
   getNextCenterByCellSide
 } from './utils/center-finder';
-import { Cell } from '../../polygons';
+import { Cell } from '../../polygons/cell';
 
 export class CenterPoint extends GridPoint {
 

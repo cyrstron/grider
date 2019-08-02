@@ -1,5 +1,5 @@
 import { PolyMatrix } from "../poly-matrix";
-import { GeoPoint } from "../../../../../points";
+import { GeoPoint } from "../../../../../points/geo-point";
 
 export function buildPoly(
   matrix: PolyMatrix, 

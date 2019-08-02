@@ -1,6 +1,5 @@
 import { GeoSegment } from "../../../segments/geo-segment";
 import { BoundIntersection } from "./bound-intersection";
-import { TileMercPoint } from "../../../points";
 
 export class SplitGeoSegment extends GeoSegment {
   constructor(

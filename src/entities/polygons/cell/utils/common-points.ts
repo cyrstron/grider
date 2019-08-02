@@ -1,4 +1,4 @@
-import { GeoPoint } from "../../../points";
+import { GeoPoint } from "../../../points/geo-point";
 import { Cell } from "../cell";
 
 export function getCommonPoints(

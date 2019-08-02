@@ -1,7 +1,5 @@
-import { CenterPoint } from "../../../points";
-import {
-  calcNearestIndexes
-} from './nearest-indexes';
+import { CenterPoint } from "../../../points/center-point";
+import { calcNearestIndexes} from './nearest-indexes';
 import { CentersMatrix } from "../entities/centers-matrix";
 
 export function unionNearestCenters(

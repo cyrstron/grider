@@ -1,8 +1,8 @@
 import { CentersMatrix } from "../centers-matrix";
-import { CenterPoint, GeoPoint } from "../../../../points";
+import { CenterPoint } from "../../../../points/center-point";
+import { GeoPoint } from "../../../../points/geo-point";
 import { getOuterCentersMatrix } from "./utils/get-outer-centers";
 import { calcTopLeft } from "../../utils/calc-top-left";
-import { calcNearestAndTouchedIndexes } from "../../utils/nearest-indexes";
 import { PolyMatrix } from "../poly-matrix";
 
 type OuterCentersMatrixPayload = Array<(CenterPoint | "outer" | undefined)>[]

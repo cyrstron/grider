@@ -1,6 +1,6 @@
 import { PolyMatrix } from "../poly-matrix";
 import { calcNearestAndTouchedIndexes } from "../../../utils/nearest-indexes";
-import { CenterPoint } from "../../../../../points";
+import { CenterPoint } from "../../../../../points/center-point";
 
 export function getStartIndexesTouchedBy(
   matrix: PolyMatrix, 

@@ -13,13 +13,19 @@ module.exports = (env, argv) => ({
   },
   module: {
     rules: [
+      {
+        test: /\.worker\.ts$/,
+        use: [{ 
+          loader: 'worker-loader',
+          options: { inline: true, fallback: false }
+        }, {
+          loader: 'ts-loader'
+        }],
+      },
       { 
         test: /\.ts$/, 
         loader: 'ts-loader',
-      },
-      {
-        test: /\.worker\.js$/,
-        use: { loader: 'worker-loader' }
+        exclude: [/\.worker\.ts$/]
       }
     ]
   },

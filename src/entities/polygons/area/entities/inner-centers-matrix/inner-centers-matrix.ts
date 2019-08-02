@@ -1,8 +1,8 @@
-import { CenterPoint, GeoPoint } from "../../../../points";
+import { CenterPoint } from "../../../../points/center-point";
+import { GeoPoint } from "../../../../points/geo-point";
 import { CentersMatrix } from "../centers-matrix";
 import { getInnerCentersMatrix } from "./utils/get-inner-centers";
 import { calcTopLeft } from "../../utils/calc-top-left";
-import { calcNearestAndTouchedIndexes } from "../../utils/nearest-indexes";
 import {PolyMatrix} from '../poly-matrix';
 
 type InnerCentersMatrixPayload = Array<CenterPoint | 'inner' | undefined>[];

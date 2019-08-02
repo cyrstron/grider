@@ -1,4 +1,5 @@
-import { GeoPoint, CenterPoint } from "../../points";
+import { GeoPoint } from "../../points/geo-point";
+import { CenterPoint } from "../../points/center-point";
 import { GeoPolygon } from "../geo-polygon";
 
 import {buildArea} from './utils/build-area';

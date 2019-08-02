@@ -1,5 +1,5 @@
 import {Point} from '../points/point';
-import { GeoPoint } from '../points';
+import { GeoPoint } from '../points/geo-point';
 
 interface DefaultSegment<PointType = Point> {
 	pointA: PointType;

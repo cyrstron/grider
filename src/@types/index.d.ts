@@ -1,3 +1,11 @@
+declare module "*.worker" {
+  class WebpackWorker extends Worker {
+    constructor();
+  }
+
+  export default WebpackWorker;
+}
+
 declare namespace grider {
   export type Cardinal = 'north' | 'south' | 'east' | 'west';
   

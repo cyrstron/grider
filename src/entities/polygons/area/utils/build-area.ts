@@ -1,4 +1,5 @@
-import { CenterPoint, GeoPoint } from "../../../points";
+import { CenterPoint } from "../../../points/center-point";
+import { GeoPoint } from "../../../points/geo-point";
 
 import {getBiggestSet} from './biggest-set';
 import { CentersMatrix } from "../entities/centers-matrix";

@@ -1,5 +1,5 @@
 import {Line} from './line';
-import { MercPoint } from '../points';
+import { MercPoint } from '../points/merc-point';
 
 export class MercLine extends Line {
   calcAlikePoint(point: MercPoint): MercPoint {

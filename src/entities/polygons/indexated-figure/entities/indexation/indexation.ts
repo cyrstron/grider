@@ -4,7 +4,7 @@ import {SideIndexation} from '../side-indexation';
 import { TileMercPoint } from '../../../../points/tile-merc-point';
 import { TileIntersection } from '../tile-intersection';
 import { BoundIntersection } from '../bound-intersection';
-import { Point } from '../../../../points';
+import { Point } from '../../../../points/point';
 
 export type SpreadedPoint = {index: number, point: GeoPoint};
 export type SpreadedSide = SpreadedPoint[];

@@ -2,7 +2,7 @@ import { GridPoint } from "../../../points/grid-point";
 import { GeoPoint } from "../../../points/geo-point";
 import { GridParams } from "../../../grid-params";
 import { TileMercPoint } from "../../../points/tile-merc-point";
-import { Point } from "../../../points";
+import { Point } from "../../../points/point";
 
 export function expandTile(
   geoPoint: GeoPoint,

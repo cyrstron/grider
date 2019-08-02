@@ -1,6 +1,6 @@
 import {GeoPoint} from '../../geo-point';
 import {GridParams} from '../../../grid-params';
-import {GeoPolygon} from '../../../polygons/geo-polygon/geo-polygon';
+import {GeoPolygon} from '../../../polygons/geo-polygon';
 
 export function correctForGrid(
   point: GeoPoint,

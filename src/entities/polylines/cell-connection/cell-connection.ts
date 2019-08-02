@@ -1,4 +1,5 @@
-import { GeoPoint, CenterPoint } from "../../points";
+import { CenterPoint } from "../../points/center-point";
+import { GeoPoint } from "../../points/geo-point";
 import { GeoSegment } from "../../segments";
 import { Cell } from "../../polygons";
 

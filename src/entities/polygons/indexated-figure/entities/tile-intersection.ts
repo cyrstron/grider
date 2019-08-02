@@ -1,6 +1,6 @@
 import { SplitGeoSegment } from "./split-geo-segment";
 import { BoundIntersection } from "./bound-intersection";
-import { TileMercPoint } from "../../../points";
+import { TileMercPoint } from "../../../points/tile-merc-point";
 
 type Intersects = {[key in grider.Cardinal]: SplitGeoSegment[]};
 

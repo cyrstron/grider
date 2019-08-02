@@ -2,7 +2,7 @@ import { GridParams } from "../../grid-params";
 
 import {expandTile} from './utils/expand';
 import { TileMercPoint } from "../../points/tile-merc-point";
-import { Point } from "../../points";
+import { Point } from "../../points/point";
 
 export class GridTile {
   constructor(

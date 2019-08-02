@@ -17,21 +17,46 @@ export class GridParams {
   correction: grider.CorrectionType;
 
   constructor({
+    isHorizontal,
+    type,
+    axes,
+    geoAxes,
+    initSize,
+    initHeight,
+    correction,
+  }: grider.GridParams) {
+    this.isHorizontal = isHorizontal;
+    this.type = type;
+    this.axes = axes;
+    this.geoAxes = geoAxes;
+    this.initSize = initSize;
+    this.initHeight = initHeight;
+    this.correction = correction;
+  }
+
+  static fromConfig({
     isHorizontal = false,
     type,
     correction,
     cellSize,
-  }: grider.GridConfig) {
+  }: grider.GridConfig): GridParams {
     const orientation = isHorizontal ? 'horizontal' : 'vertical';
     const initSizeCoof: number = initCoofs[type][correction][orientation];
 
-    this.isHorizontal = isHorizontal;
-    this.type = type;
-    this.axes = axesParams[type],
-    this.geoAxes = calcAxesParams(isHorizontal, type),
-    this.initSize = calcInitialCellWidth(cellSize, initSizeCoof),
-    this.initHeight = calcInitialCellHeight(cellSize),
-    this.correction = correction;
+    const axes = axesParams[type];
+    const geoAxes = calcAxesParams(isHorizontal, type);
+    const initSize = calcInitialCellWidth(cellSize, initSizeCoof);
+    const initHeight = calcInitialCellHeight(cellSize);
+
+    return new GridParams({
+      isHorizontal,
+      type,
+      axes,
+      geoAxes,
+      initSize,
+      initHeight,
+      correction,
+    })
   }
 
   minCellSize(tilePoint: TileMercPoint): number {
@@ -48,5 +73,27 @@ export class GridParams {
       this.type === params.type &&
       this.correction === params.correction &&
       this.initSize === params.initSize;
+  }
+
+  toPlain(): grider.GridParams {
+    const {
+      isHorizontal,
+      type,
+      axes,
+      geoAxes,
+      initSize,
+      initHeight,
+      correction,
+    } = this;
+    
+    return ({
+      isHorizontal,
+      type,
+      axes,
+      geoAxes,
+      initSize,
+      initHeight,
+      correction,
+    });
   }
 }

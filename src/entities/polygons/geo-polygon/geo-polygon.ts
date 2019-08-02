@@ -181,5 +181,9 @@ export class GeoPolygon<
         southernPoint, 
       this.points[0]
     );		
-	}
+  }
+  
+  toPlain(): grider.GeoPoint[] {
+    return this.points.map((point) => point.toPlain());
+  }
 }
