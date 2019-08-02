@@ -1,9 +1,8 @@
 import {CenterPoint} from '../../../points/center-point';
-import {PeakPoint} from '../../../points/peak-point';
 
 export function expand(
   center: CenterPoint,
-): PeakPoint[] {
+): grider.GridPoint[] {
   const {type} = center.params;
 
   if (type === 'hex') {
@@ -14,71 +13,49 @@ export function expand(
 }
 
 function getHexPoints(
-  {i, j, k, params}: CenterPoint,
-): PeakPoint[] {
-  return [
-    new PeakPoint(
-      params,
-      i - (2 / 3),
-      j + (1 / 3),
-      k as number + (1 / 3),
-    ),
-    new PeakPoint(
-      params,
-      i - (1 / 3),
-      j - (1 / 3),
-      k as number + (2 / 3),
-    ),
-    new PeakPoint(
-      params,
-      i + (1 / 3),
-      j - (2 / 3),
-      k as number + (1 / 3),
-    ),
-    new PeakPoint(
-      params,
-      i + (2 / 3),
-      j - (1 / 3),
-      k as number - (1 / 3),
-    ),
-    new PeakPoint(
-      params,
-      i + (1 / 3),
-      j + (1 / 3),
-      k as number - (2 / 3),
-    ),
-    new PeakPoint(
-      params,
-      i - (1 / 3),
-      j + (2 / 3),
-      k as number - (1 / 3),
-    ),
-  ];
+  {i, j, k}: CenterPoint,
+): grider.GridPoint[] {
+  return [{
+    i: i - (2 / 3),
+    j: j + (1 / 3),
+    k: k as number + (1 / 3),
+  }, {
+    i: i - (1 / 3),
+    j: j - (1 / 3),
+    k: k as number + (2 / 3),
+  }, {
+    i: i + (1 / 3),
+    j: j - (2 / 3),
+    k: k as number + (1 / 3),
+  }, {
+    i: i + (2 / 3),
+    j: j - (1 / 3),
+    k: k as number - (1 / 3),
+  }, {
+    i: i + (1 / 3),
+    j: j + (1 / 3),
+    k: k as number - (2 / 3),
+  }, {
+    i: i - (1 / 3),
+    j: j + (2 / 3),
+    k: k as number - (1 / 3),
+  }];
 }
 
 function getRectPoints(
-  {i, j, params}: CenterPoint,
-): PeakPoint[] {
-  return [
-    new PeakPoint(
-      params,
-      i + (1 / 2),
-      j - (1 / 2),
-    ),
-    new PeakPoint(
-      params,
-      i + (1 / 2),
-      j + (1 / 2),
-    ),
-    new PeakPoint(
-      params,
-      i - (1 / 2),
-      j + (1 / 2),
-    ),
-    new PeakPoint(
-      params,
-      i - (1 / 2),
-      j - (1 / 2),
-    ),
-  ];
+  {i, j}: CenterPoint,
+): grider.GridPoint[] {
+  return [{
+    i: i + (1 / 2),
+    j: j - (1 / 2),
+  }, {
+    i: i + (1 / 2),
+    j: j + (1 / 2),
+  }, {
+    i: i - (1 / 2),
+    j: j + (1 / 2),
+  }, {
+    i: i - (1 / 2),
+    j: j - (1 / 2),
+  }];
 }

@@ -157,9 +157,11 @@ export class Cell extends GeoPolygon<CellSide> {
   constructor(
     center: CenterPoint,
   ) {
-    const peaks = expand(center);
+    const peaks = expand(center)
+      .map(({i, j, k}) => new PeakPoint(center.params, i, j, k));
+    const points = peaks.map((peak) => peak.toGeo().toFormatted());
 
-    super(peaks.map((peak) => peak.toGeo().toFormatted()));
+    super(points);
 
     this.peaks = peaks;
     this.center = center;

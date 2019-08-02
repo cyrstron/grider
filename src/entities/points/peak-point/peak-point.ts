@@ -1,35 +1,19 @@
-import { GridParams } from '../grid-params';
-import { Cell } from '../polygons/cell';
-import { GeoPolygon } from '../polygons/geo-polygon';
-import {CellSide} from '../segments/cell-side';
-import { GeoPoint } from './geo-point';
-import {GridPoint} from './grid-point';
+import { GridParams } from '../../grid-params';
+import { GeoPolygon } from '../../polygons/geo-polygon';
+import {CellSide} from '../../segments/cell-side';
+import { GeoPoint } from '../geo-point';
+import {GridPoint} from '../grid-point';
+import {calcNearestPeaks} from './utils/nearest-peaks'
 
 export class PeakPoint extends GridPoint {
   get nearestPeaks(): PeakPoint[] {
-    const cell = Cell.fromGridPoint(this);
+    return calcNearestPeaks(this)
+      .map(({i, j, k}) => {
+        const geoPoint = new PeakPoint(this.params, i, j, k).toGeo();
+        const reduced = GridPoint.fromGeo(geoPoint, this.params);
 
-    const nearestPeaks = cell.nearestPeaks(this);
-
-    const restPeaks = nearestPeaks.reduce((restPeaks, peak) => {
-      const cellSide = CellSide.fromPeaks(this, peak);
-      const nextCell = cell.nextCellBySide(cellSide);
-      const nearest = nextCell.nearestPeaks(this)
-        .filter((peakA) => !restPeaks.find(
-          (peakB) => peakA.isEqual(peakB),
-        ));
-
-      restPeaks.push(...nearest);
-
-      return restPeaks;
-    }, [] as PeakPoint[])
-      .filter((peak) => !nearestPeaks.find(
-        (nearestPeak) => nearestPeak.isEqual(peak)),
-      );
-
-    nearestPeaks.push(...restPeaks);
-
-    return nearestPeaks;
+        return new PeakPoint(this.params, reduced.i, reduced.j, reduced.k);
+      });
   }
 
   get nearestPeaksGeo() {
