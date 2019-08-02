@@ -1,6 +1,6 @@
-import {GeoPoint} from '../../geo-point';
 import {GridParams} from '../../../grid-params';
 import {GeoPolygon} from '../../../polygons/geo-polygon';
+import {GeoPoint} from '../../geo-point';
 
 export function correctForGrid(
   point: GeoPoint,
@@ -23,7 +23,7 @@ export function correctForGeo(
 
   if (correction === 'merc') {
     const {lat, lng} = point;
-    
+
     return new GeoPoint(lat, lng * 2).fromSemiSphere().toFormatted();
   } else {
     return point.toFormatted();

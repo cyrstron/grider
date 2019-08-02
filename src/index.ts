@@ -1,21 +1,21 @@
 /// <reference types="../src/@types" />
 
 export {
-  GridParams
+  GridParams,
 } from './entities/grid-params';
 
 export {
-  Line, 
-  RhumbLine
+  Line,
+  RhumbLine,
 } from './entities/lines';
 
 export {
-  PeakPoint, 
-  Point, 
-  GeoPoint, 
-  GridPoint, 
-  CenterPoint, 
-  TileMercPoint
+  PeakPoint,
+  Point,
+  GeoPoint,
+  GridPoint,
+  CenterPoint,
+  TileMercPoint,
 } from './entities/points';
 
 export {
@@ -26,22 +26,22 @@ export {
   GenericPolygon,
   MercPolygon,
   Polygon,
-  Area
+  Area,
 } from './entities/polygons';
 
 export {
   CellSide,
   GeoSegment,
   MercSegment,
-  Segment
+  Segment,
 } from './entities/segments';
 
 export {
   GridPattern,
   GridTile,
-  MapGridTile
+  MapGridTile,
 } from './entities/tiles';
 
 export {
-  CellConnection
+  CellConnection,
 } from './entities/polylines';

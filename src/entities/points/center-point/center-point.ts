@@ -1,8 +1,10 @@
-import {GridPoint} from '../grid-point';
+import { Cell } from '../../polygons/cell';
 import {CellSide} from '../../segments/cell-side';
+import {GridPoint} from '../grid-point';
 import {
-  round,
-} from './utils/rounder';
+  getNextCenterByCellSide,
+} from './utils/center-finder';
+import {isNeighbor} from './utils/is-neighbor';
 import {
   getAll,
   getEast,
@@ -14,56 +16,11 @@ import {
   getSouthWest,
   getWest,
 } from './utils/neighborer';
-import {isNeighbor} from './utils/is-neighbor';
 import {
-  getNextCenterByCellSide
-} from './utils/center-finder';
-import { Cell } from '../../polygons/cell';
+  round,
+} from './utils/rounder';
 
 export class CenterPoint extends GridPoint {
-
-  toCell(): Cell {
-    return Cell.fromCenterPoint(this);
-  }
-
-  nextCenterByCellSide(cellSide: CellSide): CenterPoint {
-    return getNextCenterByCellSide(this, cellSide);
-  }
-
-  isNeighbor(center: CenterPoint): boolean {
-    let pointA: CenterPoint = this;
-    let pointB: CenterPoint = center;
-
-    if (this.isCloserThroughAntiMeridian(center)) {
-      pointA = pointA.toOppositeHemishpere();
-      pointB = pointB.toOppositeHemishpere();
-    }
-    
-    return isNeighbor(pointA, pointB);
-  }
-
-  isCloserThroughAntiMeridian(center: CenterPoint): boolean {
-    return this.toGeo()
-      .isCloserThroughAntiMeridian(center.toGeo());
-  }
-
-  toOppositeHemishpere(): CenterPoint {
-    return this.toGeo()
-      .toOppositeHemisphere()
-      .toCenter(this.params);
-  }
-
-  moveByDiff(iDiff: number, jDiff: number): CenterPoint {
-    const i = this.i + iDiff;
-    const j = this.j + jDiff;
-    const k = this.k === undefined ?
-      undefined :
-      this.k - (iDiff + jDiff);
-
-    return new CenterPoint(this.params, i, j ,k)
-      .toGeo()
-      .toCenter(this.params);
-  }
 
   get neighbors() {
     return getAll(this);
@@ -111,6 +68,49 @@ export class CenterPoint extends GridPoint {
 
     const {i, j, k} = round(reducedGridCenter);
 
-    return new CenterPoint(point.params, i, j ,k);
+    return new CenterPoint(point.params, i, j , k);
+  }
+
+  toCell(): Cell {
+    return Cell.fromCenterPoint(this);
+  }
+
+  nextCenterByCellSide(cellSide: CellSide): CenterPoint {
+    return getNextCenterByCellSide(this, cellSide);
+  }
+
+  isNeighbor(center: CenterPoint): boolean {
+    let pointA: CenterPoint = this;
+    let pointB: CenterPoint = center;
+
+    if (this.isCloserThroughAntiMeridian(center)) {
+      pointA = pointA.toOppositeHemishpere();
+      pointB = pointB.toOppositeHemishpere();
+    }
+
+    return isNeighbor(pointA, pointB);
+  }
+
+  isCloserThroughAntiMeridian(center: CenterPoint): boolean {
+    return this.toGeo()
+      .isCloserThroughAntiMeridian(center.toGeo());
+  }
+
+  toOppositeHemishpere(): CenterPoint {
+    return this.toGeo()
+      .toOppositeHemisphere()
+      .toCenter(this.params);
+  }
+
+  moveByDiff(iDiff: number, jDiff: number): CenterPoint {
+    const i = this.i + iDiff;
+    const j = this.j + jDiff;
+    const k = this.k === undefined ?
+      undefined :
+      this.k - (iDiff + jDiff);
+
+    return new CenterPoint(this.params, i, j , k)
+      .toGeo()
+      .toCenter(this.params);
   }
 }

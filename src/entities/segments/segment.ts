@@ -1,5 +1,5 @@
-import {Point} from '../points/point';
 import {Line} from '../lines/line';
+import {Point} from '../points/point';
 
 export class Segment {
   line: Line;
@@ -14,7 +14,7 @@ export class Segment {
   get minX(): number {
     const {
       pointA: {x: x1},
-      pointB: {x :x2}            
+      pointB: {x : x2},
     } = this;
 
     return Math.min(x1, x2);
@@ -23,7 +23,7 @@ export class Segment {
   get maxX(): number {
     const {
       pointA: {x: x1},
-      pointB: {x :x2}            
+      pointB: {x : x2},
     } = this;
 
     return Math.max(x1, x2);
@@ -32,7 +32,7 @@ export class Segment {
   get minY(): number {
     const {
       pointA: {y: y1},
-      pointB: {y :y2}            
+      pointB: {y : y2},
     } = this;
 
     return Math.min(y1, y2);
@@ -41,7 +41,7 @@ export class Segment {
   get maxY(): number {
     const {
       pointA: {y: y1},
-      pointB: {y :y2}            
+      pointB: {y : y2},
     } = this;
 
     return Math.max(y1, y2);
@@ -55,20 +55,20 @@ export class Segment {
 
   get maxXPoint() {
     const {x} = this.pointA;
-    
-    return this.maxX === x ? this.pointA : this.pointB;    
+
+    return this.maxX === x ? this.pointA : this.pointB;
   }
 
   get minYPoint() {
     const {y} = this.pointA;
-    
-    return this.minY === y ? this.pointA : this.pointB; 
+
+    return this.minY === y ? this.pointA : this.pointB;
   }
 
   get maxYPoint() {
     const {y} = this.pointA;
-    
-    return this.maxY === y ? this.pointA : this.pointB;      
+
+    return this.maxY === y ? this.pointA : this.pointB;
   }
 
   closestToPoint(point: Point): Point {
@@ -101,7 +101,7 @@ export class Segment {
     const {x: x1, y: y1} = pointA.toFormatted();
     const {x: x2, y: y2} = pointB.toFormatted();
 
-    return this.line.hasPoint(point) && 
+    return this.line.hasPoint(point) &&
       Math.max(x1, x2) >= x &&
       Math.min(x1, x2) <= x &&
       Math.max(y1, y2) >= y &&
@@ -109,7 +109,7 @@ export class Segment {
   }
 
   intersectionPoint(
-    segment: Segment
+    segment: Segment,
   ): Point | undefined {
     const intersection = this.line.intersectionPoint(segment.line);
 
@@ -118,5 +118,5 @@ export class Segment {
       segment.hasPoint(intersection);
 
     return isIntersectValid ? intersection : undefined;
-  } 
+  }
 }

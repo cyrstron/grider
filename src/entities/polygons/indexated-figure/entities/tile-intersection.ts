@@ -1,17 +1,10 @@
-import { SplitGeoSegment } from "./split-geo-segment";
-import { BoundIntersection } from "./bound-intersection";
-import { TileMercPoint } from "../../../points/tile-merc-point";
+import { TileMercPoint } from '../../../points/tile-merc-point';
+import { BoundIntersection } from './bound-intersection';
+import { SplitGeoSegment } from './split-geo-segment';
 
 type Intersects = {[key in grider.Cardinal]: SplitGeoSegment[]};
 
 export class TileIntersection implements Intersects {
-  constructor(
-    public tilePoint: TileMercPoint,
-    public north: SplitGeoSegment[],
-    public south: SplitGeoSegment[],
-    public east: SplitGeoSegment[],
-    public west: SplitGeoSegment[],
-  ) {}
 
   get isContained(): boolean {
     return this.reduce((
@@ -30,34 +23,34 @@ export class TileIntersection implements Intersects {
       'north',
       'east',
       'south',
-      'west'
+      'west',
     ];
-  } 
+  }
 
   get isEmpty(): boolean {
     return this.reduce((
-      isEmpty: boolean, 
-      segments
+      isEmpty: boolean,
+      segments,
     ): boolean => {
       if (!isEmpty) return isEmpty;
 
       return segments.length === 0;
     }, true);
   }
-  
+
   get pointsIndexes(): number[] {
     return this.reduce((
-      indexes: number[], 
+      indexes: number[],
       segments,
     ): number[] => {
       return segments.reduce((
-        indexes: number[], {boundA, boundB}
+        indexes: number[], {boundA, boundB},
       ): number[] => {
         if (boundA.toIndex !== undefined) {
-          indexes.push(boundA.toIndex)
+          indexes.push(boundA.toIndex);
         }
         if (boundB.toIndex !== undefined) {
-          indexes.push(boundB.toIndex)
+          indexes.push(boundB.toIndex);
         }
 
         return indexes;
@@ -66,12 +59,35 @@ export class TileIntersection implements Intersects {
       .sort((a, b) => a - b);
   }
 
+  static fromBounds(
+    tilePoint: TileMercPoint,
+    north: BoundIntersection[],
+    south: BoundIntersection[],
+    east: BoundIntersection[],
+    west: BoundIntersection[],
+  ): TileIntersection {
+    return new TileIntersection(
+      tilePoint,
+      SplitGeoSegment.splitsByLng(north, 'north'),
+      SplitGeoSegment.splitsByLng(south, 'south'),
+      SplitGeoSegment.splitsByLat(east, 'east'),
+      SplitGeoSegment.splitsByLat(west, 'west'),
+    );
+  }
+  constructor(
+    public tilePoint: TileMercPoint,
+    public north: SplitGeoSegment[],
+    public south: SplitGeoSegment[],
+    public east: SplitGeoSegment[],
+    public west: SplitGeoSegment[],
+  ) {}
+
   normalize(): TileIntersection {
     return this.reduce((intersection, segments, direction) => {
       const bound = this.tilePoint[direction];
 
       intersection[direction] = segments.filter(
-        (segment) => segment.overlapsSegment(bound)
+        (segment) => segment.overlapsSegment(bound),
       );
 
       return intersection;
@@ -79,7 +95,7 @@ export class TileIntersection implements Intersects {
   }
 
   forEach(
-    callback: (segments: SplitGeoSegment[], cardinal: grider.Cardinal) => void
+    callback: (segments: SplitGeoSegment[], cardinal: grider.Cardinal) => void,
   ): void {
     this.keys.forEach((key) => {
       callback(this[key], key);
@@ -87,23 +103,23 @@ export class TileIntersection implements Intersects {
   }
 
   map<Result = SplitGeoSegment>(
-    callback: (segments: SplitGeoSegment[], cardinal: grider.Cardinal) => Result
+    callback: (segments: SplitGeoSegment[], cardinal: grider.Cardinal) => Result,
   ): Result[] {
     return this.keys.map((key) => callback(this[key], key));
   }
 
   reduce<Result = SplitGeoSegment>(
     callback: (
-      result: Result, 
-      segments: SplitGeoSegment[], 
-      cardinal: grider.Cardinal
+      result: Result,
+      segments: SplitGeoSegment[],
+      cardinal: grider.Cardinal,
     ) => Result,
     result: Result,
   ): Result {
     return this.keys.reduce((result: Result, key) => callback(
-      result, 
-      this[key], 
-      key
+      result,
+      this[key],
+      key,
     ), result);
   }
 
@@ -119,21 +135,5 @@ export class TileIntersection implements Intersects {
     const segments = this[direction];
 
     return !!segments.find((segment) => segment.overlapsSegment(bound));
-  }
-
-  static fromBounds(
-    tilePoint: TileMercPoint,
-    north: BoundIntersection[],
-    south: BoundIntersection[],
-    east: BoundIntersection[],
-    west: BoundIntersection[]
-  ): TileIntersection {
-    return new TileIntersection(
-      tilePoint,
-      SplitGeoSegment.splitsByLng(north, 'north'),
-      SplitGeoSegment.splitsByLng(south, 'south'),
-      SplitGeoSegment.splitsByLat(east, 'east'),
-      SplitGeoSegment.splitsByLat(west, 'west'),
-    )
   }
 }

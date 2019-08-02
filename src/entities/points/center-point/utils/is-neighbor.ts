@@ -1,4 +1,4 @@
-import { CenterPoint } from "../center-point";
+import { CenterPoint } from '../center-point';
 
 export function isNeighbor(
   centerA: CenterPoint,
@@ -20,9 +20,9 @@ function isHexNeighbor(
   {i: iB, j: jB, k: kB}: CenterPoint,
 ): boolean {
   const diffs = [
-    iA - iB, 
-    jA - jB, 
-    (kA as number) - (kB as number)
+    iA - iB,
+    jA - jB,
+    (kA as number) - (kB as number),
   ];
 
   return diffs.includes(0) && diffs.includes(1) && diffs.includes(-1);

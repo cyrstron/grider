@@ -1,22 +1,39 @@
 import {
-  latToY, 
-  lngToX, 
-  semiLatToY,
-  semiLngToX,
-  reduceLat,
-  reduceLng,
   formatLat,
   formatLng,
+  latToY,
+  lngToX,
+  reduceLat,
+  reduceLng,
+  semiLatToY,
+  semiLngToX,
 } from '../../utils/geo.utils';
-import {MercPoint} from './merc-point';
-import {GridPoint} from './grid-point';
-import {CenterPoint} from './center-point';
 import {GridParams} from '../grid-params';
+import {CenterPoint} from './center-point';
+import {GridPoint} from './grid-point';
+import {MercPoint} from './merc-point';
 
 export class GeoPoint {
+
+  static createFormatted(
+    lat: number,
+    lng: number,
+  ): GeoPoint {
+    lat = formatLat(lat);
+    lng = formatLng(lng);
+
+    return new GeoPoint(lat, lng);
+  }
+
+  static fromUnsafeCoords(lat: number, lng: number): GeoPoint {
+    lat = reduceLat(lat);
+    lng = reduceLng(lng);
+
+    return new GeoPoint(lat, lng);
+  }
   constructor(
-    public lat: number, 
-    public lng: number
+    public lat: number,
+    public lng: number,
   ) {}
 
   inSameCell(point: GeoPoint, params: GridParams): boolean {
@@ -30,7 +47,7 @@ export class GeoPoint {
     const formattedA = this.toFormatted();
     const formattedB = point.toFormatted();
 
-    return formattedA.lat === formattedB.lat && 
+    return formattedA.lat === formattedB.lat &&
       formattedA.lng === formattedB.lng;
   }
 
@@ -54,7 +71,7 @@ export class GeoPoint {
       pointA = this.toOppositeHemisphere();
       pointB = pointB.toOppositeHemisphere();
     }
-    
+
     const mercPointA = pointA.toMerc();
     const mercPointB = pointB.toMerc();
 
@@ -100,13 +117,13 @@ export class GeoPoint {
   }
 
   isEasternTo(point: GeoPoint): boolean {
-    return this.isCloserThroughAntiMeridian(point) ? 
+    return this.isCloserThroughAntiMeridian(point) ?
       this.lng < point.lng :
       this.lng > point.lng;
   }
 
   isWesternTo(point: GeoPoint): boolean {
-    return this.isCloserThroughAntiMeridian(point) ? 
+    return this.isCloserThroughAntiMeridian(point) ?
       this.lng > point.lng :
       this.lng < point.lng;
   }
@@ -116,7 +133,7 @@ export class GeoPoint {
   }
 
   isSouthernTo(point: GeoPoint): boolean {
-    return this.lat < point.lat;    
+    return this.lat < point.lat;
   }
 
   toPlain(): grider.GeoPoint {
@@ -124,24 +141,7 @@ export class GeoPoint {
 
     return {
       lat,
-      lng
+      lng,
     };
-  }
-
-  static createFormatted(
-    lat: number, 
-    lng: number
-  ): GeoPoint {
-    lat = formatLat(lat);
-    lng = formatLng(lng);
-
-    return new GeoPoint(lat, lng);
-  }
-
-  static fromUnsafeCoords(lat: number, lng: number): GeoPoint {
-    lat = reduceLat(lat); 
-    lng = reduceLng(lng);
-
-    return new GeoPoint(lat, lng);
   }
 }

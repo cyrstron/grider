@@ -2,7 +2,7 @@ import {radToDeg} from './math.utils';
 
 export function yToLat(y: number): number {
   const latRad = (Math.atan(
-    Math.E ** (-(y * 2 - 1) * Math.PI)
+    Math.E ** (-(y * 2 - 1) * Math.PI),
   ) - Math.PI / 4);
 
   return 2 * radToDeg(latRad);

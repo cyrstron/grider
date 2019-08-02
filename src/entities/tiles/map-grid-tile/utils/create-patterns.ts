@@ -1,7 +1,7 @@
-import { TileMercPoint } from "../../../points/tile-merc-point";
-import { GridPattern } from "../../grid-pattern";
-import { GridParams } from "../../../grid-params";
-import { Point } from "../../../points/point";
+import { GridParams } from '../../../grid-params';
+import { Point } from '../../../points/point';
+import { TileMercPoint } from '../../../points/tile-merc-point';
+import { GridPattern } from '../../grid-pattern';
 
 export function createPatterns(
     tilePoint: TileMercPoint,
@@ -13,14 +13,14 @@ export function createPatterns(
         const pattern = GridPattern.fromTileCoords(tilePoint, start, params);
 
         return [
-            pattern
+            pattern,
         ];
     }
 
     const patterns: GridPattern[] = [];
     const yEnd = 1;
 
-    while(start.y < yEnd) {
+    while (start.y < yEnd) {
         const pattern = GridPattern.fromTileCoords(tilePoint, start, params);
 
         patterns.push(pattern);

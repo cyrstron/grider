@@ -1,18 +1,29 @@
-import { CentersMatrix } from "../centers-matrix";
-import { CenterPoint } from "../../../../points/center-point";
-import { GeoPoint } from "../../../../points/geo-point";
-import { getOuterCentersMatrix } from "./utils/get-outer-centers";
-import { calcTopLeft } from "../../utils/calc-top-left";
-import { PolyMatrix } from "../poly-matrix";
+import { CenterPoint } from '../../../../points/center-point';
+import { GeoPoint } from '../../../../points/geo-point';
+import { calcTopLeft } from '../../utils/calc-top-left';
+import { CentersMatrix } from '../centers-matrix';
+import { PolyMatrix } from '../poly-matrix';
+import { getOuterCentersMatrix } from './utils/get-outer-centers';
 
-type OuterCentersMatrixPayload = Array<(CenterPoint | "outer" | undefined)>[]
+type OuterCentersMatrixPayload = Array<Array<(CenterPoint | 'outer' | undefined)>>;
 
 export class OuterCentersMatrix extends PolyMatrix {
+
+  get startIndexes(): [number, number] {
+    return this.startIndexesBy((value) => value instanceof CenterPoint);
+  }
+
+  static fromCentersMatrix(matrix: CentersMatrix): OuterCentersMatrix {
+    const payload = getOuterCentersMatrix(matrix);
+    const topLeft = calcTopLeft(payload);
+
+    return new OuterCentersMatrix(payload, topLeft);
+  }
   payload: OuterCentersMatrixPayload;
 
   constructor(
-    payload: OuterCentersMatrixPayload, 
-    topLeft: CenterPoint
+    payload: OuterCentersMatrixPayload,
+    topLeft: CenterPoint,
   ) {
     super(payload, topLeft);
 
@@ -30,28 +41,17 @@ export class OuterCentersMatrix extends PolyMatrix {
   toPoly(): GeoPoint[] {
     return super.toPoly();
   }
-  
+
   removeEmptyLines(): OuterCentersMatrix {
     const {
-      payload, 
-      topLeft
+      payload,
+      topLeft,
     } = super.removeEmptyLines();
 
     return new OuterCentersMatrix(
-      payload as OuterCentersMatrixPayload, 
-      topLeft
+      payload as OuterCentersMatrixPayload,
+      topLeft,
     );
-  }
-
-  get startIndexes(): [number, number] {
-    return this.startIndexesBy((value) => value instanceof CenterPoint);
-  }
-
-  static fromCentersMatrix(matrix: CentersMatrix): OuterCentersMatrix {
-    const payload = getOuterCentersMatrix(matrix);
-    const topLeft = calcTopLeft(payload);
-
-    return new OuterCentersMatrix(payload, topLeft);
   }
 
 }

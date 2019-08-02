@@ -1,15 +1,15 @@
+import {
+  cosDeg,
+  sinDeg,
+} from '../../../../utils/math.utils';
+import {GridParams} from '../../../grid-params';
 import {GeoPoint} from '../../geo-point';
 import {GridPoint} from '../grid-point';
-import {GridParams} from '../../../grid-params';
-import {
-  sinDeg,
-  cosDeg,
-} from '../../../../utils/math.utils';
 
 export function toGrid(
-  point: GeoPoint, 
-  axisParams: grider.GridAxis, 
-  params: GridParams
+  point: GeoPoint,
+  axisParams: grider.GridAxis,
+  params: GridParams,
 ): number {
   const rotatedAxis = rotateToGrid(point, axisParams, params.isHorizontal);
   const scaledAxis = toGridScale(rotatedAxis, params);
@@ -18,7 +18,7 @@ export function toGrid(
 }
 
 export function toGeo(
-  point: GridPoint, 
+  point: GridPoint,
   axisParams: grider.Axis,
 ): number {
   const rotatedAxis = rotateToGeo(point, axisParams);
@@ -52,7 +52,7 @@ function rotateToGeo(
   axisParams: grider.Axis,
 ): number {
   const {
-    isHorizontal
+    isHorizontal,
   } = point.params;
 
   const mainAxis = isHorizontal ? 'lng' : 'lat';
@@ -80,8 +80,8 @@ function rotateToGeo(
 }
 
 function toGridScale(
-  value: number, 
-  gridParams: grider.GridParams
+  value: number,
+  gridParams: grider.GridParams,
 ): number {
   const size = gridParams.initSize;
   const result = value * 10000000 / size;
@@ -90,8 +90,8 @@ function toGridScale(
 }
 
 function toGeoScale(
-  value: number, 
-  gridParams: grider.GridParams
+  value: number,
+  gridParams: grider.GridParams,
 ): number {
   const size = gridParams.initSize;
   const result = value * size / 10000000;

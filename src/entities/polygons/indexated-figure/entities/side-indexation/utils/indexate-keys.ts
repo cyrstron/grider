@@ -6,7 +6,7 @@ export function indexateKeys(keys: string[]): {[key: string]: number[]} {
     key,
   ): {[key: string]: number[]} => {
     let keyIndex = key;
-    
+
     while (true) {
       if (!indexation[keyIndex]) {
         indexation[keyIndex] = [];

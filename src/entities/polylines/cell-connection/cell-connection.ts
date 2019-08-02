@@ -1,19 +1,13 @@
-import { CenterPoint } from "../../points/center-point";
-import { GeoPoint } from "../../points/geo-point";
-import { GeoSegment } from "../../segments";
-import { Cell } from "../../polygons";
+import { CenterPoint } from '../../points/center-point';
+import { GeoPoint } from '../../points/geo-point';
+import { Cell } from '../../polygons';
+import { GeoSegment } from '../../segments';
 
 export class CellConnection {
-  constructor(
-    public centerA: CenterPoint,
-    public centerB: CenterPoint,
-    public path: GeoPoint[],
-    public innerCenters: CenterPoint[]
-  ) {}
 
   static fromCenters(
-    centerA: CenterPoint, 
-    centerB: CenterPoint
+    centerA: CenterPoint,
+    centerB: CenterPoint,
   ): CellConnection {
     const geoPointA = centerA.toGeo();
     const geoPointB = centerB.toGeo();
@@ -23,14 +17,14 @@ export class CellConnection {
 
     let segment = new GeoSegment(geoPointA, geoPointB);
     let nextCell: Cell | undefined = centerA.toCell().nextCellOnSegment(segment);
-    
-    while(nextCell && !nextCell.isEqual(endCell)) {
+
+    while (nextCell && !nextCell.isEqual(endCell)) {
       const nextGeoPoint = nextCell.center.toGeo();
 
       segment = new GeoSegment(nextGeoPoint, geoPointB);
 
       innerCenters.push(nextCell.center);
-      points.push(nextGeoPoint);      
+      points.push(nextGeoPoint);
 
       nextCell = nextCell.nextCellOnSegment(segment);
     }
@@ -39,4 +33,11 @@ export class CellConnection {
 
     return new CellConnection(centerA, centerB, points, innerCenters);
   }
+
+  constructor(
+    public centerA: CenterPoint,
+    public centerB: CenterPoint,
+    public path: GeoPoint[],
+    public innerCenters: CenterPoint[],
+  ) {}
 }

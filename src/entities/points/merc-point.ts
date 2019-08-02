@@ -1,11 +1,11 @@
 import {Point} from './point';
 
 import {
-  yToLat, 
+  reduceX,
   xToLng,
   xToSemiLng,
+  yToLat,
   yToSemiLat,
-  reduceX,
 } from '../../utils/merc.utils';
 
 import {GeoPoint} from './geo-point';
@@ -21,7 +21,7 @@ export class MercPoint extends Point {
     return new MercPoint(
       +this.x.toFixed(10),
       +this.y.toFixed(10),
-    )
+    );
   }
 
   toOppositeHemisphere(): MercPoint {
@@ -59,13 +59,13 @@ export class MercPoint extends Point {
   }
 
   isEasternTo(point: MercPoint): boolean {
-    return this.isCloserThroughAntiMeridian(point) ? 
+    return this.isCloserThroughAntiMeridian(point) ?
       this.x < point.x :
       this.x > point.x;
   }
 
   isWesternTo(point: MercPoint): boolean {
-    return this.isCloserThroughAntiMeridian(point) ? 
+    return this.isCloserThroughAntiMeridian(point) ?
       this.x > point.x :
       this.x < point.x;
   }
@@ -75,6 +75,6 @@ export class MercPoint extends Point {
   }
 
   isSouthernTo(point: MercPoint): boolean {
-    return this.y < point.y;    
+    return this.y < point.y;
   }
 }

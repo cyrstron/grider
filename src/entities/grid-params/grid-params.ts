@@ -1,13 +1,38 @@
+import { TileMercPoint } from '../points/tile-merc-point';
 import {
   axesParams,
   calcAxesParams,
-  initCoofs,
-  calcInitialCellWidth,
   calcInitialCellHeight,
+  calcInitialCellWidth,
+  initCoofs,
 } from './utils';
-import { TileMercPoint } from '../points/tile-merc-point';
 
 export class GridParams {
+
+  static fromConfig({
+    isHorizontal = false,
+    type,
+    correction,
+    cellSize,
+  }: grider.GridConfig): GridParams {
+    const orientation = isHorizontal ? 'horizontal' : 'vertical';
+    const initSizeCoof: number = initCoofs[type][correction][orientation];
+
+    const axes = axesParams[type];
+    const geoAxes = calcAxesParams(isHorizontal, type);
+    const initSize = calcInitialCellWidth(cellSize, initSizeCoof);
+    const initHeight = calcInitialCellHeight(cellSize);
+
+    return new GridParams({
+      isHorizontal,
+      type,
+      axes,
+      geoAxes,
+      initSize,
+      initHeight,
+      correction,
+    });
+  }
   isHorizontal: boolean;
   type: grider.ShapeType;
   axes: grider.GridAxis[];
@@ -32,31 +57,6 @@ export class GridParams {
     this.initSize = initSize;
     this.initHeight = initHeight;
     this.correction = correction;
-  }
-
-  static fromConfig({
-    isHorizontal = false,
-    type,
-    correction,
-    cellSize,
-  }: grider.GridConfig): GridParams {
-    const orientation = isHorizontal ? 'horizontal' : 'vertical';
-    const initSizeCoof: number = initCoofs[type][correction][orientation];
-
-    const axes = axesParams[type];
-    const geoAxes = calcAxesParams(isHorizontal, type);
-    const initSize = calcInitialCellWidth(cellSize, initSizeCoof);
-    const initHeight = calcInitialCellHeight(cellSize);
-
-    return new GridParams({
-      isHorizontal,
-      type,
-      axes,
-      geoAxes,
-      initSize,
-      initHeight,
-      correction,
-    })
   }
 
   minCellSize(tilePoint: TileMercPoint): number {
@@ -85,7 +85,7 @@ export class GridParams {
       initHeight,
       correction,
     } = this;
-    
+
     return ({
       isHorizontal,
       type,

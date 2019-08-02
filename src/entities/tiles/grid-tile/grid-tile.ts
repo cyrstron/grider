@@ -1,17 +1,10 @@
-import { GridParams } from "../../grid-params";
+import { GridParams } from '../../grid-params';
 
+import { Point } from '../../points/point';
+import { TileMercPoint } from '../../points/tile-merc-point';
 import {expandTile} from './utils/expand';
-import { TileMercPoint } from "../../points/tile-merc-point";
-import { Point } from "../../points/point";
 
 export class GridTile {
-  constructor(
-    public points: Point[][], 
-    public tilePoint: TileMercPoint,
-    public tileWidth: number,
-    public tileHeight: number,
-    public params: GridParams,
-  ) {}
 
   static fromTileCoords(
     tilePoint: TileMercPoint,
@@ -23,7 +16,7 @@ export class GridTile {
       tileY,
       tileHeight,
       tileWidth,
-      zoom
+      zoom,
     } = tilePoint;
 
     const startTilePoint = TileMercPoint.fromTile(
@@ -47,7 +40,9 @@ export class GridTile {
     const patternMercEnd = patternGridEnd.toGeo()
       .toMerc();
 
-    let {tileX: startTileX, tileY: startTileY} = startTilePoint;
+    const {tileY: startTileY} = startTilePoint;
+    let {tileX: startTileX} = startTilePoint;
+
     const {tileX: endTileX, tileY: endTileY} = TileMercPoint.fromMerc(
       patternMercEnd,
       tileWidth,
@@ -62,7 +57,7 @@ export class GridTile {
     const patternGeoCenter = patternGridCenter.toGeo();
     const width = endTileX - startTileX;
     const height = endTileY - startTileY;
-    
+
     const points = expandTile(patternGeoCenter, startTilePoint, width, height, params);
 
     return new GridTile(
@@ -70,7 +65,14 @@ export class GridTile {
       tilePoint,
       width,
       height,
-      params
+      params,
     );
   }
+  constructor(
+    public points: Point[][],
+    public tilePoint: TileMercPoint,
+    public tileWidth: number,
+    public tileHeight: number,
+    public params: GridParams,
+  ) {}
 }

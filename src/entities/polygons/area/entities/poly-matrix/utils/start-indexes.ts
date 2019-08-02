@@ -1,16 +1,16 @@
-import { PolyMatrix } from "../poly-matrix";
-import { calcNearestAndTouchedIndexes } from "../../../utils/nearest-indexes";
-import { CenterPoint } from "../../../../../points/center-point";
+import { CenterPoint } from '../../../../../points/center-point';
+import { calcNearestAndTouchedIndexes } from '../../../utils/nearest-indexes';
+import { PolyMatrix } from '../poly-matrix';
 
 export function getStartIndexesTouchedBy(
-  matrix: PolyMatrix, 
-  callback: (value: CenterPoint | 'inner' | 'outer' | undefined) => boolean
+  matrix: PolyMatrix,
+  callback: (value: CenterPoint | 'inner' | 'outer' | undefined) => boolean,
 ): [number, number] {
   const {
     payload,
-    topLeft: {params}
+    topLeft: {params},
   } = matrix;
-  
+
   const startI: number = 0;
   const startJ = payload[0].reduce((startJ, _value, j) => {
     if (startJ !== undefined) return startJ;

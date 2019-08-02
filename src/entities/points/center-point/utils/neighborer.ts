@@ -1,18 +1,18 @@
 import {CenterPoint} from '../center-point';
 
 export interface Neighbors {
-  west?: CenterPoint,
-  southWest: CenterPoint,
-  east?: CenterPoint,
-  southEast: CenterPoint,
-  south?: CenterPoint,
-  northEast: CenterPoint,
-  north?: CenterPoint,
-  northWest: CenterPoint,
+  west?: CenterPoint;
+  southWest: CenterPoint;
+  east?: CenterPoint;
+  southEast: CenterPoint;
+  south?: CenterPoint;
+  northEast: CenterPoint;
+  north?: CenterPoint;
+  northWest: CenterPoint;
 }
 
 export function getAll(
-  center: CenterPoint
+  center: CenterPoint,
 ): Neighbors {
   const {
     type,
@@ -56,7 +56,7 @@ export function getAll(
 }
 
 export function getNorthWest(
-  center: CenterPoint
+  center: CenterPoint,
 ): {northWest: CenterPoint} {
   const {
     type,
@@ -64,7 +64,8 @@ export function getNorthWest(
   } = center.params;
   const mainGeoAxis = geoAxes[0].name;
 
-  let {i, j, k} = center;
+  let {i, j} = center;
+  const {k} = center;
 
   if (type === 'rect' && mainGeoAxis === 'lat') {
     i += 1;
@@ -86,7 +87,7 @@ export function getNorthWest(
 }
 
 export function getNorthEast(
-  center: CenterPoint
+  center: CenterPoint,
 ): {northEast: CenterPoint} {
   const {
     type,
@@ -108,7 +109,7 @@ export function getNorthEast(
 }
 
 export function getSouthWest(
-  center: CenterPoint
+  center: CenterPoint,
 ): {southWest: CenterPoint} {
   const {
     type,
@@ -130,7 +131,7 @@ export function getSouthWest(
 }
 
 export function getSouthEast(
-  center: CenterPoint
+  center: CenterPoint,
 ): {southEast: CenterPoint} {
   const {
     type,
@@ -138,7 +139,8 @@ export function getSouthEast(
   } = center.params;
   const mainGeoAxis = geoAxes[0].name;
 
-  let {i, j, k} = center;
+  let {i, j} = center;
+  const {k} = center;
 
   if (type === 'rect' && mainGeoAxis === 'lat') {
     i -= 1;
@@ -160,7 +162,7 @@ export function getSouthEast(
 }
 
 export function getNorth(
-  center: CenterPoint
+  center: CenterPoint,
 ): {
   north?: CenterPoint,
   northEast?: CenterPoint,
@@ -194,7 +196,7 @@ export function getNorth(
 }
 
 export function getSouth(
-  center: CenterPoint
+  center: CenterPoint,
 ): {
   south?: CenterPoint,
   southEast?: CenterPoint,
@@ -228,7 +230,7 @@ export function getSouth(
 }
 
 export function getEast(
-  center: CenterPoint
+  center: CenterPoint,
 ): {
   east?: CenterPoint,
   southEast?: CenterPoint,
@@ -262,7 +264,7 @@ export function getEast(
 }
 
 export function getWest(
-  center: CenterPoint
+  center: CenterPoint,
 ): {
   west?: CenterPoint,
   southWest?: CenterPoint,

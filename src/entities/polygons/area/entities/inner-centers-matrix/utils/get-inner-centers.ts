@@ -1,24 +1,24 @@
-import { CentersMatrix } from "../../centers-matrix";
-import { CenterPoint } from "../../../../../points/center-point";
-import { calcNearestAndTouchedIndexes } from "../../../utils/nearest-indexes";
+import { CenterPoint } from '../../../../../points/center-point';
+import { calcNearestAndTouchedIndexes } from '../../../utils/nearest-indexes';
+import { CentersMatrix } from '../../centers-matrix';
 
-export function getInnerCentersMatrix(  
+export function getInnerCentersMatrix(
   matrix: CentersMatrix,
-  innerEmpties: number[][]
-): Array<CenterPoint | undefined | 'inner'>[] {
+  innerEmpties: number[][],
+): Array<Array<CenterPoint | undefined | 'inner'>> {
   const {
     payload,
-    topLeft: {params}
+    topLeft: {params},
   } = matrix;
-    
+
   const innerMatrix = payload.map((row, i) => row.map(
     (center, j) => {
       if (
-        !center && 
+        !center &&
         innerEmpties.some(([i2, j2]) => i === i2 && j === j2)
       ) return 'inner';
 
-      if (!center) return center;  
+      if (!center) return center;
 
       const nearestEmpties = calcNearestAndTouchedIndexes(i, j, params)
         .filter(([i, j]) => {
@@ -30,11 +30,11 @@ export function getInnerCentersMatrix(
         });
 
       const isNearest = nearestEmpties.some(
-        ([i1, j1]) => innerEmpties.some(([i2, j2]) => i1 === i2 && j1 === j2)
+        ([i1, j1]) => innerEmpties.some(([i2, j2]) => i1 === i2 && j1 === j2),
       );
 
       return isNearest ? center : undefined;
-    })) as Array<CenterPoint | undefined | 'inner'>[];
+    })) as Array<Array<CenterPoint | undefined | 'inner'>>;
 
-    return innerMatrix;
-};
+  return innerMatrix;
+}

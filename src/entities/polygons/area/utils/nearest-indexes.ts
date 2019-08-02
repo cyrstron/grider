@@ -1,9 +1,9 @@
-import { GridParams } from "../../../grid-params";
+import { GridParams } from '../../../grid-params';
 
 export function calcNearestIndexes(
-  i: number, 
-  j: number, 
-  params: GridParams
+  i: number,
+  j: number,
+  params: GridParams,
 ): number[][] {
   const indexes = [
     [i + 1, j],
@@ -23,9 +23,9 @@ export function calcNearestIndexes(
 }
 
 export function calcNearestAndTouchedIndexes(
-  i: number, 
-  j: number, 
-  params: GridParams
+  i: number,
+  j: number,
+  params: GridParams,
 ): number[][] {
   const indexes = [
     [i + 1, j],

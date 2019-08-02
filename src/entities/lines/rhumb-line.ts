@@ -1,27 +1,15 @@
-import {GeoPoint} from '../points/geo-point';
-import {MercLine} from './merc-line';
 import {
-  latToY, 
-  lngToX, 
+  latToY,
+  lngToX,
   reduceLng,
 } from '../../utils/geo.utils';
 import {
-  xToLng, yToLat
+  xToLng, yToLat,
 } from '../../utils/merc.utils';
+import {GeoPoint} from '../points/geo-point';
+import {MercLine} from './merc-line';
 
 export class RhumbLine extends MercLine {
-  isAntiMeridian: boolean;
-
-  constructor(
-    a: number, 
-    b: number, 
-    c: number, 
-    isAntiMeridial: boolean,
-  ) {
-    super(a, b, c);
-
-    this.isAntiMeridian = isAntiMeridial;
-  }
 
   static fromTwoGeoPoints(pointA: GeoPoint, pointB: GeoPoint) {
     const isAntiMeridian = pointA.isCloserThroughAntiMeridian(pointB);
@@ -34,6 +22,18 @@ export class RhumbLine extends MercLine {
     const {a, b, c} = MercLine.fromTwoPoints(pointA.toMerc(), pointB.toMerc());
 
     return new RhumbLine(a, b, c, isAntiMeridian);
+  }
+  isAntiMeridian: boolean;
+
+  constructor(
+    a: number,
+    b: number,
+    c: number,
+    isAntiMeridial: boolean,
+  ) {
+    super(a, b, c);
+
+    this.isAntiMeridian = isAntiMeridial;
   }
 
   lngByLat(lat: number): number | undefined {

@@ -1,16 +1,16 @@
-import { GeoPoint } from "../../../points/geo-point";
+import { GeoPoint } from '../../../points/geo-point';
 
 export function cleanFigure(points: GeoPoint[]): GeoPoint[] {
   const indexes = indexatePoints(points);
   const {inner, outer} = calcSplitIndexes(indexes, points);
   const sliceIndexes = calcSliceIndexes(outer, inner);
-  
+
   return clearPoints(points, sliceIndexes);
 }
 
 function indexatePoints(
-  points: GeoPoint[]
-): {[key: string]: number | number[]} {  
+  points: GeoPoint[],
+): {[key: string]: number | number[]} {
   return points.reduce((
     indexes: {[key: string]: number | number[]},
     {lat, lng}: grider.GeoPoint,
@@ -33,7 +33,7 @@ function indexatePoints(
 
 function calcSplitIndexes(
   indexes: {[key: string]: number | number[]},
-  points: GeoPoint[]
+  points: GeoPoint[],
 ): {
   inner: number[][],
   outer: [number, number],
@@ -125,8 +125,8 @@ function pickIndexes(indexes: number[], figureLength: number) {
 }
 
 function calcSliceIndexes(
-  outer: number[], 
-  inner: number[][]
+  outer: number[],
+  inner: number[][],
 ): Array<[number, number]> {
   return [
     ...outer,
@@ -156,9 +156,9 @@ function calcSliceIndexes(
 }
 
 function clearPoints(
-  points: GeoPoint[], 
-  sliceIndexes: Array<[number, number]>
-):  GeoPoint[] {
+  points: GeoPoint[],
+  sliceIndexes: Array<[number, number]>,
+): GeoPoint[] {
   const clearedPoints = sliceIndexes.reduce((
     cleanedFigure: GeoPoint[],
     [sliceStart, sliceEnd]: [number, number],

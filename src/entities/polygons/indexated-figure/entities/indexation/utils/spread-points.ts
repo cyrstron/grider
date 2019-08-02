@@ -1,5 +1,5 @@
-import { GeoPoint } from "../../../../../points/geo-point";
-import { GeoSegment } from "../../../../../segments/geo-segment";
+import { GeoPoint } from '../../../../../points/geo-point';
+import { GeoSegment } from '../../../../../segments/geo-segment';
 import {SpreadedFigure} from '../indexation';
 
 export function spreadPointsBySides(
@@ -10,7 +10,7 @@ export function spreadPointsBySides(
       spreadedPoints: SpreadedFigure,
       point,
       pointIndex,
-      points
+      points,
     ): SpreadedFigure => {
       const sidePoints = spreadedPoints[spreadedPoints.length - 1];
 
@@ -29,8 +29,8 @@ export function spreadPointsBySides(
 
       const checkSegment = new GeoSegment(
         sidePoints[0].point,
-        sidePoints[sidePoints.length - 1].point
-      )
+        sidePoints[sidePoints.length - 1].point,
+      );
 
       const latIsOK = !checkSegment.containsLat(point.lat);
       const lngIsOK = !checkSegment.containsLng(point.lng);

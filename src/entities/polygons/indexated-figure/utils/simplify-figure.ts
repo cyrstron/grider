@@ -1,6 +1,6 @@
-import { GeoPoint } from "../../../points/geo-point";
-import { GridParams } from "../../../grid-params";
-import { GeoPolygon } from "../../geo-polygon";
+import { GridParams } from '../../../grid-params';
+import { GeoPoint } from '../../../points/geo-point';
+import { GeoPolygon } from '../../geo-polygon';
 
 export function simplifyFigure(
   points: GeoPoint[],
@@ -37,20 +37,20 @@ function simplifyHexFigure(
   params: GridParams,
 ): GeoPoint[] {
   if (points.length === 0) return points;
-  
+
   if (params.type === 'rect') return points;
 
   const len = points.length;
   const isInner = shape.containsPoint(points[0]);
 
   const distances = points.map((point): number => shape.reduceSides((
-      minDistance: number, 
-      side
+      minDistance: number,
+      side,
     ): number => {
       const distance = side.mercDistanceToPoint(point);
 
       return Math.min(distance, minDistance);
-    }, Infinity)
+    }, Infinity),
   );
 
   const simplified = points.reduce((result: GeoPoint[], point, index) => {
@@ -146,14 +146,14 @@ function checkPoint(
   const gridSegment = segment.map((point) => point.toGrid(params));
 
   const pointsInRow = gridSegment.reduce((
-    pointsInRow: number[][], 
-    pointA, 
-    indexA
+    pointsInRow: number[][],
+    pointA,
+    indexA,
   ) => {
     return gridSegment.reduce((
-      pointsInRow: number[][], 
-      pointB, 
-      indexB
+      pointsInRow: number[][],
+      pointB,
+      indexB,
     ) => {
       if (indexA >= indexB) return pointsInRow;
 
@@ -183,7 +183,7 @@ function checkPoint(
   } else if (pointsInRow.length > 1 && pointsInRow.every((row) => row.includes(index))) {
 
     const outOfRowIndexes = segmentIndexes.filter(
-      (index) => pointsInRow.every((row) => !row.includes(index))
+      (index) => pointsInRow.every((row) => !row.includes(index)),
     );
 
     if (outOfRowIndexes.length !== 1) return true;

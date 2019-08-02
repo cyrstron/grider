@@ -1,21 +1,21 @@
-import {GenericPolygon} from '../generic-polygon';
 import {GeoPoint} from '../../points/geo-point';
 import {GeoSegment} from '../../segments/geo-segment';
 import { Cell } from '../cell';
+import {GenericPolygon} from '../generic-polygon';
 
-import {getInvalidCells} from './utils/cells-invalid-for-figure'
 import { GridParams } from '../../grid-params';
+import {getInvalidCells} from './utils/cells-invalid-for-figure';
 
 export class GeoPolygon<
   SegmentType extends GeoSegment = GeoSegment
-> extends GenericPolygon<GeoPoint, SegmentType> {  
-	sideByIndex(index: number): SegmentType {
+> extends GenericPolygon<GeoPoint, SegmentType> {
+  sideByIndex(index: number): SegmentType {
     const {pointA, pointB} = super.sideByIndex(index);
 
     return new GeoSegment(pointA, pointB) as SegmentType;
   }
 
-	sideByIndexInversed(index: number): SegmentType {
+  sideByIndexInversed(index: number): SegmentType {
     const {pointA, pointB} = super.sideByIndexInversed(index);
 
     return new GeoSegment(pointA, pointB) as SegmentType;
@@ -29,7 +29,7 @@ export class GeoPolygon<
       const lat = side.latByLng(lng);
 
       if (lat === undefined) return intersects;
-      
+
       const intersect = new GeoPoint(lat, lng);
 
       if (!intersects.find((point) => point.isEqual(intersect))) {
@@ -38,7 +38,7 @@ export class GeoPolygon<
 
       return intersects;
     }, []);
-      
+
     return GeoSegment.segmentsFromPointsByLat(intersects);
   }
 
@@ -83,23 +83,23 @@ export class GeoPolygon<
       const distanceB = segment.mercDistanceToPoint(pointB);
 
       return distanceA - distanceB;
-    })
+    });
   }
 
   pointsInsidePoly(poly: GeoPolygon): GeoPoint[] {
     return this.points.filter((point) => poly.containsPoint(point));
   }
-  
+
   pointsOutsidePoly(poly: GeoPolygon): GeoPoint[] {
     return this.points.filter((point) => !poly.containsPoint(point));
   }
-  
-	arePointsInsidePoly(poly: GeoPolygon): boolean {
-		return this.points.every((point) => poly.containsPoint(point));
+
+  arePointsInsidePoly(poly: GeoPolygon): boolean {
+    return this.points.every((point) => poly.containsPoint(point));
   }
-  
+
   arePointsOutsidePoly(poly: GeoPolygon): boolean {
-    return this.points.every((point) => !poly.containsPoint(point))
+    return this.points.every((point) => !poly.containsPoint(point));
   }
 
   containsPoint(point: GeoPoint): boolean {
@@ -107,7 +107,7 @@ export class GeoPolygon<
 
     return splitSegment.reduce((
       isContained: boolean,
-      segment
+      segment,
     ) => isContained || segment.containsLng(point.lng), false);
   }
 
@@ -115,13 +115,13 @@ export class GeoPolygon<
     if (this.outmapPoints.length > 0) return false;
 
     if (this.points.length < 3) return false;
-    
+
     const {selfIntersections} = this;
 
     if (selfIntersections.length > 0) return false;
 
     const invalidCells = this.cellsInvalidForFigure(params);
-    
+
     if (invalidCells.length > 0) return false;
 
     return true;
@@ -138,51 +138,51 @@ export class GeoPolygon<
       return y > 1 || y < 0;
     });
   }
-  
-	get easternPoint(): GeoPoint {
+
+  get easternPoint(): GeoPoint {
     return this.points.reduce((
         easternPoint,
         point,
-      ) => point.isEasternTo(easternPoint) ? 
-        point : 
-        easternPoint, 
-      this.points[0]
-    );		
+      ) => point.isEasternTo(easternPoint) ?
+        point :
+        easternPoint,
+      this.points[0],
+    );
   }
-  
-	get westernPoint(): GeoPoint {
+
+  get westernPoint(): GeoPoint {
     return this.points.reduce((
         westernPoint,
         point,
-      ) => point.isWesternTo(westernPoint) ? 
-        point : 
-        westernPoint, 
-      this.points[0]
-    );		
+      ) => point.isWesternTo(westernPoint) ?
+        point :
+        westernPoint,
+      this.points[0],
+    );
   }
-  
-	get northernPoint(): GeoPoint {
+
+  get northernPoint(): GeoPoint {
     return this.points.reduce((
         northernPoint,
         point,
-      ) => point.isNorthernTo(northernPoint) ? 
-        point : 
-        northernPoint, 
-      this.points[0]
-    );		
+      ) => point.isNorthernTo(northernPoint) ?
+        point :
+        northernPoint,
+      this.points[0],
+    );
   }
-  
-	get southernPoint(): GeoPoint {
+
+  get southernPoint(): GeoPoint {
     return this.points.reduce((
         southernPoint,
         point,
-      ) => point.isSouthernTo(southernPoint) ? 
-        point : 
-        southernPoint, 
-      this.points[0]
-    );		
+      ) => point.isSouthernTo(southernPoint) ?
+        point :
+        southernPoint,
+      this.points[0],
+    );
   }
-  
+
   toPlain(): grider.GeoPoint[] {
     return this.points.map((point) => point.toPlain());
   }

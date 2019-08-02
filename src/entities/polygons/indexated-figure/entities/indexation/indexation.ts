@@ -1,16 +1,29 @@
-import {spreadPointsBySides} from './utils/spread-points';
 import { GeoPoint } from '../../../../points/geo-point';
-import {SideIndexation} from '../side-indexation';
-import { TileMercPoint } from '../../../../points/tile-merc-point';
-import { TileIntersection } from '../tile-intersection';
-import { BoundIntersection } from '../bound-intersection';
 import { Point } from '../../../../points/point';
+import { TileMercPoint } from '../../../../points/tile-merc-point';
+import { BoundIntersection } from '../bound-intersection';
+import {SideIndexation} from '../side-indexation';
+import { TileIntersection } from '../tile-intersection';
+import {spreadPointsBySides} from './utils/spread-points';
 
-export type SpreadedPoint = {index: number, point: GeoPoint};
+export interface SpreadedPoint {
+  index: number;
+  point: GeoPoint;
+}
 export type SpreadedSide = SpreadedPoint[];
 export type SpreadedFigure = SpreadedSide[];
 
 export class Indexation {
+
+  static fromPoints(points: GeoPoint[]) {
+    const spreadedPoints = spreadPointsBySides(points);
+
+    const indexations = spreadedPoints.map(
+      (spreadedSide) => SideIndexation.fromSpreadedSide(points, spreadedSide),
+    );
+
+    return new Indexation(points, spreadedPoints, indexations);
+  }
   constructor(
     public points: GeoPoint[],
     public spreaded: SpreadedFigure,
@@ -52,7 +65,7 @@ export class Indexation {
       north,
       south,
       east,
-      west
+      west,
     );
 
     const normalized = intersection.normalize();
@@ -61,13 +74,13 @@ export class Indexation {
   }
 
   tileBorderPoints(tilePoint: TileMercPoint): Point[] {
-    let tileIntersects = this.tileIntersection(tilePoint);
+    const tileIntersects = this.tileIntersection(tilePoint);
 
     if (tileIntersects.isEmpty) {
-      const points = tilePoint.toPoly().containsPoint(this.points[0]) ? 
-        tilePoint.projectGeoPoints(this.points) : 
+      const points = tilePoint.toPoly().containsPoint(this.points[0]) ?
+        tilePoint.projectGeoPoints(this.points) :
         [];
-      
+
       return points;
     }
 
@@ -78,9 +91,9 @@ export class Indexation {
     }
 
     const points = tileIntersects.reduce((
-      points: GeoPoint[], 
-      segments, 
-      direction
+      points: GeoPoint[],
+      segments,
+      direction,
     ): GeoPoint[] => {
       if (segments.length === 0) return points;
 
@@ -119,9 +132,9 @@ export class Indexation {
         const {toIndex: indexA} = segment.boundB;
 
         if (indexA === undefined) return boundPoints;
-        
+
         let indexB: number | undefined;
-        let nextSegment = segments[index + 1];
+        const nextSegment = segments[index + 1];
 
         if (nextSegment && nextSegment.boundA.toIndex) {
           indexB = nextSegment.boundA.toIndex;
@@ -129,8 +142,8 @@ export class Indexation {
           const {keys} = tileIntersects;
           const directionIndex = keys.indexOf(direction);
           const directions = [
-            ...keys.slice(directionIndex + 1), 
-            ...keys.slice(0, directionIndex + 1)
+            ...keys.slice(directionIndex + 1),
+            ...keys.slice(0, directionIndex + 1),
           ];
 
           const nextDirection = directions.find((key) => tileIntersects[key].length > 0);
@@ -158,15 +171,15 @@ export class Indexation {
           borderPoints = this.points.slice(minIndex, maxIndex + 1);
         } else {
           borderPoints = [
-            ...this.points.slice(maxIndex), 
-            ...this.points.slice(0, minIndex + 1)
-          ]
+            ...this.points.slice(maxIndex),
+            ...this.points.slice(0, minIndex + 1),
+          ];
         }
 
         if (isInversed) {
           borderPoints.reverse();
         }
-        
+
         boundPoints.push(...borderPoints);
 
         return boundPoints;
@@ -181,14 +194,4 @@ export class Indexation {
 
     return projectedPoints;
   }
-
-  static fromPoints(points: GeoPoint[]) {
-    const spreadedPoints = spreadPointsBySides(points);
-
-    const indexations = spreadedPoints.map(
-      (spreadedSide) => SideIndexation.fromSpreadedSide(points, spreadedSide)
-    )
-
-    return new Indexation(points, spreadedPoints, indexations);
-  }
-} 
+}

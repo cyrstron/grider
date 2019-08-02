@@ -1,11 +1,11 @@
-import { GridParams } from "../../../../../grid-params";
-import { CenterPoint } from "../../../../../points/center-point";
-import { calcNearestAndTouchedIndexes } from "../../../utils/nearest-indexes";
+import { GridParams } from '../../../../../grid-params';
+import { CenterPoint } from '../../../../../points/center-point';
+import { calcNearestAndTouchedIndexes } from '../../../utils/nearest-indexes';
 
 export function getNearestEmpties(
   i: number,
   j: number,
-  matrix: Array<CenterPoint | undefined | 'inner' | 'outer'>[],
+  matrix: Array<Array<CenterPoint | undefined | 'inner' | 'outer'>>,
   params: GridParams,
   emptiesCoords?: number[][],
 ): number[][] {

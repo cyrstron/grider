@@ -1,18 +1,32 @@
-import { CenterPoint } from "../../../../points/center-point";
-import { GeoPoint } from "../../../../points/geo-point";
-import { CentersMatrix } from "../centers-matrix";
-import { getInnerCentersMatrix } from "./utils/get-inner-centers";
-import { calcTopLeft } from "../../utils/calc-top-left";
+import { CenterPoint } from '../../../../points/center-point';
+import { GeoPoint } from '../../../../points/geo-point';
+import { calcTopLeft } from '../../utils/calc-top-left';
+import { CentersMatrix } from '../centers-matrix';
 import {PolyMatrix} from '../poly-matrix';
+import { getInnerCentersMatrix } from './utils/get-inner-centers';
 
-type InnerCentersMatrixPayload = Array<CenterPoint | 'inner' | undefined>[];
+type InnerCentersMatrixPayload = Array<Array<CenterPoint | 'inner' | undefined>>;
 
 export class InnerCentersMatrix extends PolyMatrix {
+
+  get startIndexes(): [number, number] {
+    return this.startIndexesBy((value) => value === 'inner');
+  }
+
+  static fromCentersMatrix(
+    matrix: CentersMatrix,
+    empties: number[][],
+  ): InnerCentersMatrix {
+    const payload = getInnerCentersMatrix(matrix, empties);
+    const topLeft = calcTopLeft(payload);
+
+    return new InnerCentersMatrix(payload, topLeft).removeEmptyLines();
+  }
   payload: InnerCentersMatrixPayload;
 
   constructor(
-    payload: InnerCentersMatrixPayload, 
-    topLeft: CenterPoint
+    payload: InnerCentersMatrixPayload,
+    topLeft: CenterPoint,
   ) {
     super(payload, topLeft);
 
@@ -29,20 +43,6 @@ export class InnerCentersMatrix extends PolyMatrix {
 
   toPoly(): GeoPoint[] {
     return super.toPoly(true).reverse();
-  }
-
-  get startIndexes(): [number, number] {
-    return this.startIndexesBy((value) => value === 'inner');
-  }
-
-  static fromCentersMatrix(
-    matrix: CentersMatrix, 
-    empties: number[][]
-  ): InnerCentersMatrix {
-    const payload = getInnerCentersMatrix(matrix, empties);
-    const topLeft = calcTopLeft(payload);
-
-    return new InnerCentersMatrix(payload, topLeft).removeEmptyLines();
   }
 
   removeEmptyLines(): InnerCentersMatrix {

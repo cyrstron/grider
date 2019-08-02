@@ -1,41 +1,41 @@
-import { PolyMatrix } from "../poly-matrix";
-import { GeoPoint } from "../../../../../points/geo-point";
-import { Cell } from "../../../../cell";
+import { GeoPoint } from '../../../../../points/geo-point';
+import { Cell } from '../../../../cell';
+import { PolyMatrix } from '../poly-matrix';
 
 function getOuterCommonCell(
-  commonCells: Cell[], 
+  commonCells: Cell[],
   prelastPoint: GeoPoint,
-  prevCell: Cell | undefined
+  prevCell: Cell | undefined,
 ): Cell | undefined {
   if (prevCell) {
     return commonCells.find(
-      (cell) => !!prevCell && prevCell.isNeighbor(cell)
+      (cell) => !!prevCell && prevCell.isNeighbor(cell),
     );
-  } else if (commonCells.length === 1) {      
+  } else if (commonCells.length === 1) {
     return commonCells[0];
   } else {
     return commonCells.find(
-      (cell) => !!cell.findEqualGeoPoint(prelastPoint)        
+      (cell) => !!cell.findEqualGeoPoint(prelastPoint),
     );
-  };
+  }
 }
 
 function getInnerCommonCell(
-  commonCells: Cell[], 
+  commonCells: Cell[],
   prelastPoint: GeoPoint,
-  prevCell: Cell | undefined
-): Cell | undefined {  
-  if (commonCells.length === 1) {      
+  prevCell: Cell | undefined,
+): Cell | undefined {
+  if (commonCells.length === 1) {
     return commonCells[0];
   } else if (prevCell) {
     return commonCells.find(
-      (cell) => !!prevCell && !prevCell.isNeighbor(cell)
+      (cell) => !!prevCell && !prevCell.isNeighbor(cell),
     );
   } else {
     return commonCells.find(
-      (cell) => !!cell.findEqualGeoPoint(prelastPoint)        
+      (cell) => !!cell.findEqualGeoPoint(prelastPoint),
     );
-  };
+  }
 }
 
 export function getNextPoints(
@@ -43,7 +43,7 @@ export function getNextPoints(
   points: GeoPoint[],
   outerI: number,
   outerJ: number,
-  isInner: boolean = false, 
+  isInner: boolean = false,
 ) {
   const outerCell = matrix.equivalentCell(outerI, outerJ);
   const touchedIndexes = matrix.touchedInnerIndexes(outerI, outerJ);
@@ -54,16 +54,16 @@ export function getNextPoints(
 
   let prevCell: Cell | undefined;
 
-  while(touchedCells.length > 0) {
-    const lastPoint: GeoPoint = nextPoints[nextPoints.length - 1] || 
-      points[points.length - 1];    
+  while (touchedCells.length > 0) {
+    const lastPoint: GeoPoint = nextPoints[nextPoints.length - 1] ||
+      points[points.length - 1];
     const commonCells = touchedCells.filter((cell: Cell) => (
       !!cell.findEqualGeoPoint(lastPoint)
     ));
-    const prelastPoint: GeoPoint = nextPoints[nextPoints.length - 2] || 
+    const prelastPoint: GeoPoint = nextPoints[nextPoints.length - 2] ||
       points[points.length - 2];
-    
-    const commonCell: Cell | undefined = isInner ? 
+
+    const commonCell: Cell | undefined = isInner ?
       getInnerCommonCell(commonCells, prelastPoint, prevCell) :
       getOuterCommonCell(commonCells, prelastPoint, prevCell);
 

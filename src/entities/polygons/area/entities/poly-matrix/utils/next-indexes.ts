@@ -1,5 +1,5 @@
-import { PolyMatrix } from "../poly-matrix";
-import { GeoPoint } from "../../../../../points/geo-point";
+import { GeoPoint } from '../../../../../points/geo-point';
+import { PolyMatrix } from '../poly-matrix';
 
 export function callNextIndexes(
   matrix: PolyMatrix,
@@ -23,7 +23,7 @@ export function callNextIndexes(
     (prevI !== undefined && prevJ !== undefined)
   ) {
     touchedIndexes = touchedIndexes.filter(
-      ([i, j]) => i !== prevI || j !== prevJ
+      ([i, j]) => i !== prevI || j !== prevJ,
     );
   } else if (touchedIndexes.length > 1) {
     return touchedIndexes.sort(([, jA], [, jB]) => jB - jA)[0] as [number, number];

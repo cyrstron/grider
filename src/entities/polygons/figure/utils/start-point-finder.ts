@@ -1,14 +1,14 @@
-import { GeoPoint } from "../../../points/geo-point";
-import { GeoPolygon } from "../../geo-polygon/geo-polygon";
-import { PeakPoint } from "../../../points/peak-point";
-import { Cell } from "../../cell";
-import { GridParams } from "../../../grid-params";
-import { GeoSegment } from "../../../segments/geo-segment";
+import { GridParams } from '../../../grid-params';
+import { GeoPoint } from '../../../points/geo-point';
+import { PeakPoint } from '../../../points/peak-point';
+import { GeoSegment } from '../../../segments/geo-segment';
+import { Cell } from '../../cell';
+import { GeoPolygon } from '../../geo-polygon/geo-polygon';
 
 function checkStartPoint(
   shape: GeoPolygon,
   peak: PeakPoint,
-  prevPeak?: PeakPoint
+  prevPeak?: PeakPoint,
 ): boolean {
   const okPoints = peak.nearestNotSeparatedByPoly(shape);
 
@@ -21,11 +21,11 @@ function checkStartPoint(
   } else {
     return okPoints.map((okPeak) => checkStartPoint(shape, okPeak, peak))
     .some((isValid) => isValid);
-  }  
+  }
 }
 
 function findFirstPointOfAllCellPoints(
-  shape: GeoPolygon, 
+  shape: GeoPolygon,
   startCell: Cell,
   isInner: boolean,
 ): GeoPoint | undefined {
@@ -58,23 +58,23 @@ function findFirstPointOfSomeCellPoints(
   startCell: Cell,
   points: GeoPoint[],
   isInner: boolean,
-): GeoPoint | undefined {  
+): GeoPoint | undefined {
   const shapeSide = shape.sideByIndex(0);
-  const {params} = startCell.center;  
-  const nextCell = startCell.nextCellOnSegment(shapeSide) || 
+  const {params} = startCell.center;
+  const nextCell = startCell.nextCellOnSegment(shapeSide) ||
     Cell.fromGeoPoint(shape.points[1], params);
 
   const firstPoint = points.find((
-    point
+    point,
   ) => {
     const pointIndex = startCell.points.indexOf(point);
     const prevPoint = startCell.prevPointByIndex(pointIndex);
     const nextPoint = startCell.nextPointByIndex(pointIndex);
-    
+
     const prevContained = shape.containsPoint(prevPoint);
     const nextContained = shape.containsPoint(nextPoint);
 
-    return prevContained !== nextContained && 
+    return prevContained !== nextContained &&
       !nextCell.points.find((nextPoint) => nextPoint.isEqual(point));
   });
 
@@ -92,8 +92,8 @@ function findFirstPointForCell(
   params: GridParams,
   isInner: boolean = true,
 ): GeoPoint | undefined {
-  const points = isInner ? 
-    startCell.pointsInsidePoly(shape) : 
+  const points = isInner ?
+    startCell.pointsInsidePoly(shape) :
     startCell.pointsOutsidePoly(shape);
 
   if (points.length === 0) return;
@@ -121,7 +121,7 @@ export function findStartPointForSide(
   let startCell: Cell | undefined = Cell.fromGeoPoint(shape.points[0], params);
 
   if (!startCell) return;
-  
+
   let firstPoint: GeoPoint | undefined;
 
   while (startCell && (!firstPoint || !startCell.isEqual(endCell))) {
@@ -139,15 +139,15 @@ export function recalcStartCell(
   points: GeoPoint[],
   shapeSide: GeoSegment,
   params: GridParams,
-): Cell | undefined {  
+): Cell | undefined {
   const lastPoint = points[points.length - 1];
   const endCell = Cell.fromGeoPoint(shapeSide.pointB, params);
 
   let startCell: Cell | undefined = Cell.fromGeoPoint(shapeSide.pointA, params);
   let startPoint: GeoPoint | undefined = startCell.findEqualGeoPoint(lastPoint);
 
-  if (startPoint) return startCell; 
-  
+  if (startPoint) return startCell;
+
   while (!startPoint && startCell && !startCell.isEqual(endCell)) {
     startCell = startCell.nextCellOnSegment(shapeSide);
 

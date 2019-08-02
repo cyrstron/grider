@@ -1,14 +1,14 @@
-import { CenterPoint } from "../../../points/center-point";
+import { CenterPoint } from '../../../points/center-point';
+import { CentersMatrix } from '../entities/centers-matrix';
 import { calcNearestIndexes} from './nearest-indexes';
-import { CentersMatrix } from "../entities/centers-matrix";
 
 export function unionNearestCenters(
   i: number,
-  j: number, 
-  matrix: CentersMatrix, 
-  set?: Set<CenterPoint>
+  j: number,
+  matrix: CentersMatrix,
+  set?: Set<CenterPoint>,
 ): Set<CenterPoint> {
-  if (!set) {    
+  if (!set) {
     set = new Set<CenterPoint>();
   }
 
@@ -32,8 +32,8 @@ export function unionNearestCenters(
 }
 
 export function getBiggestSet(
-  matrix: CentersMatrix
-) {  
+  matrix: CentersMatrix,
+) {
   const sets = matrix.payload.reduce((sets, row, i) => row.reduce(
     (sets, center, j) => {
       if (!(center instanceof CenterPoint)) return sets;
@@ -45,7 +45,7 @@ export function getBiggestSet(
       sets.push(set);
 
       return sets;
-    }, sets), [] as Set<CenterPoint>[])
+    }, sets), [] as Array<Set<CenterPoint>>)
     .sort((setA, setB) => setB.size - setA.size);
 
   return sets[0];

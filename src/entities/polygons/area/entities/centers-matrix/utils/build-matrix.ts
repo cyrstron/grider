@@ -1,9 +1,9 @@
-import { CenterPoint } from "../../../../../points/center-point";
+import { CenterPoint } from '../../../../../points/center-point';
 
 export function buildMatrix(
-  centers: CenterPoint[], 
-  isAntimeridian: boolean
-) {  
+  centers: CenterPoint[],
+  isAntimeridian: boolean,
+) {
   centers = isAntimeridian ?
     centers.map((center) => center.toOppositeHemishpere()) :
     [...centers];
@@ -24,8 +24,8 @@ export function buildMatrix(
   const matrix = new Array(iDiff + 1)
     .fill(undefined)
     .map(
-      () => new Array(jDiff + 1).fill(undefined)
-    ) as Array<CenterPoint | undefined>[];
+      () => new Array(jDiff + 1).fill(undefined),
+    ) as Array<Array<CenterPoint | undefined>>;
 
   sortedByI.forEach((center) => {
     const i = center.i - iMin;

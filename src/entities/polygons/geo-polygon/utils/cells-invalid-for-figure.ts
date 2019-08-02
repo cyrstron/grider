@@ -1,7 +1,7 @@
-import { Cell } from "../../cell";
-import { GeoPolygon } from "../geo-polygon";
-import { GridParams } from "../../../grid-params";
-import { GeoSegment } from "../../../segments/geo-segment";
+import { GridParams } from '../../../grid-params';
+import { GeoSegment } from '../../../segments/geo-segment';
+import { Cell } from '../../cell';
+import { GeoPolygon } from '../geo-polygon';
 
 export function getInvalidCells(
   shape: GeoPolygon,
@@ -10,7 +10,7 @@ export function getInvalidCells(
   return shape.reduceNeighboringSidesPairs((
     invalidCells: Cell[],
     prevSide: GeoSegment,
-    nextSide: GeoSegment
+    nextSide: GeoSegment,
   ): Cell[] => {
     const closestCells = getClosestToPeakCells(prevSide, nextSide, params);
     const oppositeSides = shape.reduceSides((sides, side) => {
@@ -23,11 +23,11 @@ export function getInvalidCells(
 
     const intersectedCells = closestCells.reduce((
       intersectedCells: Cell[],
-      cell: Cell
+      cell: Cell,
     ): Cell[] => {
       const intersectedNeighbors = cell.intersectedWithSegmentsNeighbors(oppositeSides)
         .filter((cell) => !intersectedCells
-          .find((intersected) => intersected.isEqual(cell))
+          .find((intersected) => intersected.isEqual(cell)),
         );
 
       intersectedCells.push(...intersectedNeighbors);
@@ -35,7 +35,7 @@ export function getInvalidCells(
       return intersectedCells;
     }, [])
       .filter((cell) => !invalidCells
-        .find((invalidCell) => invalidCell.isEqual(cell))
+        .find((invalidCell) => invalidCell.isEqual(cell)),
       );
 
     invalidCells.push(...intersectedCells);
@@ -48,7 +48,7 @@ function getClosestToPeakCells(
   sideA: GeoSegment,
   sideB: GeoSegment,
   params: GridParams,
-  steps: number = 3
+  steps: number = 3,
 ): Cell[] {
   const initCell = Cell.fromGeoPoint(sideA.pointA, params);
   const closestCells: Cell[] = [];
@@ -57,11 +57,11 @@ function getClosestToPeakCells(
   let prevCell: Cell | undefined;
 
   for (let i = 0; i < steps; i += 1) {
-    prevCell = prevCell ? 
-      prevCell.nextCellOnSegment(sideA) : 
+    prevCell = prevCell ?
+      prevCell.nextCellOnSegment(sideA) :
       initCell;
-    nextCell = nextCell ? 
-      nextCell.nextCellOnSegment(sideB) : 
+    nextCell = nextCell ?
+      nextCell.nextCellOnSegment(sideB) :
       initCell;
 
     const hasPrev = !!closestCells.find((cell) => !!prevCell && cell.isEqual(prevCell));

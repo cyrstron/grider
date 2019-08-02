@@ -1,5 +1,5 @@
-import { Cell } from "../cell";
-import { GeoSegment } from "../../../segments/geo-segment";
+import { GeoSegment } from '../../../segments/geo-segment';
+import { Cell } from '../cell';
 
 export function getIntersectedWithSegmentNeighbor(
   cell: Cell,
@@ -17,5 +17,5 @@ export function getIntersectedWithSegmentNeighbor(
 
   if (nextCellIntersects.length > 0) {
     return nextCell;
-  };
+  }
 }

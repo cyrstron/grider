@@ -1,6 +1,6 @@
 import {GridParams} from '../../grid-params';
-import {GeoPoint} from '../geo-point';
 import {CenterPoint} from '../center-point';
+import {GeoPoint} from '../geo-point';
 import {
   correctForGeo,
   correctForGrid,
@@ -11,13 +11,28 @@ import {
 } from './utils/transformer';
 
 export class GridPoint {
+
+  static fromGeo(point: GeoPoint, params: GridParams) {
+    const correctedGeoPoint = correctForGrid(point, params);
+    const {
+      axes: axesParams,
+    } = params;
+
+    const {i, j, k} = axesParams.reduce((gridPoint: any, axisParams) => {
+      gridPoint[axisParams.name] = toGrid(correctedGeoPoint, axisParams, params);
+
+      return gridPoint;
+    }, {}) as grider.GridPoint;
+
+    return new GridPoint(params, i, j, k);
+  }
   i: number;
   j: number;
   k?: number;
   params: GridParams;
 
   constructor(
-    params: GridParams, 
+    params: GridParams,
     i: number,
     j: number,
     k?: number,
@@ -53,21 +68,6 @@ export class GridPoint {
     const {i: iB, j: jB, k: kB} = point.toFormatted();
 
     return (iA === iB) && (jA === jB) && (kA === kB);
-  }
-
-  static fromGeo(point: GeoPoint, params: GridParams) {
-    const correctedGeoPoint = correctForGrid(point, params);
-    const {
-      axes: axesParams,
-    } = params;
-
-    const {i, j, k} = axesParams.reduce((gridPoint: any, axisParams) => {
-      gridPoint[axisParams.name] = toGrid(correctedGeoPoint, axisParams, params);
-
-      return gridPoint;
-    }, {}) as grider.GridPoint;
-
-    return new GridPoint(params, i, j, k);
   }
 
   toGeo(): GeoPoint {

@@ -1,8 +1,8 @@
-import { GridPoint } from "../../../points/grid-point";
-import { GeoPoint } from "../../../points/geo-point";
-import { GridParams } from "../../../grid-params";
-import { TileMercPoint } from "../../../points/tile-merc-point";
-import { Point } from "../../../points/point";
+import { GridParams } from '../../../grid-params';
+import { GeoPoint } from '../../../points/geo-point';
+import { GridPoint } from '../../../points/grid-point';
+import { Point } from '../../../points/point';
+import { TileMercPoint } from '../../../points/tile-merc-point';
 
 export function expandTile(
   geoPoint: GeoPoint,
@@ -26,7 +26,7 @@ export function expandTile(
       const mercPoint = new GridPoint(params, i, j, k).toGeo().toMerc();
 
       const tilePoint = TileMercPoint.fromMerc(
-        mercPoint, 
+        mercPoint,
         startTilePoint.tileWidth,
         startTilePoint.tileHeight,
         startTilePoint.zoom,
@@ -36,7 +36,7 @@ export function expandTile(
 
       if (xDiff > 1) {
         const xDiffAlter = Math.abs(
-          Math.ceil(tilePoint.tileX) - (tilePoint.tileX - startTilePoint.tileX)
+          Math.ceil(tilePoint.tileX) - (tilePoint.tileX - startTilePoint.tileX),
         );
 
         xDiff = Math.min(xDiff, xDiffAlter);
@@ -46,7 +46,7 @@ export function expandTile(
       const y = (tilePoint.tileY - startTilePoint.tileY) / tileHeight;
 
       return new Point(x, y);
-    })
+    }),
   );
 }
 
@@ -119,7 +119,7 @@ function expandRectTile(
 }
 
 function expandHexTile(
-  northWest: GridPoint
+  northWest: GridPoint,
 ) {
   const {i, j, params} = northWest;
   const k = northWest.k as number;

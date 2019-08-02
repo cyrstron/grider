@@ -3,7 +3,7 @@ import {Segment} from '../segments/segment';
 
 export class Point {
   constructor(
-    public x: number, 
+    public x: number,
     public y: number,
   ) {}
 
@@ -34,7 +34,7 @@ export class Point {
     const formattedA = this.toFormatted();
     const formattedB = point.toFormatted();
 
-    const isEqual = formattedA.x === formattedB.x && 
+    const isEqual = formattedA.x === formattedB.x &&
       formattedA.y === formattedB.y;
 
     return isEqual;

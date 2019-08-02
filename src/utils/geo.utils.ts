@@ -40,7 +40,7 @@ export function formatLat(lat: number): number {
 
 export function formatLng(lng: number): number {
   lng = reduceLng(lng);
-  
+
   return +lng.toFixed(7);
 }
 

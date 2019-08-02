@@ -1,11 +1,11 @@
-import {Segment} from './segment';
-import {GeoSegment} from './geo-segment';
-import {MercPoint} from '../points/merc-point';
 import { MercLine } from '../lines/merc-line';
+import {MercPoint} from '../points/merc-point';
+import {GeoSegment} from './geo-segment';
+import {Segment} from './segment';
 
 export class MercSegment extends Segment {
   line: MercLine;
-  
+
   constructor(
     public pointA: MercPoint,
     public pointB: MercPoint,
@@ -60,7 +60,7 @@ export class MercSegment extends Segment {
   get isAntiMeridian(): boolean {
     return this.pointA.isCloserThroughAntiMeridian(this.pointB);
   }
-  
+
   get isParallelToAxisX(): boolean {
     return this.line.isParallelToAxisX;
   }

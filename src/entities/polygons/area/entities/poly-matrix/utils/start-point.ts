@@ -1,18 +1,18 @@
-import { PolyMatrix } from "../poly-matrix";
-import { GeoPoint } from "../../../../../points/geo-point";
+import { GeoPoint } from '../../../../../points/geo-point';
+import { PolyMatrix } from '../poly-matrix';
 
 export function getStartPoints(
   matrix: PolyMatrix,
 ) {
   const {
     topLeft: {
-      params: {isHorizontal}
+      params: {isHorizontal},
     },
-    startIndexes: [startI, startJ]
+    startIndexes: [startI, startJ],
   } = matrix;
   const points: GeoPoint[] = [];
   const touchedIndexes = matrix.touchedInnerIndexes(startI, startJ);
-  
+
   touchedIndexes.sort(([iA, jA], [iB, jB]) => iB - iA || jA - jB);
 
   const outerCell = matrix.equivalentCell(startI, startJ);
@@ -35,9 +35,9 @@ export function getStartPoints(
           if (isByEastern) {
             return pointA.isEasternTo(pointB) === isEastern ? 1 : -1;
           } else {
-            return pointA.isNorthernTo(pointB) === isNorthern ? 1 : -1
-          }            
-        })
+            return pointA.isNorthernTo(pointB) === isNorthern ? 1 : -1;
+          }
+        });
     })
     .reduce((points, commonPoints) => {
       points.push(...commonPoints);
@@ -50,8 +50,8 @@ export function getStartPoints(
 
     if (!lastPoint || !lastPoint.isEqual(commonPoint)) {
       points.push(commonPoint);
-    }     
+    }
   });
-  
+
   return points;
 }

@@ -2,11 +2,6 @@ import {Point} from '../points/point';
 import {Vector} from '../vectors/vector';
 
 export class Line {
-  constructor(
-    public a: number,
-    public b: number,
-    public c: number,
-  ) {}
 
   get isParallelToAxisX(): boolean {
     return this.b === 0;
@@ -16,12 +11,28 @@ export class Line {
     return this.a === 0;
   }
 
+  static fromTwoPoints(
+    {x: x1, y: y1}: Point,
+    {x: x2, y: y2}: Point,
+  ): Line {
+    return new Line(
+      y1 - y2,
+      x2 - x1,
+      -((x1 * y2) - (y1 * x2)),
+    );
+  }
+  constructor(
+    public a: number,
+    public b: number,
+    public c: number,
+  ) {}
+
   calcAlikePoint(point: Point): Point {
     const calcX = this.xByY(point.y);
     const calcY = this.yByX(point.x);
 
     return new Point(
-      calcX === undefined ? point.x : calcX, 
+      calcX === undefined ? point.x : calcX,
       calcY === undefined ? point.y : calcY,
     );
   }
@@ -35,16 +46,16 @@ export class Line {
   xByY(y: number): number | undefined {
     if (this.isParallelToAxisY) return;
 
-    return (this.c - this.b * y) / this.a; 
+    return (this.c - this.b * y) / this.a;
   }
 
   yByX(x: number) {
     if (this.isParallelToAxisX) return;
 
-    return (this.c - this.a * x) / this.b; 
+    return (this.c - this.a * x) / this.b;
   }
 
-  distanceToPoint(        
+  distanceToPoint(
     point: Point,
   ): number {
     const closestPoint = this.closestToPoint(point);
@@ -64,13 +75,13 @@ export class Line {
     if (this.isParallelToAxisX) {
       return new Point(
         this.c / this.a,
-        y
+        y,
       );
     } else if (this.isParallelToAxisY) {
       return new Point(
         x,
         this.c / this.b,
-      );            
+      );
     }
 
     const perpendicular = this.perpendicularByPoint(point);
@@ -90,7 +101,7 @@ export class Line {
     );
   }
 
-  intersectionX({a, b, c}: Line): number | undefined {    
+  intersectionX({a, b, c}: Line): number | undefined {
     const delta = this.a * b - this.b * a;
     const deltaX = this.c * b - this.b * c;
 
@@ -99,7 +110,7 @@ export class Line {
     return deltaX / delta;
   }
 
-  intersectionY({a, b, c}: Line): number | undefined {    
+  intersectionY({a, b, c}: Line): number | undefined {
     const delta = this.a * b - this.b * a;
     const deltaY = this.a * c - this.c * a;
 
@@ -126,7 +137,7 @@ export class Line {
     } else {
       x = this.intersectionX(line);
     }
-    
+
     if (line.isParallelToAxisY) {
       y = c / b;
     } else if (this.isParallelToAxisY) {
@@ -147,15 +158,4 @@ export class Line {
 
     return new Point(x, y);
   }
-
-  static fromTwoPoints(
-    {x: x1, y: y1}: Point,
-    {x: x2, y: y2}: Point,
-  ): Line {
-    return new Line(
-      y1 - y2,
-      x2 - x1,
-      -((x1 * y2) - (y1 * x2)),
-    );
-  }   
 }
