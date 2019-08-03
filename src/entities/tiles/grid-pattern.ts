@@ -4,7 +4,6 @@ import {TileMercPoint} from '../points/tile-merc-point';
 import { GridTile } from './grid-tile/grid-tile';
 
 export class GridPattern {
-
   static fromTileCoords(
     tilePoint: TileMercPoint,
     start: Point,
@@ -32,6 +31,7 @@ export class GridPattern {
       params,
     );
   }
+
   constructor(
     public tilePoint: TileMercPoint,
     public tile: GridTile,

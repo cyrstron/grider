@@ -71,6 +71,25 @@ export class GridTile {
       params,
     );
   }
+
+  static fromPlain(
+    {points, tileHeight, tileWidth}: {
+      points: grider.Point[][],
+      tileHeight: number,
+      tileWidth: number,
+    },
+    tilePoint: TileMercPoint,
+    params: GridParams, 
+  ) {
+    return new GridTile(
+      points.map((line) => line.map(({x, y}) => new Point(x, y))),
+      tilePoint,
+      tileWidth,
+      tileHeight,
+      params
+    )
+  }
+
   constructor(
     public points: Point[][],
     public tilePoint: TileMercPoint,
@@ -78,4 +97,16 @@ export class GridTile {
     public tileHeight: number,
     public params: GridParams,
   ) {}
+
+  toPlain(): {
+    points: grider.Point[][],
+    tileHeight: number,
+    tileWidth: number,
+  } {
+    return {
+      points: this.points.map((line) => line.map(({x, y}) => ({x, y}))),
+      tileHeight: this.tileHeight,
+      tileWidth: this.tileWidth,
+    }
+  }
 }

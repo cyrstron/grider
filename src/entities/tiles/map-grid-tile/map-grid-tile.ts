@@ -59,6 +59,7 @@ export class MapGridTile {
 
     return new MapGridTile(tilePoint, patterns, params);
   }
+  
   constructor(
     public tilePoint: TileMercPoint,
     public patterns: GridPattern[],
