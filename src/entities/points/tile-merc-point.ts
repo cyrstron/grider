@@ -266,4 +266,24 @@ export class TileMercPoint extends MercPoint implements Bounds {
       return new Point(x, y);
     });
   }
+
+  toPlain(): {
+    x: number,
+    y: number,
+    tileX: number,
+    tileY: number,
+    zoom: number,
+    tileHeight: number,
+    tileWidth: number,
+  } {
+    return {
+      x: this.x,
+      y: this.y,
+      tileX: this.tileX,
+      tileY: this.tileY,
+      zoom: this.zoom,
+      tileHeight: this.tileHeight,
+      tileWidth: this.tileWidth,
+    }
+  }
 }

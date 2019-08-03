@@ -20,6 +20,13 @@ export class Point {
     return this;
   }
 
+  toPlain(): grider.Point {
+    return {
+      x: this.x,
+      y: this.y
+    };
+  }
+
   containedByLine(line: Line): boolean {
     return line.hasPoint(this);
   }
