@@ -39,4 +39,13 @@ export class GridPattern {
     public end: Point,
     public params: GridParams,
   ) {}
+
+  toPlain() {
+    return {
+      start: this.start.toPlain(),
+      end: this.start.toPlain(),
+      tilePoint: this.tilePoint.toPlain(),
+      tile: this.tile.toPlain(),
+    }
+  }
 }
