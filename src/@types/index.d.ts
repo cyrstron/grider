@@ -125,5 +125,30 @@ declare namespace grider {
   export interface GridTileConfig {
     patterns: GridPatternConfig[];
   }
+
+  export interface TilePoint extends Point {
+    tileX: number;
+    tileY: number;
+    tileWidth: number;
+    tileHeight: number;
+    zoom: number;
+  }
+
+  export interface GridTile {
+    points: Point[][];
+    tileHeight: number;
+    tileWidth: number;
+  }
+
+  export interface GridPattern {
+    tile: GridTile,
+    start: Point,
+    end: Point,
+  }
+
+  export interface MapGridTile {
+    tilePoint: TilePoint,
+    patterns: GridPattern[]
+  }
 }
 

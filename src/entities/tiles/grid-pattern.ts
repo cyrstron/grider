@@ -40,12 +40,28 @@ export class GridPattern {
     public params: GridParams,
   ) {}
 
-  toPlain() {
+  toPlain(): grider.GridPattern {
     return {
       start: this.start.toPlain(),
       end: this.start.toPlain(),
-      tilePoint: this.tilePoint.toPlain(),
       tile: this.tile.toPlain(),
     }
+  }
+
+  static fromPlain({
+    start,
+    end,
+    tile,
+  }: grider.GridPattern,
+  tilePoint: TileMercPoint,
+  params: GridParams
+  ): GridPattern {
+    return new GridPattern(
+      tilePoint,
+      GridTile.fromPlain(tile, tilePoint, params),
+      Point.fromPlain(start),
+      Point.fromPlain(end),
+      params
+    )
   }
 }

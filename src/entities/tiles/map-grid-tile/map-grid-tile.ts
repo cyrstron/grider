@@ -4,9 +4,11 @@ import { GridPattern } from '../grid-pattern';
 
 import { GeoPoint } from '../../points/geo-point';
 import {createPatterns} from './utils/create-patterns';
+import { WorkerService } from '../../../services/worker-service';
+
+import Worker from './workers/create-pattern.worker';
 
 export class MapGridTile {
-
   get northWest(): GeoPoint {
     return GeoPoint.fromMerc(this.tilePoint);
   }
@@ -45,19 +47,59 @@ export class MapGridTile {
     zoom: number,
     tileWidth: number,
     tileHeight: number,
-  ): MapGridTile {
+  ): Promise<MapGridTile> {
     const tilePoint = TileMercPoint.fromTile(x, y, tileWidth, tileHeight, zoom);
 
     return MapGridTile.fromTilePoint(tilePoint, params);
   }
 
-  static fromTilePoint(
+  static async fromTilePoint(
     tilePoint: TileMercPoint,
     params: GridParams,
-  ): MapGridTile {
-    const patterns = createPatterns(tilePoint, params);
+  ): Promise<MapGridTile> {
+    if (!MapGridTile.worker) {
+      MapGridTile.worker = new WorkerService(new Worker());
 
-    return new MapGridTile(tilePoint, patterns, params);
+      await MapGridTile.worker.post({
+        type: 'params',
+        payload: {
+          params: params.toPlain()
+        }
+      });
+    }
+
+    if (!MapGridTile.worker) return new MapGridTile(tilePoint, [], params);
+
+    const {data: mapTile} = await MapGridTile.worker.post({
+      type: 'grid-tile',
+      payload: {
+        tilePoint: tilePoint.toPlain()
+      }
+    });
+
+    return MapGridTile.fromPlain(mapTile, params);
+  }
+
+  toPlain(): grider.MapGridTile {
+    return {
+      patterns: this.patterns.map((pattern) => pattern.toPlain()),
+      tilePoint: this.tilePoint.toPlain(),
+    };
+  }
+
+  static worker?: WorkerService<any>;
+
+  static fromPlain(
+    {tilePoint: tileLiteral, patterns}: grider.MapGridTile,
+    params: GridParams,
+  ): MapGridTile {
+    const tilePoint = TileMercPoint.fromPlain(tileLiteral);
+
+    return new MapGridTile(
+      tilePoint,
+      patterns.map((pattern) => GridPattern.fromPlain(pattern, tilePoint, params)),
+      params,
+    );
   }
   
   constructor(

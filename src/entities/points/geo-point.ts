@@ -131,4 +131,10 @@ export class GeoPoint {
       lng,
     };
   }
+
+  static fromPlain(
+    {lat, lng}: grider.GeoPoint
+  ): GeoPoint {
+    return new GeoPoint(lat, lng);
+  }
 }

@@ -98,11 +98,7 @@ export class GridTile {
     public params: GridParams,
   ) {}
 
-  toPlain(): {
-    points: grider.Point[][],
-    tileHeight: number,
-    tileWidth: number,
-  } {
+  toPlain(): grider.GridTile {
     return {
       points: this.points.map((line) => line.map(({x, y}) => ({x, y}))),
       tileHeight: this.tileHeight,

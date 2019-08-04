@@ -96,4 +96,8 @@ export class GridParams {
       correction,
     });
   }
+
+  static fromPlain(params: grider.GridParams): GridParams {
+    return new GridParams(params);
+  }
 }

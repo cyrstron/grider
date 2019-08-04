@@ -6,6 +6,7 @@ import { CenterPoint } from './center-point';
 import { GeoPoint } from './geo-point';
 import { MercPoint } from './merc-point';
 import { Point } from './point';
+import { GridPattern } from '../tiles';
 
 type Bounds = {[key in grider.Cardinal]: GeoSegment};
 
@@ -158,6 +159,19 @@ export class TileMercPoint extends MercPoint implements Bounds {
       tileHeight,
       zoom,
     );
+  }
+
+  static fromPlain({
+      x,
+      y,
+      tileX,
+      tileY,
+      tileWidth,
+      tileHeight,
+      zoom
+    }: grider.TilePoint
+  ): TileMercPoint {
+    return new TileMercPoint(x, y, tileX, tileY, tileWidth, tileHeight, zoom);
   }
 
   static fromMerc(
