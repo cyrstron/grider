@@ -247,4 +247,19 @@ export class CenterPoint extends GridPoint {
 
     return CenterPoint.fromGeo(centerGeo, this.params);
   }
+
+  toPlain(): grider.GridPoint {
+    return {
+      i: this.i,
+      j: this.j,
+      k: this.k,
+    }
+  }
+
+  static fromPlain(
+    {i, j, k}: grider.GridPoint,
+    params: GridParams,
+  ): CenterPoint {
+    return new CenterPoint(params, i, j, k);
+  }
 }
