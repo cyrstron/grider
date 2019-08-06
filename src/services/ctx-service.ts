@@ -1,4 +1,4 @@
-export class CtxService<Message> {
+export class CtxService {
   messageHandler?: (e: MessageEvent) => void;
   errorHandler?: (e: ErrorEvent) => void;
 
@@ -9,7 +9,7 @@ export class CtxService<Message> {
     this.worker.addEventListener('error', this.handleError);
   }
 
-  post(message: Message) {
+  post(message: any) {
     this.worker.postMessage(message);
   }
 

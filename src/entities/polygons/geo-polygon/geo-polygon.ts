@@ -1,10 +1,8 @@
 import {GeoPoint} from '../../points/geo-point';
 import {GeoSegment} from '../../segments/geo-segment';
-// import { Cell } from '../cell';
 import {GenericPolygon} from '../generic-polygon';
 
 import { GridParams } from '../../grid-params';
-// import {getInvalidCells} from './utils/cells-invalid-for-figure';
 
 export class GeoPolygon<
   SegmentType extends GeoSegment = GeoSegment
@@ -185,5 +183,9 @@ export class GeoPolygon<
 
   toPlain(): grider.GeoPoint[] {
     return this.points.map((point) => point.toPlain());
+  }
+
+  static fromPlain(points: grider.GeoPoint[]): GeoPolygon {
+    return new GeoPolygon(points.map(({lat, lng}) => new GeoPoint(lat, lng)));
   }
 }

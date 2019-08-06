@@ -1,4 +1,4 @@
-import { GeoSegment } from '../../../segments/geo-segment';
+import { GeoSegment } from '../../../../segments/geo-segment';
 import { BoundIntersection } from './bound-intersection';
 
 export class SplitGeoSegment extends GeoSegment {

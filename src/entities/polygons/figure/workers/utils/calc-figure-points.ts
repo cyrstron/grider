@@ -1,8 +1,8 @@
-import { GridParams } from '../../../grid-params';
-import { GeoPoint } from '../../../points/geo-point';
-import { GeoSegment } from '../../../segments/geo-segment';
-import { Cell } from '../../cell';
-import { GeoPolygon } from '../../geo-polygon/geo-polygon';
+import { GridParams } from '../../../../grid-params';
+import { GeoPoint } from '../../../../points/geo-point';
+import { GeoSegment } from '../../../../segments/geo-segment';
+import { Cell } from '../../../cell';
+import { GeoPolygon } from '../../../geo-polygon/geo-polygon';
 
 import {
   getInvalidCells,

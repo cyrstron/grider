@@ -1,31 +1,46 @@
 import {CtxService} from '../../../../services/ctx-service';
 import { GridParams } from '../../../grid-params';
-import {GeoPoint} from '../../../points/geo-point';
 import { GeoPolygon } from '../../geo-polygon';
-import {buildFigurePoints} from '../utils/calc-figure-points';
+import {buildFigurePoints} from './utils/calc-figure-points';
 
 const ctx: Worker = self as any;
 
 const worker = new CtxService(ctx);
+let gridParams: GridParams | undefined;
 
 worker.onMessage((event: MessageEvent) => {
   const {
-    shape,
-    params,
-    isInner,
+    type
   } = event.data as {
-    shape: grider.GeoPoint[],
-    params: grider.GridParams,
-    isInner: boolean,
+    type: string
   };
 
-  const points = buildFigurePoints(
-    new GeoPolygon(shape.map(({lat, lng}) => new GeoPoint(lat, lng))),
-    new GridParams(params),
-    isInner,
-  );
+  if (type === 'params') {
+    const {params} = event.data.payload as {params: grider.GridParams};
 
-  worker.post(points.map((point) => point.toPlain()));
+    gridParams = GridParams.fromPlain(params);
+    
+    worker.post('');
+
+    return;
+  }
+
+  if (type === 'build-poly') {
+    if (!gridParams) throw new Error('Grid Params wasn\'t defined');
+    
+    const {shape, isInner} = event.data.payload as {
+      shape: grider.GeoPoint[];
+      isInner: boolean;
+    };
+
+    const points = buildFigurePoints(
+      GeoPolygon.fromPlain(shape),
+      gridParams,
+      isInner,
+    );
+  
+    worker.post({points: points.map((point) => point.toPlain())});
+  }
 });
 
 export default {} as typeof Worker & (new () => Worker);

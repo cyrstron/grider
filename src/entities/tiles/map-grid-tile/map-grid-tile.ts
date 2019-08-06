@@ -3,7 +3,6 @@ import {TileMercPoint} from '../../points/tile-merc-point';
 import { GridPattern } from '../grid-pattern';
 
 import { GeoPoint } from '../../points/geo-point';
-import {createPatterns} from './utils/create-patterns';
 import { WorkerService } from '../../../services/worker-service';
 
 import Worker from './workers/create-pattern.worker';
@@ -87,7 +86,7 @@ export class MapGridTile {
     };
   }
 
-  static worker?: WorkerService<any>;
+  static worker?: WorkerService;
 
   static fromPlain(
     {tilePoint: tileLiteral, patterns}: grider.MapGridTile,

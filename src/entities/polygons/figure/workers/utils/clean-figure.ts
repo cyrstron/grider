@@ -1,4 +1,4 @@
-import { GeoPoint } from '../../../points/geo-point';
+import { GeoPoint } from '../../../../points/geo-point';
 
 export function cleanFigure(points: GeoPoint[]): GeoPoint[] {
   const indexes = indexatePoints(points);

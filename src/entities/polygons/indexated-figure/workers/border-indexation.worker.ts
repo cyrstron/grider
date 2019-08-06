@@ -1,7 +1,7 @@
 import {CtxService} from '../../../../services/ctx-service';
-import {Indexation} from '../entities/indexation'
+import {Indexation} from './entities/indexation'
 import { GeoPoint, TileMercPoint } from '../../../points';
-import { simplifyFigure } from '../utils/simplify-figure';
+import { simplifyFigure } from './utils/simplify-figure';
 import { GeoPolygon } from '../../geo-polygon';
 import { GridParams } from '../../../grid-params';
 

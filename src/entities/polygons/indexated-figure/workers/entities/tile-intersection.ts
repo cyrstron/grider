@@ -1,4 +1,4 @@
-import { TileMercPoint } from '../../../points/tile-merc-point';
+import { TileMercPoint } from '../../../../points/tile-merc-point';
 import { BoundIntersection } from './bound-intersection';
 import { SplitGeoSegment } from './split-geo-segment';
 

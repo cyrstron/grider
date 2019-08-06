@@ -2,16 +2,27 @@ import { GridParams } from '../../grid-params';
 import { GeoPoint } from '../../points/geo-point';
 import {GeoPolygon} from '../geo-polygon/geo-polygon';
 
-import { WorkerService } from '../../../services/worker-service';
-import Worker from './workers/build-poly.worker';
+import {FigureWorker} from './utils/figure-worker';
 
 export class Figure extends GeoPolygon {
 
-  static worker?: WorkerService<{
-    shape: grider.GeoPoint[],
-    params: grider.GridParams,
-    isInner?: boolean,
-  }>;
+  static worker?: FigureWorker;
+
+  static resetWorker() {
+    if (!Figure.worker) return;
+
+    Figure.worker.terminate();
+
+    Figure.worker = undefined;
+  }
+
+  static async setGridParams(params: GridParams): Promise<void> {
+    if (!Figure.worker) {
+      Figure.worker = new FigureWorker();
+    }
+
+    await Figure.worker.postParams(params);
+  }
 
   static async fromShape(
     shape: GeoPolygon,
@@ -19,21 +30,15 @@ export class Figure extends GeoPolygon {
     isInner: boolean = true,
   ): Promise<Figure> {
     if (!Figure.worker) {
-      const worker = new Worker();
-
-      Figure.worker = new WorkerService(worker);
+      Figure.worker = new FigureWorker();
     }
 
-    const payload = {
-      shape: shape.toPlain(),
-      params: params.toPlain(),
-      isInner,
-    };
+    await Figure.worker.postParams(params);
 
-    const {data: points} = await Figure.worker.post(payload) as {data: grider.GeoPoint[]};
+    const points = await Figure.worker.buildPoly(shape, isInner);
 
     return new Figure(
-      points.map(({lat, lng}) => new GeoPoint(lat, lng)),
+      points,
       shape,
       params,
       isInner,

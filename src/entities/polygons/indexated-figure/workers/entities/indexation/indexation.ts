@@ -1,6 +1,6 @@
-import { GeoPoint } from '../../../../points/geo-point';
-import { Point } from '../../../../points/point';
-import { TileMercPoint } from '../../../../points/tile-merc-point';
+import { GeoPoint } from '../../../../../points/geo-point';
+import { Point } from '../../../../../points/point';
+import { TileMercPoint } from '../../../../../points/tile-merc-point';
 import { BoundIntersection } from '../bound-intersection';
 import {SideIndexation} from '../side-indexation';
 import { TileIntersection } from '../tile-intersection';

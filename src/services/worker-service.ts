@@ -1,19 +1,21 @@
 import {CtxService} from './ctx-service';
 
-export class WorkerService<PostMessage> extends CtxService<PostMessage> {
-  private postQueue: PostMessage[] = [];
-  private runningTaskMessage: PostMessage | null = null;
+export class WorkerService extends CtxService {
+  private postQueue: any[] = [];
+  private runningTaskMessage: any | null = null;
 
   private resolves: Map<
-    PostMessage,
+    any,
     (e: MessageEvent) => void
   > = new Map();
   private rejects: Map<
-    PostMessage,
+    any,
     (e: ErrorEvent) => void
   > = new Map();
 
-  post(message: PostMessage): Promise<MessageEvent> {
+  post(
+    message: any
+  ): Promise<MessageEvent> {
     if (!this.runningTaskMessage) {
       this.runningTaskMessage = message;
       super.post(message);
@@ -41,7 +43,7 @@ export class WorkerService<PostMessage> extends CtxService<PostMessage> {
   }
 
   messageHandler = (event: MessageEvent) => {
-    const endedTask = this.runningTaskMessage as PostMessage;
+    const endedTask = this.runningTaskMessage as any;
     const resolve = this.resolves.get(endedTask);
 
     if (resolve) {
@@ -53,7 +55,7 @@ export class WorkerService<PostMessage> extends CtxService<PostMessage> {
   }
 
   errorHandler = (event: ErrorEvent) => {
-    const endedTask = this.runningTaskMessage as PostMessage;
+    const endedTask = this.runningTaskMessage as any;
     const reject = this.rejects.get(endedTask);
 
     if (reject) {
@@ -64,9 +66,13 @@ export class WorkerService<PostMessage> extends CtxService<PostMessage> {
     this.nextTask();
   }
 
-  clearMessage(message: PostMessage) {
+  clearMessage(message: any) {
     this.resolves.delete(message);
     this.rejects.delete(message);
+  }
+
+  terminate() {
+    this.worker.terminate();
   }
 
   unmount() {

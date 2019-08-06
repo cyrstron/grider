@@ -1,7 +1,7 @@
-import { GridParams } from '../../../grid-params';
-import { GeoPoint } from '../../../points/geo-point';
-import { GridPoint } from '../../../points/grid-point';
-import { GeoPolygon } from '../../geo-polygon';
+import { GridParams } from '../../../../grid-params';
+import { GeoPoint } from '../../../../points/geo-point';
+import { GridPoint } from '../../../../points/grid-point';
+import { GeoPolygon } from '../../../geo-polygon';
 
 export function simplifyFigure(
   points: GeoPoint[],

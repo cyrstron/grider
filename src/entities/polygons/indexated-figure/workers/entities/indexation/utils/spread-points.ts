@@ -1,5 +1,5 @@
-import { GeoPoint } from '../../../../../points/geo-point';
-import { GeoSegment } from '../../../../../segments/geo-segment';
+import { GeoPoint } from '../../../../../../points/geo-point';
+import { GeoSegment } from '../../../../../../segments/geo-segment';
 import {SpreadedFigure} from '../indexation';
 
 export function spreadPointsBySides(

@@ -1,7 +1,7 @@
-import { GridParams } from '../../../grid-params';
-import { GeoSegment } from '../../../segments/geo-segment';
-import { Cell } from '../../cell';
-import { GeoPolygon } from '../../geo-polygon';
+import { GridParams } from '../../../../grid-params';
+import { GeoSegment } from '../../../../segments/geo-segment';
+import { Cell } from '../../../cell';
+import { GeoPolygon } from '../../../geo-polygon';
 
 export function getInvalidCells(
   shape: GeoPolygon,

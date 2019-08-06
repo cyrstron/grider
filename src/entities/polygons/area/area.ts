@@ -6,7 +6,7 @@ import {WorkerService} from '../../../services/worker-service';
 import Worker from './workers/build-area.worker';
 
 export class Area extends GeoPolygon {
-  static worker?: WorkerService<any>;
+  static worker?: WorkerService;
 
   static async fromCellCenters(centers: CenterPoint[]): Promise<Area> {
     if (centers.length < 1) return new Area([], [], centers);

@@ -1,6 +1,6 @@
-import { GeoPoint } from '../../../points/geo-point';
-import { GeoSegment } from '../../../segments/geo-segment';
-import { GeoPolygon } from '../../geo-polygon';
+import { GeoPoint } from '../../../../points/geo-point';
+import { GeoSegment } from '../../../../segments/geo-segment';
+import { GeoPolygon } from '../../../geo-polygon';
 
 export class BoundIntersection {
   static fromPoints(

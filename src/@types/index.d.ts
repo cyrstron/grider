@@ -150,5 +150,14 @@ declare namespace grider {
     tilePoint: TilePoint,
     patterns: GridPattern[]
   }
+
+  export interface WorkerPost<Payload> {
+    type: string,
+    payload: Payload
+  }
+
+  export interface WorkerAnswer<Data> extends MessageEvent {
+    data: Data
+  }
 }
 
