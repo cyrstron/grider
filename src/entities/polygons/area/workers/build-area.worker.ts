@@ -1,5 +1,5 @@
 import {GridParams} from '../../../grid-params';
-import {buildArea} from './utils/build-area';
+import {buildArea, pickBiggestSet} from './utils/build-area';
 import { CtxService } from '../../../../services/ctx-service';
 import { CenterPoint } from '../../../points';
 
@@ -18,7 +18,8 @@ interface ParamsMessage {
 interface GridTileMessage {
   type: 'join-centers',
   payload: {
-    centers: grider.GridPoint[]
+    centers: grider.GridPoint[],
+    params: grider.GridParams,
   }
 };
 
@@ -32,7 +33,30 @@ worker.onMessage((e: MessageEvent) => {
 
     gridParams = GridParams.fromPlain(params);
 
-    worker.post(true);
+    worker.post('');
+
+    return;
+  }
+
+  if (data.type === 'biggest-set') {
+    const {
+      payload: {
+        centers: centerLiterals,
+        params: paramsLiteral,
+      }
+    } = data as GridTileMessage;
+
+    const params = GridParams.fromPlain(paramsLiteral);
+
+    const centers = centerLiterals.map(
+      (center) => CenterPoint.fromPlain(center, params)
+    );
+    
+    const polygons = pickBiggestSet(centers);
+
+    worker.post({
+      centers: polygons.map((center) => center.toPlain())
+    });
 
     return;
   }

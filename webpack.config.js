@@ -8,6 +8,7 @@ module.exports = (env, argv) => ({
     filename: 'index.js',
     libraryTarget: 'umd',
     library: '@micelord/grider',
+    globalObject: 'typeof self !== \'undefined\' ? self : this',
   },
   resolve: {
     extensions: ['.ts', '.js', '.json']
@@ -18,7 +19,7 @@ module.exports = (env, argv) => ({
         test: /\.worker\.ts$/,
         use: [{ 
           loader: 'worker-loader',
-          options: { inline: true, fallback: false }
+          options: { inline: true, fallback: true }
         }, {
           loader: 'ts-loader'
         }],

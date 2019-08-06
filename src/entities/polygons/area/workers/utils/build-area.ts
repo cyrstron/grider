@@ -27,3 +27,11 @@ export function buildArea(centers: CenterPoint[]): GeoPoint[][] {
 
   return [outerPoints, ...innerPolys];
 }
+
+export function pickBiggestSet(centers: CenterPoint[]): CenterPoint[] {
+  if (centers.length === 0) return [];
+
+  const matrix = CentersMatrix.fromCenters(centers);
+
+  return [...getBiggestSet(matrix)];
+}
