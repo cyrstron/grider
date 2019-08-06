@@ -60,9 +60,9 @@ export class MapGridTile {
 
     await MapGridTile.worker.postParams(params);
 
-    const tile = await MapGridTile.worker.buildTile(tilePoint, params);
+    const tile = await MapGridTile.worker.buildTile(tilePoint);
 
-    return tile;
+    return MapGridTile.fromPlain(tile, params);
   }
 
   toPlain(): grider.MapGridTile {

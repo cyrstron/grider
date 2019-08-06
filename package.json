@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.123",
-    "@types/node": "^12.6.8",
+    "@types/node": "^12.6.9",
     "circular-dependency-plugin": "^5.0.2",
     "declaration-bundler-webpack-plugin": "^1.0.3",
     "ts-loader": "^6.0.4",

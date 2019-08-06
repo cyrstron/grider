@@ -2,19 +2,27 @@ import { WorkerService } from "../../../../services/worker-service";
 import Worker from '../workers/build-area.worker';
 import { GridParams } from "../../../grid-params";
 import { GeoPoint, CenterPoint } from "../../../points";
+import {pickBiggestSet, buildArea} from '../workers/utils/build-area';
 
 export class AreaWorker {
-  worker: WorkerService;
+  worker?: WorkerService;
+  params?: GridParams;
 
   constructor() {
-    this.worker = new WorkerService(new Worker());
+    if (typeof window !== 'undefined') {
+      this.worker = new WorkerService(new Worker());
+    }
   }
 
   terminate() {
+    if (!this.worker) return;
+
     this.worker.terminate();
   }
 
   async postParams(params: GridParams): Promise<void> {
+    if (!this.worker) return;
+
     await this.worker.post({
       type: 'params',
       payload: {
@@ -27,6 +35,10 @@ export class AreaWorker {
     if (centers.length === 0) return [];
 
     const params = centers[0].params;
+    
+    if (!this.worker) {
+      return pickBiggestSet(centers);
+    }
 
     const {data} = await this.worker.post({
       type: 'biggest-set',
@@ -40,6 +52,10 @@ export class AreaWorker {
   }
 
   async joinCenters(centers: CenterPoint[]): Promise<GeoPoint[][]> {
+    if (!this.worker) {
+      return buildArea(centers);
+    }
+
     const {data} = await this.worker.post({
       type: 'join-centers',
       payload: {

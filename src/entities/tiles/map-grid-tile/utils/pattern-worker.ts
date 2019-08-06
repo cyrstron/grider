@@ -25,9 +25,8 @@ export class PatternWorker {
   }
 
   async buildTile(
-    tilePoint: TileMercPoint, 
-    params: GridParams
-  ): Promise<MapGridTile> {
+    tilePoint: TileMercPoint
+  ): Promise<grider.MapGridTile> {
     const {data} = await this.worker.post({
       type: 'grid-tile',
       payload: {
@@ -35,6 +34,6 @@ export class PatternWorker {
       }
     }) as grider.WorkerAnswer<{mapTile: grider.MapGridTile}>;
 
-    return MapGridTile.fromPlain(data.mapTile, params);
+    return data.mapTile;
   }
 }
