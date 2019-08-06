@@ -43,7 +43,7 @@ export class GridPattern {
   toPlain(): grider.GridPattern {
     return {
       start: this.start.toPlain(),
-      end: this.start.toPlain(),
+      end: this.end.toPlain(),
       tile: this.tile.toPlain(),
     }
   }

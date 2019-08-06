@@ -8,8 +8,6 @@ import {
   yToSemiLat,
 } from '../../utils/merc.utils';
 
-import {GeoPoint} from './geo-point';
-
 export class MercPoint extends Point {
   constructor(x: number, y: number) {
     x = reduceX(x);
@@ -19,8 +17,8 @@ export class MercPoint extends Point {
 
   toFormatted(): MercPoint {
     return new MercPoint(
-      +this.x.toFixed(8),
-      +this.y.toFixed(8),
+      +this.x.toFixed(10),
+      +this.y.toFixed(10),
     );
   }
 

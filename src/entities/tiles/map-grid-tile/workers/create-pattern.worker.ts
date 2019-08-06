@@ -2,6 +2,7 @@ import {GridParams} from '../../../grid-params';
 import {createPatterns} from '../utils/create-patterns';
 import { CtxService } from '../../../../services/ctx-service';
 import { TileMercPoint } from '../../../points';
+import { GridPattern } from '../../grid-pattern';
 
 const ctx: Worker = self as any;
 const worker = new CtxService(ctx);
@@ -46,14 +47,23 @@ worker.onMessage((e: MessageEvent) => {
       }
     } = data as GridTileMessage;
 
-    const patterns = createPatterns(
-      TileMercPoint.fromPlain(tilePoint), 
-      gridParams
-    );
+    let patterns: GridPattern[];
 
+    try {
+      patterns = createPatterns(
+        TileMercPoint.fromPlain(tilePoint), 
+        gridParams
+      );
+    } catch (err) {
+      err.tilePoint = tilePoint;
+      err.gridParams = gridParams;
+
+      throw err;
+    }
+  
     worker.post({
-      patterns,
-      tilePoint
+      patterns: patterns.map((pattern) => pattern.toPlain()),
+      tilePoint,
     });
   }
 });

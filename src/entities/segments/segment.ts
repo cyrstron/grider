@@ -111,11 +111,49 @@ export class Segment {
   intersectionPoint(
     segment: Segment,
   ): Point | undefined {
+    if (
+      (this.line.a === segment.line.a) ||
+      (this.line.b === segment.line.b)
+    ) return undefined;
+
     const intersection = this.line.intersectionPoint(segment.line);
 
-    const isIntersectValid = !!intersection &&
-      this.hasPoint(intersection) &&
-      segment.hasPoint(intersection);
+    if (!intersection) return undefined;
+
+    let segmentAHasPoint: boolean;
+    let segmentBHasPoint: boolean;
+
+    const maxXA = Math.max(this.pointA.x, this.pointB.x);
+    const minXA = Math.min(this.pointA.x, this.pointB.x);
+    const maxYA = Math.max(this.pointA.y, this.pointB.y);
+    const minYA = Math.min(this.pointA.y, this.pointB.y);
+
+    const maxXB = Math.max(segment.pointA.x, segment.pointB.x);
+    const minXB = Math.min(segment.pointA.x, segment.pointB.x);
+    const maxYB = Math.max(segment.pointA.y, segment.pointB.y);
+    const minYB = Math.min(segment.pointA.y, segment.pointB.y);
+
+    if (this.line.a === 0) {
+      segmentAHasPoint = intersection.x <= maxXA && intersection.x >= minXA &&
+        maxYB >= maxYA && minYB <= minYA;
+    } else if (this.line.b === 0) {
+      segmentAHasPoint = intersection.y <= maxYA && intersection.y >= minYA &&
+        maxXB >= maxXA && minXB <= minXA;
+    } else {
+      segmentAHasPoint = this.hasPoint(intersection);
+    }
+
+    if (segment.line.a === 0) {
+      segmentBHasPoint = intersection.x <= maxXB && intersection.x >= minXB &&
+        maxYA >= maxYB && minYA <= minYB;
+    } else if (segment.line.b === 0) {
+      segmentBHasPoint = intersection.y <= maxYB && intersection.y >= minYB &&
+        maxXA >= maxXB && minXA <= minXB;
+    } else {
+      segmentBHasPoint = segment.hasPoint(intersection);
+    }
+
+    const isIntersectValid = segmentAHasPoint && segmentBHasPoint;
 
     return isIntersectValid ? intersection : undefined;
   }
