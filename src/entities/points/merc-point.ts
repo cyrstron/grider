@@ -19,8 +19,8 @@ export class MercPoint extends Point {
 
   toFormatted(): MercPoint {
     return new MercPoint(
-      +this.x.toFixed(10),
-      +this.y.toFixed(10),
+      +this.x.toFixed(8),
+      +this.y.toFixed(8),
     );
   }
 
