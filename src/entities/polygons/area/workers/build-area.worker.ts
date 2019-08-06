@@ -1,5 +1,5 @@
 import {GridParams} from '../../../grid-params';
-import {buildArea} from '../utils/build-area';
+import {buildArea} from './utils/build-area';
 import { CtxService } from '../../../../services/ctx-service';
 import { CenterPoint } from '../../../points';
 

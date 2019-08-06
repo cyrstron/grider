@@ -1,5 +1,5 @@
-import { CenterPoint } from '../../../../points/center-point';
-import { Cell } from '../../../cell';
+import { CenterPoint } from '../../../../../points/center-point';
+import { Cell } from '../../../../cell';
 import {calcTopLeft} from '../../utils/calc-top-left';
 import { calcNearestAndTouchedIndexes, calcNearestIndexes } from '../../utils/nearest-indexes';
 import {buildMatrix} from './utils/build-matrix';

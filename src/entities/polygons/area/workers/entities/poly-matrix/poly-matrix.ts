@@ -1,5 +1,5 @@
-import { CenterPoint } from '../../../../points/center-point';
-import { GeoPoint } from '../../../../points/geo-point';
+import { CenterPoint } from '../../../../../points/center-point';
+import { GeoPoint } from '../../../../../points/geo-point';
 import { CentersMatrix } from '../centers-matrix';
 import { buildPoly } from './utils/build-poly';
 import {callNextIndexes} from './utils/next-indexes';

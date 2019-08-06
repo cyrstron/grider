@@ -1,4 +1,4 @@
-import { CenterPoint } from '../../../../../points/center-point';
+import { CenterPoint } from '../../../../../../points/center-point';
 import { calcNearestAndTouchedIndexes } from '../../../utils/nearest-indexes';
 import { CentersMatrix } from '../../centers-matrix';
 

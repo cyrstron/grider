@@ -1,4 +1,4 @@
-import { GridParams } from '../../../grid-params';
+import { GridParams } from '../../../../grid-params';
 
 export function calcNearestIndexes(
   i: number,

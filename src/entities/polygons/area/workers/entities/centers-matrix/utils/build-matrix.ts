@@ -1,4 +1,4 @@
-import { CenterPoint } from '../../../../../points/center-point';
+import { CenterPoint } from '../../../../../../points/center-point';
 
 export function buildMatrix(
   centers: CenterPoint[],

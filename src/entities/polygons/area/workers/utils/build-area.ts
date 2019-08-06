@@ -1,7 +1,7 @@
-import { CenterPoint } from '../../../points/center-point';
-import { GeoPoint } from '../../../points/geo-point';
+import { CenterPoint } from '../../../../points/center-point';
+import { GeoPoint } from '../../../../points/geo-point';
 
-import { Cell } from '../../cell';
+import { Cell } from '../../../cell';
 import { CentersMatrix } from '../entities/centers-matrix';
 import { InnerCentersMatrix } from '../entities/inner-centers-matrix';
 import { OuterCentersMatrix } from '../entities/outer-centers-matrix';

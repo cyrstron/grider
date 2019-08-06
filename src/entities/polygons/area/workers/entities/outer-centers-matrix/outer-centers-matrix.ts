@@ -1,5 +1,5 @@
-import { CenterPoint } from '../../../../points/center-point';
-import { GeoPoint } from '../../../../points/geo-point';
+import { CenterPoint } from '../../../../../points/center-point';
+import { GeoPoint } from '../../../../../points/geo-point';
 import { calcTopLeft } from '../../utils/calc-top-left';
 import { CentersMatrix } from '../centers-matrix';
 import { PolyMatrix } from '../poly-matrix';

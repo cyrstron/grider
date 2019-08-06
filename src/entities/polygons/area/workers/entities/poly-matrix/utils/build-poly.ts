@@ -1,4 +1,4 @@
-import { GeoPoint } from '../../../../../points/geo-point';
+import { GeoPoint } from '../../../../../../points/geo-point';
 import { PolyMatrix } from '../poly-matrix';
 
 export function buildPoly(

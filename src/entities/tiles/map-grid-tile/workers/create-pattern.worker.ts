@@ -1,5 +1,5 @@
 import {GridParams} from '../../../grid-params';
-import {createPatterns} from '../utils/create-patterns';
+import {createPatterns} from './utils/create-patterns';
 import { CtxService } from '../../../../services/ctx-service';
 import { TileMercPoint } from '../../../points';
 import { GridPattern } from '../../grid-pattern';

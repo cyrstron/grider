@@ -1,5 +1,5 @@
-import { GeoPoint } from '../../../../../points/geo-point';
-import { Cell } from '../../../../cell';
+import { GeoPoint } from '../../../../../../points/geo-point';
+import { Cell } from '../../../../../cell';
 import { PolyMatrix } from '../poly-matrix';
 
 function getOuterCommonCell(
