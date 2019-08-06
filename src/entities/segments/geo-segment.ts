@@ -198,7 +198,7 @@ export class GeoSegment {
 
     if (lat === undefined) return;
 
-    if (!this.containsLat(lat)) return;
+    if (this.rhumbLine.a !== 0 && !this.containsLat(lat)) return;
 
     return lat;
   }
@@ -210,7 +210,7 @@ export class GeoSegment {
 
     if (lng === undefined) return;
 
-    if (!this.containsLng(lng)) return;
+    if (this.rhumbLine.b !== 0 && !this.containsLng(lng)) return;
 
     return lng;
   }
