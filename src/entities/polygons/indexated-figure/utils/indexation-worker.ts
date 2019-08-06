@@ -34,7 +34,7 @@ export class IndexationWorker {
 
   async buildTile(tilePoint: TileMercPoint): Promise<Point[]> {
     const {data} = await this.worker.post({
-      type: 'build-poly',
+      type: 'tile-intersects',
       payload: {
         tile: tilePoint.toPlain(),
       }

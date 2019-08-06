@@ -33,7 +33,7 @@ worker.onMessage((e: MessageEvent) => {
 
     gridParams = GridParams.fromPlain(params);
 
-    worker.post(true);
+    worker.post('');
 
     return;
   }
@@ -49,21 +49,16 @@ worker.onMessage((e: MessageEvent) => {
 
     let patterns: GridPattern[];
 
-    try {
-      patterns = createPatterns(
-        TileMercPoint.fromPlain(tilePoint), 
-        gridParams
-      );
-    } catch (err) {
-      err.tilePoint = tilePoint;
-      err.gridParams = gridParams;
-
-      throw err;
-    }
+    patterns = createPatterns(
+      TileMercPoint.fromPlain(tilePoint), 
+      gridParams
+    );
   
     worker.post({
-      patterns: patterns.map((pattern) => pattern.toPlain()),
-      tilePoint,
+      mapTile :{
+        patterns: patterns.map((pattern) => pattern.toPlain()),
+        tilePoint,
+      }
     });
   }
 });

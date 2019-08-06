@@ -1,11 +1,9 @@
 import { GridParams } from '../../grid-params';
 import {TileMercPoint} from '../../points/tile-merc-point';
 import { GridPattern } from '../grid-pattern';
-
 import { GeoPoint } from '../../points/geo-point';
-import { WorkerService } from '../../../services/worker-service';
 
-import Worker from './workers/create-pattern.worker';
+import {PatternWorker} from './utils/pattern-worker';
 
 export class MapGridTile {
   get northWest(): GeoPoint {
@@ -57,26 +55,14 @@ export class MapGridTile {
     params: GridParams,
   ): Promise<MapGridTile> {
     if (!MapGridTile.worker) {
-      MapGridTile.worker = new WorkerService(new Worker());
-
-      await MapGridTile.worker.post({
-        type: 'params',
-        payload: {
-          params: params.toPlain()
-        }
-      });
+      MapGridTile.worker = new PatternWorker();
     }
 
-    if (!MapGridTile.worker) return new MapGridTile(tilePoint, [], params);
+    await MapGridTile.worker.postParams(params);
 
-    const {data: mapTile} = await MapGridTile.worker.post({
-      type: 'grid-tile',
-      payload: {
-        tilePoint: tilePoint.toPlain()
-      }
-    });
+    const tile = await MapGridTile.worker.buildTile(tilePoint, params);
 
-    return MapGridTile.fromPlain(mapTile, params);
+    return tile;
   }
 
   toPlain(): grider.MapGridTile {
@@ -86,7 +72,7 @@ export class MapGridTile {
     };
   }
 
-  static worker?: WorkerService;
+  static worker?: PatternWorker;
 
   static fromPlain(
     {tilePoint: tileLiteral, patterns}: grider.MapGridTile,

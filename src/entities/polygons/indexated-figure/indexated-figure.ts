@@ -6,7 +6,6 @@ import {GeoPolygon} from '../geo-polygon';
 import {Point} from '../../points';
 import {IndexationWorker} from './utils/indexation-worker';
 
-
 export class IndexatedFigure extends Figure {
   static indexWorker?: IndexationWorker;
 
