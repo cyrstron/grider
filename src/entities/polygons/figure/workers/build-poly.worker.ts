@@ -2,6 +2,7 @@ import {CtxService} from '../../../../services/ctx-service';
 import { GridParams } from '../../../grid-params';
 import { GeoPolygon } from '../../geo-polygon';
 import {buildFigurePoints} from './utils/calc-figure-points';
+import { getInvalidCells } from './utils/cells-invalid-for-figure';
 
 const ctx: Worker = self as any;
 
@@ -40,6 +41,24 @@ worker.onMessage((event: MessageEvent) => {
     );
   
     worker.post({points: points.map((point) => point.toPlain())});
+  }
+
+  if (type === 'validate') {
+    if (!gridParams) throw new Error('Grid Params wasn\'t defined');
+    
+    const {shape} = event.data.payload as {
+      shape: grider.GeoPoint[];
+    };
+
+    const poly = GeoPolygon.fromPlain(shape)
+    
+    const selfIntersects = poly.selfIntersections;
+    const invalidCells = getInvalidCells(poly, gridParams);
+  
+    worker.post({
+      centers: invalidCells.map(({center}) => center.toPlain()),
+      points: selfIntersects.map((point) => point.toPlain()),
+    });
   }
 });
 

@@ -2,7 +2,8 @@ import { WorkerService } from "../../../../services/worker-service";
 import Worker from '../workers/build-poly.worker';
 import { GridParams } from "../../../grid-params";
 import { GeoPolygon } from "../../geo-polygon";
-import { GeoPoint } from "../../../points";
+import { GeoPoint, CenterPoint } from "../../../points";
+import { Cell } from "../../cell";
 
 export class FigureWorker {
   worker: WorkerService;
@@ -34,5 +35,25 @@ export class FigureWorker {
     }) as grider.WorkerAnswer<{points: grider.GeoPoint[]}>;
 
     return data.points.map((point) => GeoPoint.fromPlain(point));
+  }
+
+  async validateShape(shape: GeoPolygon, params: GridParams): Promise<{
+    points: GeoPoint[],
+    cells: Cell[],
+  }> {
+    const {data: {centers, points}} = await this.worker.post({
+      type: 'validate',
+      payload: {
+        shape: shape.toPlain(),
+      }
+    }) as grider.WorkerAnswer<{
+      points: grider.GeoPoint[],
+      centers: grider.GridPoint[],
+    }>;
+
+    return {
+      points: points.map((point) => GeoPoint.fromPlain(point)),
+      cells: centers.map((center) => Cell.fromCenter(CenterPoint.fromPlain(center, params))),
+    };
   }
 }

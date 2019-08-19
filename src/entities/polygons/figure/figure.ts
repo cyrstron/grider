@@ -3,6 +3,7 @@ import { GeoPoint } from '../../points/geo-point';
 import {GeoPolygon} from '../geo-polygon/geo-polygon';
 
 import {FigureWorker} from './utils/figure-worker';
+import { Cell } from '../cell';
 
 export class Figure extends GeoPolygon {
 
@@ -43,6 +44,22 @@ export class Figure extends GeoPolygon {
       params,
       isInner,
     );
+  }
+
+
+  static async validateShape(
+    shape: GeoPolygon,
+    params: GridParams,
+  ): Promise<{cells: Cell[], points: GeoPoint[]}> {
+    if (!Figure.worker) {
+      Figure.worker = new FigureWorker();
+    }
+
+    await Figure.worker.postParams(params);
+
+    const data = await Figure.worker.validateShape(shape, params);
+
+    return data;
   }
 
   constructor(
