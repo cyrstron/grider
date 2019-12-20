@@ -161,3 +161,5 @@ declare namespace grider {
   }
 }
 
+export = grider;
+export as namespace grider;
