@@ -1,12 +1,11 @@
 import {CellSide} from '../../../segments/cell-side';
-import {GridPoint} from '../../grid-point';
 import { CenterPoint } from '../center-point';
 
 export function getNextCenterByCellSide(
   center: CenterPoint,
   segment: CellSide,
 ): grider.GridPoint {
-  const {i, j, k, params} = center;
+  const {i, j, k} = center;
   const {
     averagePoint: {i: averI, j: averJ, k: averK},
   } = segment;

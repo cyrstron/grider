@@ -1,4 +1,4 @@
-/// <reference types="../src/@types" />
+/// <reference path="@types/index.d.ts" />
 
 export {
   GridParams,

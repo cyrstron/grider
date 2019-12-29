@@ -6,7 +6,6 @@ import { CenterPoint } from './center-point';
 import { GeoPoint } from './geo-point';
 import { MercPoint } from './merc-point';
 import { Point } from './point';
-import { GridPattern } from '../tiles';
 
 type Bounds = {[key in grider.Cardinal]: GeoSegment};
 
