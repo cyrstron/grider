@@ -45,6 +45,7 @@ export class FigureWorker {
       type: 'validate',
       payload: {
         shape: shape.toPlain(),
+        params: params.toPlain(),
       }
     }) as grider.WorkerAnswer<{
       points: grider.GeoPoint[],

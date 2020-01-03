@@ -185,6 +185,31 @@ export class GeoPolygon<
     return this.points.map((point) => point.toPlain());
   }
 
+  toGeoJSON(): grider.GeoJSONPolygon {
+    const closedPoints = [...this.points, this.points[0]];
+
+    return {
+      type: 'Polygon',
+      coordinates: [closedPoints.map(({lat, lng}) => [lng, lat] as [number, number])],
+    };
+  }
+
+  static fromGeoJSON({coordinates: [polygon]}: grider.GeoJSONPolygon): GeoPolygon {
+    const firstPoint = GeoPoint.fromGeoJSON({
+      type: 'Point',
+      coordinates: polygon[0],
+    });
+
+    const lastPoint = GeoPoint.fromGeoJSON({
+      type: 'Point',
+      coordinates: polygon[polygon.length - 1],
+    });
+
+    if (!firstPoint.isEqual(lastPoint)) throw new Error('Loop is not closed');
+
+    return GeoPolygon.fromPlain(polygon.slice(0, -1).map(([lng, lat]) => ({lat, lng})));
+  }
+
   static fromPlain(points: grider.GeoPoint[]): GeoPolygon {
     return new GeoPolygon(points.map(({lat, lng}) => new GeoPoint(lat, lng)));
   }

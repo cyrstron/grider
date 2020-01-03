@@ -4,6 +4,7 @@ import {GeoPolygon} from '../geo-polygon/geo-polygon';
 
 import {FigureWorker} from './utils/figure-worker';
 import { Cell } from '../cell';
+import { getInvalidCells } from './workers/utils/cells-invalid-for-figure';
 
 export class Figure extends GeoPolygon {
 
@@ -46,18 +47,27 @@ export class Figure extends GeoPolygon {
     );
   }
 
-
   static async validateShape(
     shape: GeoPolygon,
     params: GridParams,
   ): Promise<{cells: Cell[], points: GeoPoint[]}> {
-    if (!Figure.worker) {
+    if (!Figure.worker && typeof window !== 'undefined') {
       Figure.worker = new FigureWorker();
     }
 
-    await Figure.worker.postParams(params);
+    let data: {
+      cells: Cell[];
+      points: GeoPoint[];
+    };
 
-    const data = await Figure.worker.validateShape(shape, params);
+    if (Figure.worker) {
+      data = await Figure.worker.validateShape(shape, params);
+    } else {
+      data = {
+        points: shape.selfIntersections,
+        cells: getInvalidCells(shape, params),
+      }
+    }
 
     return data;
   }

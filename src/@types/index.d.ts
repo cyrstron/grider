@@ -159,6 +159,21 @@ declare namespace grider {
   export interface WorkerAnswer<Data> extends MessageEvent {
     data: Data
   }
+
+  export interface GeoJSONPolygon {
+    type: "Polygon",
+    coordinates: Array<[number, number]>[],
+  }
+
+  export interface GeoJSONLineString {
+    type: "LineString",
+    coordinates: Array<[number, number]>,
+  }
+
+  export interface GeoJSONPoint {
+    type: "Point",
+    coordinates: [number, number],
+  }
 }
 
 export = grider;

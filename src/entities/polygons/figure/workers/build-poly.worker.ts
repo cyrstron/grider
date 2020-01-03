@@ -43,17 +43,16 @@ worker.onMessage((event: MessageEvent) => {
     worker.post({points: points.map((point) => point.toPlain())});
   }
 
-  if (type === 'validate') {
-    if (!gridParams) throw new Error('Grid Params wasn\'t defined');
-    
-    const {shape} = event.data.payload as {
+  if (type === 'validate') {    
+    const {shape, params} = event.data.payload as {
       shape: grider.GeoPoint[];
+      params: grider.GridParams;
     };
 
     const poly = GeoPolygon.fromPlain(shape)
     
     const selfIntersects = poly.selfIntersections;
-    const invalidCells = getInvalidCells(poly, gridParams);
+    const invalidCells = getInvalidCells(poly, GridParams.fromPlain(params));
   
     worker.post({
       centers: invalidCells.map(({center}) => center.toPlain()),

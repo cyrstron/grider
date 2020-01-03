@@ -132,9 +132,20 @@ export class GeoPoint {
     };
   }
 
+  toGeoJSON(): grider.GeoJSONPoint {
+    return {
+      type: 'Point',
+      coordinates: [this.lng, this.lat],
+    }
+  }
+
   static fromPlain(
     {lat, lng}: grider.GeoPoint
   ): GeoPoint {
     return new GeoPoint(lat, lng);
+  }
+
+  static fromGeoJSON({coordinates: [lng, lat]}: grider.GeoJSONPoint): GeoPoint {
+    return GeoPoint.fromPlain({lat, lng});
   }
 }
