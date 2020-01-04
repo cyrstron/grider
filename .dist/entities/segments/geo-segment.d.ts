@@ -1,0 +1,35 @@
+import { RhumbLine } from '../lines/rhumb-line';
+import { GeoPoint } from '../points/geo-point';
+import { GeoPolygon } from '../polygons/geo-polygon/geo-polygon';
+import { MercSegment } from './merc-segment';
+export declare class GeoSegment {
+    pointA: GeoPoint;
+    pointB: GeoPoint;
+    readonly points: GeoPoint[];
+    readonly isAntiMeridian: boolean;
+    readonly isParallel: boolean;
+    readonly isMeridian: boolean;
+    readonly easternPoint: GeoPoint;
+    readonly westernPoint: GeoPoint;
+    readonly northernPoint: GeoPoint;
+    readonly southernPoint: GeoPoint;
+    static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[];
+    static segmentsFromPointsByLat(points: GeoPoint[]): GeoSegment[];
+    rhumbLine: RhumbLine;
+    constructor(pointA: GeoPoint, pointB: GeoPoint);
+    toMerc(): MercSegment;
+    toOppositeHemisphere(): GeoSegment;
+    intersectsWithPoly(poly: GeoPolygon): GeoPoint[];
+    intersects(segment: GeoSegment): boolean;
+    intersectionPoint(segment: GeoSegment): GeoPoint | undefined;
+    closestToPoint(point: GeoPoint): GeoPoint;
+    isEqual({ pointA, pointB }: GeoSegment): boolean;
+    mercDistanceToPoint(point: GeoPoint): number;
+    latByLng(lng: number): number | undefined;
+    lngByLat(lat: number): number | undefined;
+    containsLat(lat: number): boolean;
+    containsLng(lng: number): boolean;
+    containsPoint({ lat, lng }: GeoPoint): boolean;
+    containsSegment({ pointA, pointB }: GeoSegment): boolean;
+    overlapsSegment(segment: GeoSegment): boolean;
+}
