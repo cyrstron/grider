@@ -9,7 +9,8 @@
     "dev": "webpack --watch --mode development",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tslint --project tsconfig.json",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "postinstall": "npm i && npm run build"
   },
   "author": "",
   "license": "ISC",
