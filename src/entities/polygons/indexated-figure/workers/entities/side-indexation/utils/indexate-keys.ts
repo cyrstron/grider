@@ -1,4 +1,4 @@
-import {floorNumStrByOrder} from '../../../../../../../utils/math.utils';
+import {floorNumStrByOrder} from '../../../../../../../utils/math-utils';
 
 export function indexateKeys(keys: string[]): {[key: string]: number[]} {
   const indexation: {[key: string]: number[]} = keys.reduce((

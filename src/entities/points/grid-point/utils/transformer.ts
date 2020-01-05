@@ -1,7 +1,7 @@
 import {
   cosDeg,
   sinDeg,
-} from '../../../../utils/math.utils';
+} from '../../../../utils/math-utils';
 import {GridParams} from '../../../grid-params';
 import {GeoPoint} from '../../geo-point';
 import {GridPoint} from '../grid-point';

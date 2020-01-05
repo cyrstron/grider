@@ -1,4 +1,4 @@
-import {radToDeg} from './math.utils';
+import {radToDeg} from './math-utils';
 
 export function yToLat(y: number): number {
   const latRad = (Math.atan(

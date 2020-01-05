@@ -6,7 +6,7 @@ import {
   xToSemiLng,
   yToLat,
   yToSemiLat,
-} from '../../utils/merc.utils';
+} from '../../utils/merc-utils';
 
 export class MercPoint extends Point {
   constructor(x: number, y: number) {

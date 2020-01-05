@@ -1,4 +1,4 @@
-import {degToRad} from './math.utils';
+import {degToRad} from './math-utils';
 
 export function semiLatToY(lat: number): number {
   const y = -(lat / 180) + 0.5;

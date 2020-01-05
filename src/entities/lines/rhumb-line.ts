@@ -2,10 +2,10 @@ import {
   latToY,
   lngToX,
   reduceLng,
-} from '../../utils/geo.utils';
+} from '../../utils/geo-utils';
 import {
   xToLng, yToLat,
-} from '../../utils/merc.utils';
+} from '../../utils/merc-utils';
 import {GeoPoint} from '../points/geo-point';
 import {MercLine} from './merc-line';
 

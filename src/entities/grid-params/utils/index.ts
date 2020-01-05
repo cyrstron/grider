@@ -1,5 +1,5 @@
 import {constants} from '../../../constants';
-import {calcClosestMultiple} from '../../../utils/math.utils';
+import {calcClosestMultiple} from '../../../utils/math-utils';
 
 const SIN60 = Math.sqrt(3) / 2;
 

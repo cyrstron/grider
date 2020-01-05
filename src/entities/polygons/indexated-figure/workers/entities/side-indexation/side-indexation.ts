@@ -1,4 +1,4 @@
-import {floorNumStrByOrder} from '../../../../../../utils/math.utils';
+import {floorNumStrByOrder} from '../../../../../../utils/math-utils';
 import {GeoSegment} from '../../../../../segments/geo-segment';
 import {SpreadedSide} from '../indexation';
 

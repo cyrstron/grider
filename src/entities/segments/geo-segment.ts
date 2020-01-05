@@ -1,4 +1,4 @@
-import {formatLat, formatLng} from '../../utils/geo.utils';
+import {formatLat, formatLng} from '../../utils/geo-utils';
 import {RhumbLine} from '../lines/rhumb-line';
 import {GeoPoint} from '../points/geo-point';
 import {GeoPolygon} from '../polygons/geo-polygon/geo-polygon';

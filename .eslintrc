@@ -20,6 +20,9 @@
     "node": true,
     "browser": true
   },
+  "rules": {
+    "linebreak-style": 0
+  },
   "overrides": [
     {
       "files": ["*.ts"],
@@ -58,6 +61,23 @@
         "no-constant-condition": ["error", {
           "checkLoops": false
         }]
+      }
+    }, {
+      "files": ["*.test.ts"],
+      "extends": [
+        "plugin:jest/all"
+      ],
+      "plugins": ["jest"],
+      "rules": {
+        "jest/no-disabled-tests": "warn",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error",
+        "jest/prefer-expect-assertions": 0
+      },
+      "env": {
+        "jest/globals": true
       }
     }
   ]

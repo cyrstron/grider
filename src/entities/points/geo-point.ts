@@ -7,7 +7,7 @@ import {
   reduceLng,
   semiLatToY,
   semiLngToX,
-} from '../../utils/geo.utils';
+} from '../../utils/geo-utils';
 import {MercPoint} from './merc-point';
 
 export class GeoPoint {

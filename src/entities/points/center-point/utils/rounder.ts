@@ -1,4 +1,4 @@
-import {decRemain} from '../../../../utils/math.utils';
+import {decRemain} from '../../../../utils/math-utils';
 import {GridPoint} from '../../grid-point';
 
 function calcPointDecimalRemains(point: {[key: string]: number}): grider.PointHex {
