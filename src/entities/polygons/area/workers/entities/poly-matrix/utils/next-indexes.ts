@@ -1,5 +1,5 @@
-import { GeoPoint } from '../../../../../../points/geo-point';
-import { PolyMatrix } from '../poly-matrix';
+import {GeoPoint} from '../../../../../../points/geo-point';
+import {PolyMatrix} from '../poly-matrix';
 
 export function callNextIndexes(
   matrix: PolyMatrix,

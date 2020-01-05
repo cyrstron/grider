@@ -1,19 +1,4 @@
-import { CenterPoint } from '../center-point';
-
-export function isNeighbor(
-  centerA: CenterPoint,
-  centerB: CenterPoint,
-): boolean {
-  const {
-    type,
-  } = centerA.params;
-
-  if (type === 'hex') {
-    return isHexNeighbor(centerA, centerB);
-  } else {
-    return isRectNeighbor(centerA, centerB);
-  }
-}
+import {CenterPoint} from '../center-point';
 
 function isHexNeighbor(
   {i: iA, j: jA, k: kA}: CenterPoint,
@@ -35,4 +20,19 @@ function isRectNeighbor(
   const diffs = [Math.abs(iA - iB), Math.abs(jA - jB)];
 
   return diffs.includes(0) && diffs.includes(1);
+}
+
+export function isNeighbor(
+  centerA: CenterPoint,
+  centerB: CenterPoint,
+): boolean {
+  const {
+    type,
+  } = centerA.params;
+
+  if (type === 'hex') {
+    return isHexNeighbor(centerA, centerB);
+  } else {
+    return isRectNeighbor(centerA, centerB);
+  }
 }

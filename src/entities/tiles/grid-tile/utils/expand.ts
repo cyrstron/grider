@@ -1,61 +1,13 @@
-import { GridParams } from '../../../grid-params';
-import { CenterPoint } from '../../../points/center-point';
-import { GeoPoint } from '../../../points/geo-point';
-import { GridPoint } from '../../../points/grid-point';
-import { Point } from '../../../points/point';
-import { TileMercPoint } from '../../../points/tile-merc-point';
-
-export function expandTile(
-  geoPoint: GeoPoint,
-  startTilePoint: TileMercPoint,
-  tileWidth: number,
-  tileHeight: number,
-  params: GridParams,
-): Point[][] {
-  const {
-    northWestNeighbors: {northWest},
-  } = CenterPoint.fromGeo(geoPoint, params);
-
-  let gridTilePoints: grider.GridPoint[][];
-
-  if (params.type === 'hex') {
-    gridTilePoints = expandHexTile(northWest);
-  } else {
-    gridTilePoints = expandRectTile(northWest);
-  }
-
-  return gridTilePoints.map((points) => points
-    .map(({i, j, k}): Point => {
-      const mercPoint = new GridPoint(params, i, j, k).toGeo().toMerc();
-
-      const tilePoint = TileMercPoint.fromMerc(
-        mercPoint,
-        startTilePoint.tileWidth,
-        startTilePoint.tileHeight,
-        startTilePoint.zoom,
-      );
-
-      let xDiff = tilePoint.tileX - startTilePoint.tileX;
-
-      if (xDiff > 1) {
-        const xDiffAlter = Math.abs(
-          Math.ceil(tilePoint.tileX) - (tilePoint.tileX - startTilePoint.tileX),
-        );
-
-        xDiff = Math.min(xDiff, xDiffAlter);
-      }
-
-      const x = (xDiff) / tileWidth;
-      const y = (tilePoint.tileY - startTilePoint.tileY) / tileHeight;
-
-      return new Point(x, y);
-    }),
-  );
-}
+import {GridParams} from '../../../grid-params';
+import {CenterPoint} from '../../../points/center-point';
+import {GeoPoint} from '../../../points/geo-point';
+import {GridPoint} from '../../../points/grid-point';
+import {Point} from '../../../points/point';
+import {TileMercPoint} from '../../../points/tile-merc-point';
 
 function expandRectTile(
   {i, j, params}: GridPoint,
-) {
+): grider.PointRect[][] {
   if (!params.isHorizontal) {
     return [
       [{
@@ -123,7 +75,7 @@ function expandRectTile(
 
 function expandHexTile(
   northWest: GridPoint,
-) {
+): grider.PointHex[][] {
   const {i, j, params} = northWest;
   const k = northWest.k as number;
 
@@ -218,4 +170,52 @@ function expandHexTile(
       }],
     ];
   }
+}
+
+export function expandTile(
+  geoPoint: GeoPoint,
+  startTilePoint: TileMercPoint,
+  tileWidth: number,
+  tileHeight: number,
+  params: GridParams,
+): Point[][] {
+  const {
+    northWestNeighbors: {northWest},
+  } = CenterPoint.fromGeo(geoPoint, params);
+
+  let gridTilePoints: grider.GridPoint[][];
+
+  if (params.type === 'hex') {
+    gridTilePoints = expandHexTile(northWest);
+  } else {
+    gridTilePoints = expandRectTile(northWest);
+  }
+
+  return gridTilePoints.map((points) => points
+    .map(({i, j, k}): Point => {
+      const mercPoint = new GridPoint(params, i, j, k).toGeo().toMerc();
+
+      const tilePoint = TileMercPoint.fromMerc(
+        mercPoint,
+        startTilePoint.tileWidth,
+        startTilePoint.tileHeight,
+        startTilePoint.zoom,
+      );
+
+      let xDiff = tilePoint.tileX - startTilePoint.tileX;
+
+      if (xDiff > 1) {
+        const xDiffAlter = Math.abs(
+          Math.ceil(tilePoint.tileX) - (tilePoint.tileX - startTilePoint.tileX),
+        );
+
+        xDiff = Math.min(xDiff, xDiffAlter);
+      }
+
+      const x = (xDiff) / tileWidth;
+      const y = (tilePoint.tileY - startTilePoint.tileY) / tileHeight;
+
+      return new Point(x, y);
+    }),
+  );
 }

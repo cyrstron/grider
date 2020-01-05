@@ -1,18 +1,18 @@
 import {decRemain} from '../../../../utils/math.utils';
 import {GridPoint} from '../../grid-point';
 
-export function round(point: GridPoint): grider.GridPoint {
-  const {type} = point.params;
+function calcPointDecimalRemains(point: {[key: string]: number}): grider.PointHex {
+  const remains: grider.PointHex = Object.keys(point)
+    .reduce((remains: any, key: string) => {
+      const value = point[key];
+      const remain = decRemain(value);
 
-  if (type === 'hex') {
-    const {i, j, k} = point;
+      remains[key] = remain;
 
-    return roundHexGridPoint({i, j, k: k as number});
-  } else {
-    const {i, j} = point;
+      return remains;
+    }, {}) as grider.PointHex;
 
-    return roundRectGridPoint({i, j});
-  }
+  return remains;
 }
 
 function roundHexGridPoint(point: grider.PointHex): grider.PointHex {
@@ -43,24 +43,24 @@ function roundHexGridPoint(point: grider.PointHex): grider.PointHex {
 function roundRectGridPoint(point: grider.PointRect): grider.PointRect {
   const roundedPoint = Object.keys(point as {[key: string]: number})
     .reduce((roundedPoint: any, key: string) => {
-        roundedPoint[key] = Math.round(point[key]);
+      roundedPoint[key] = Math.round(point[key]);
 
-        return roundedPoint;
+      return roundedPoint;
     }, {}) as grider.PointRect;
 
   return roundedPoint;
 }
 
-function calcPointDecimalRemains(point: {[key: string]: number}): grider.PointHex {
-  const remains: grider.PointHex = Object.keys(point)
-    .reduce((remains: any, key: string) => {
-      const value = point[key];
-      const remain = decRemain(value);
+export function round(point: GridPoint): grider.GridPoint {
+  const {type} = point.params;
 
-      remains[key] = remain;
+  if (type === 'hex') {
+    const {i, j, k} = point;
 
-      return remains;
-    }, {}) as grider.PointHex;
+    return roundHexGridPoint({i, j, k: k as number});
+  } else {
+    const {i, j} = point;
 
-  return remains;
+    return roundRectGridPoint({i, j});
+  }
 }

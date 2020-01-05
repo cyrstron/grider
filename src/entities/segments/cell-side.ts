@@ -1,10 +1,19 @@
 import {GridParams} from '../grid-params';
-import { GeoPoint } from '../points/geo-point';
+import {GeoPoint} from '../points/geo-point';
 import {GridPoint} from '../points/grid-point';
 import {PeakPoint} from '../points/peak-point';
 import {GeoSegment} from './geo-segment';
 
 export class CellSide extends GeoSegment {
+  constructor(
+    pointA: GeoPoint,
+    pointB: GeoPoint,
+    public peakA: PeakPoint,
+    public peakB: PeakPoint,
+    public params: GridParams,
+  ) {
+    super(pointA, pointB);
+  }
 
   get averagePoint(): GridPoint {
     const {i: i1, j: j1, k: k1, params} = this.peakA;
@@ -18,7 +27,7 @@ export class CellSide extends GeoSegment {
     );
   }
 
-  static fromPeaks(peakA: PeakPoint, peakB: PeakPoint) {
+  static fromPeaks(peakA: PeakPoint, peakB: PeakPoint): CellSide {
     const pointA = peakA.toGeo();
     const pointB = peakB.toGeo();
 
@@ -29,14 +38,5 @@ export class CellSide extends GeoSegment {
       peakB,
       peakA.params,
     );
-  }
-  constructor(
-    pointA: GeoPoint,
-    pointB: GeoPoint,
-    public peakA: PeakPoint,
-    public peakB: PeakPoint,
-    public params: GridParams,
-  ) {
-    super(pointA, pointB);
   }
 }

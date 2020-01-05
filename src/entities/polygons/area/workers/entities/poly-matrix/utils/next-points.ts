@@ -1,6 +1,6 @@
-import { GeoPoint } from '../../../../../../points/geo-point';
-import { Cell } from '../../../../../cell';
-import { PolyMatrix } from '../poly-matrix';
+import {GeoPoint} from '../../../../../../points/geo-point';
+import {Cell} from '../../../../../cell';
+import {PolyMatrix} from '../poly-matrix';
 
 function getOuterCommonCell(
   commonCells: Cell[],
@@ -43,8 +43,8 @@ export function getNextPoints(
   points: GeoPoint[],
   outerI: number,
   outerJ: number,
-  isInner: boolean = false,
-) {
+  isInner = false,
+): GeoPoint[] {
   const outerCell = matrix.equivalentCell(outerI, outerJ);
   const touchedIndexes = matrix.touchedInnerIndexes(outerI, outerJ);
   const touchedCells = touchedIndexes.map(([i, j]) => {

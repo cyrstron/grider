@@ -12,25 +12,25 @@ module.exports = (env, argv) => ({
     globalObject: 'typeof self !== \'undefined\' ? self : this',
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.ts', '.js', '.json'],
   },
   module: {
     rules: [
       {
         test: /\.worker\.ts$/,
-        use: [{ 
+        use: [{
           loader: 'worker-loader',
-          options: { inline: true, fallback: false }
+          options: {inline: true, fallback: false},
         }, {
-          loader: 'ts-loader'
+          loader: 'ts-loader',
         }],
       },
-      { 
-        test: /\.ts$/, 
+      {
+        test: /\.ts$/,
         loader: 'ts-loader',
-        exclude: [/\.worker\.ts$/]
-      }
-    ]
+        exclude: [/\.worker\.ts$/],
+      },
+    ],
   },
   devtool: argv.mode === 'development' ? 'eval-source-map' : false,
   plugins: [
@@ -41,5 +41,5 @@ module.exports = (env, argv) => ({
       cwd: process.cwd(),
     }),
     new CleanWebpackPlugin(),
-  ]
-})
+  ],
+});

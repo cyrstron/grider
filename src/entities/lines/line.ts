@@ -2,7 +2,6 @@ import {Point} from '../points/point';
 import {Vector} from '../vectors/vector';
 
 export class Line {
-
   get isParallelToAxisX(): boolean {
     return this.b === 0;
   }
@@ -49,7 +48,7 @@ export class Line {
     return (this.c - this.b * y) / this.a;
   }
 
-  yByX(x: number) {
+  yByX(x: number): number | undefined {
     if (this.isParallelToAxisX) return;
 
     return (this.c - this.a * x) / this.b;

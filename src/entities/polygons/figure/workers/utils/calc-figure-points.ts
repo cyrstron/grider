@@ -1,8 +1,8 @@
-import { GridParams } from '../../../../grid-params';
-import { GeoPoint } from '../../../../points/geo-point';
-import { GeoSegment } from '../../../../segments/geo-segment';
-import { Cell } from '../../../cell';
-import { GeoPolygon } from '../../../geo-polygon/geo-polygon';
+import {GridParams} from '../../../../grid-params';
+import {GeoPoint} from '../../../../points/geo-point';
+import {GeoSegment} from '../../../../segments/geo-segment';
+import {Cell} from '../../../cell';
+import {GeoPolygon} from '../../../geo-polygon/geo-polygon';
 
 import {
   getInvalidCells,
@@ -13,25 +13,51 @@ import {
   recalcStartCell,
 } from './start-point-finder';
 
-export function buildFigurePoints(
+function getFigurePointsFromCell(
+  shapeSide: GeoSegment,
   shape: GeoPolygon,
-  params: GridParams,
+  startCell: Cell,
+  startPoint: GeoPoint,
   isInner: boolean,
 ): GeoPoint[] {
-  if (!shape.isValidForFigure(params)) {
-    return [];
+  let index = startCell.points.indexOf(startPoint);
+  let nextPoint = startCell.nextPointByIndex(index);
+  let cellSide = startCell.sideByIndex(index);
+  let isIntersected = cellSide.intersects(shapeSide);
+  let isNextContained = shape.containsPoint(nextPoint);
+
+  const isReversed = isIntersected || isNextContained !== isInner;
+  const points: GeoPoint[] = [];
+
+  if (isReversed) {
+    nextPoint = startCell.prevPointByIndex(index);
+    isNextContained = shape.containsPoint(nextPoint);
+    cellSide = startCell.sideByIndex(startCell.prevIndex(index));
+    // isIntersected = shape.containsPoint(nextPoint);
+    isIntersected = shape.intersectsSegment(cellSide);
   }
 
-  const invalidCells = getInvalidCells(shape, params);
+  while (!isIntersected && isNextContained === isInner) {
+    const lastPoint = points[points.length - 1] || startPoint;
+    const cellPoint = startCell.points[index];
 
-  if (invalidCells.length > 0) return [];
+    if (!lastPoint.isEqual(cellPoint)) {
+      points.push(cellPoint);
+    }
 
-  const figurePoints = shape.reduceSides((
-    figurePoints: GeoPoint[],
-    shapeSide,
-  ): GeoPoint[] => calcSidePoints(shapeSide, shape, figurePoints, params, isInner), []);
+    const cellSide = isReversed ?
+      startCell.sideByIndexInversed(index) :
+      startCell.sideByIndex(index);
 
-  return cleanFigure(figurePoints);
+    isIntersected = cellSide.intersects(shapeSide);
+    index = isReversed ?
+      startCell.prevIndex(index) :
+      startCell.nextIndex(index);
+    nextPoint = startCell.points[index];
+    isNextContained = shape.containsPoint(nextPoint);
+  }
+
+  return points;
 }
 
 function calcSidePoints(
@@ -93,49 +119,23 @@ function calcSidePoints(
   return points;
 }
 
-function getFigurePointsFromCell(
-  shapeSide: GeoSegment,
+export function buildFigurePoints(
   shape: GeoPolygon,
-  startCell: Cell,
-  startPoint: GeoPoint,
+  params: GridParams,
   isInner: boolean,
 ): GeoPoint[] {
-  let index = startCell.points.indexOf(startPoint);
-  let nextPoint = startCell.nextPointByIndex(index);
-  let cellSide = startCell.sideByIndex(index);
-  let isIntersected = cellSide.intersects(shapeSide);
-  let isNextContained = shape.containsPoint(nextPoint);
-
-  const isReversed = isIntersected || isNextContained !== isInner;
-  const points: GeoPoint[] = [];
-
-  if (isReversed) {
-    nextPoint = startCell.prevPointByIndex(index);
-    isNextContained = shape.containsPoint(nextPoint);
-    cellSide = startCell.sideByIndex(startCell.prevIndex(index));
-    // isIntersected = shape.containsPoint(nextPoint);
-    isIntersected = shape.intersectsSegment(cellSide);
+  if (!shape.isValidForFigure()) {
+    return [];
   }
 
-  while (!isIntersected && isNextContained === isInner) {
-    const lastPoint = points[points.length - 1] || startPoint;
-    const cellPoint = startCell.points[index];
+  const invalidCells = getInvalidCells(shape, params);
 
-    if (!lastPoint.isEqual(cellPoint)) {
-      points.push(cellPoint);
-    }
+  if (invalidCells.length > 0) return [];
 
-    const cellSide = isReversed ?
-      startCell.sideByIndexInversed(index) :
-      startCell.sideByIndex(index);
+  const figurePoints = shape.reduceSides((
+    figurePoints: GeoPoint[],
+    shapeSide,
+  ): GeoPoint[] => calcSidePoints(shapeSide, shape, figurePoints, params, isInner), []);
 
-    isIntersected = cellSide.intersects(shapeSide);
-    index = isReversed ?
-      startCell.prevIndex(index) :
-      startCell.nextIndex(index);
-    nextPoint = startCell.points[index];
-    isNextContained = shape.containsPoint(nextPoint);
-  }
-
-  return points;
+  return cleanFigure(figurePoints);
 }

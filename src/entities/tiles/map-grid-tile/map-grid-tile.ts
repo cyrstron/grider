@@ -1,7 +1,7 @@
-import { GridParams } from '../../grid-params';
+import {GridParams} from '../../grid-params';
 import {TileMercPoint} from '../../points/tile-merc-point';
-import { GridPattern } from '../grid-pattern';
-import { GeoPoint } from '../../points/geo-point';
+import {GridPattern} from '../grid-pattern';
+import {GeoPoint} from '../../points/geo-point';
 
 import {PatternWorker} from './utils/pattern-worker';
 
@@ -86,7 +86,7 @@ export class MapGridTile {
       params,
     );
   }
-  
+
   constructor(
     public tilePoint: TileMercPoint,
     public patterns: GridPattern[],

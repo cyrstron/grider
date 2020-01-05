@@ -1,6 +1,6 @@
-import { CenterPoint } from '../../points/center-point';
-import { GeoPoint } from '../../points/geo-point';
-import { GeoPolygon } from '../geo-polygon';
+import {CenterPoint} from '../../points/center-point';
+import {GeoPoint} from '../../points/geo-point';
+import {GeoPolygon} from '../geo-polygon';
 import {AreaWorker} from './utils/area-worker';
 
 export class Area extends GeoPolygon {

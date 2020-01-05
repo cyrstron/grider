@@ -5,8 +5,7 @@ import {GeoPolygon} from '../polygons/geo-polygon/geo-polygon';
 import {MercSegment} from './merc-segment';
 
 export class GeoSegment {
-
-  get points() {
+  get points(): [GeoPoint, GeoPoint] {
     return [this.pointA, this.pointB];
   }
 
@@ -62,7 +61,7 @@ export class GeoSegment {
       this.pointB;
   }
 
-  static segmentsFromPointsByLng(points: GeoPoint[]) {
+  static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[] {
     const sorted = points.sort(({lng: lngA}, {lng: lngB}) => lngA - lngB);
 
     const easternIndex = sorted.reduce((easternIndex, point, index) => {
@@ -88,23 +87,23 @@ export class GeoSegment {
     }, []);
   }
 
-  static segmentsFromPointsByLat(points: GeoPoint[]) {
+  static segmentsFromPointsByLat(points: GeoPoint[]): GeoSegment[] {
     const sorted = points.sort(({lat: latA}, {lat: latB}) => latA - latB);
 
     return sorted.reduce((
-        splitSegments: GeoSegment[],
-        point,
-        index,
-        sorted,
-      ): GeoSegment[] => {
-        if (index % 2) return splitSegments;
+      splitSegments: GeoSegment[],
+      point,
+      index,
+      sorted,
+    ): GeoSegment[] => {
+      if (index % 2) return splitSegments;
 
-        const splitSegment = new GeoSegment(sorted[index + 1], point);
+      const splitSegment = new GeoSegment(sorted[index + 1], point);
 
-        splitSegments.push(splitSegment);
+      splitSegments.push(splitSegment);
 
-        return splitSegments;
-      }, []);
+      return splitSegments;
+    }, []);
   }
   rhumbLine: RhumbLine;
 
@@ -138,6 +137,7 @@ export class GeoSegment {
   }
 
   intersectionPoint(segment: GeoSegment): GeoPoint | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let segmentA: GeoSegment = this;
     let segmentB: GeoSegment = segment;
 
@@ -162,6 +162,7 @@ export class GeoSegment {
   closestToPoint(point: GeoPoint): GeoPoint {
     const {isAntiMeridian} = this;
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let segment: GeoSegment = this;
 
     if (isAntiMeridian) {
@@ -177,7 +178,7 @@ export class GeoSegment {
     return isAntiMeridian ? closest.toOppositeHemisphere() : closest;
   }
 
-  isEqual({pointA, pointB}: GeoSegment) {
+  isEqual({pointA, pointB}: GeoSegment): boolean {
     return (
       this.pointA.isEqual(pointA) && this.pointB.isEqual(pointB)
     ) || (
@@ -250,7 +251,7 @@ export class GeoSegment {
     return this.containsPoint(pointA) && this.containsPoint(pointB);
   }
 
-  overlapsSegment(segment: GeoSegment) {
+  overlapsSegment(segment: GeoSegment): boolean {
     const {pointA, pointB} = segment;
 
     return (

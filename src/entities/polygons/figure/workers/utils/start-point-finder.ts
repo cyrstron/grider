@@ -1,9 +1,9 @@
-import { GridParams } from '../../../../grid-params';
-import { GeoPoint } from '../../../../points/geo-point';
-import { PeakPoint } from '../../../../points/peak-point';
-import { GeoSegment } from '../../../../segments/geo-segment';
-import { Cell } from '../../../cell';
-import { GeoPolygon } from '../../../geo-polygon/geo-polygon';
+import {GridParams} from '../../../../grid-params';
+import {GeoPoint} from '../../../../points/geo-point';
+import {PeakPoint} from '../../../../points/peak-point';
+import {GeoSegment} from '../../../../segments/geo-segment';
+import {Cell} from '../../../cell';
+import {GeoPolygon} from '../../../geo-polygon/geo-polygon';
 
 function checkStartPoint(
   shape: GeoPolygon,
@@ -20,7 +20,7 @@ function checkStartPoint(
     return length > 1;
   } else {
     return okPoints.map((okPeak) => checkStartPoint(shape, okPeak, peak))
-    .some((isValid) => isValid);
+      .some((isValid) => isValid);
   }
 }
 
@@ -57,7 +57,6 @@ function findFirstPointOfSomeCellPoints(
   shape: GeoPolygon,
   startCell: Cell,
   points: GeoPoint[],
-  isInner: boolean,
 ): GeoPoint | undefined {
   const shapeSide = shape.sideByIndex(0);
   const {params} = startCell.center;
@@ -90,7 +89,7 @@ function findFirstPointForCell(
   startCell: Cell,
   shape: GeoPolygon,
   params: GridParams,
-  isInner: boolean = true,
+  isInner = true,
 ): GeoPoint | undefined {
   const points = isInner ?
     startCell.pointsInsidePoly(shape) :
@@ -108,7 +107,7 @@ function findFirstPointForCell(
     return findFirstPointOfAllCellPoints(shape, startCell, isInner);
   }
 
-  return findFirstPointOfSomeCellPoints(shape, startCell, points, isInner);
+  return findFirstPointOfSomeCellPoints(shape, startCell, points);
 }
 
 export function findStartPointForSide(

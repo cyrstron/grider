@@ -1,9 +1,9 @@
-import { GridParams } from '../../grid-params';
-import { GeoPolygon } from '../../polygons/geo-polygon';
+import {GridParams} from '../../grid-params';
+import {GeoPolygon} from '../../polygons/geo-polygon';
 import {CellSide} from '../../segments/cell-side';
-import { GeoPoint } from '../geo-point';
+import {GeoPoint} from '../geo-point';
 import {GridPoint} from '../grid-point';
-import {calcNearestPeaks} from './utils/nearest-peaks'
+import {calcNearestPeaks} from './utils/nearest-peaks';
 
 export class PeakPoint extends GridPoint {
   get nearestPeaks(): PeakPoint[] {
@@ -16,11 +16,11 @@ export class PeakPoint extends GridPoint {
       });
   }
 
-  get nearestPeaksGeo() {
+  get nearestPeaksGeo(): GeoPoint[] {
     return this.nearestPeaks.map((peak) => peak.toGeo());
   }
 
-  static fromGeo(point: GeoPoint, params: GridParams) {
+  static fromGeo(point: GeoPoint, params: GridParams): PeakPoint {
     const {i, j, k} = GridPoint.fromGeo(point, params);
 
     return new PeakPoint(params, i, j, k);

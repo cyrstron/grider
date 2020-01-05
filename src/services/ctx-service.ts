@@ -9,29 +9,29 @@ export class CtxService {
     this.worker.addEventListener('error', this.handleError);
   }
 
-  post(message: any) {
+  post(message: any): void {
     this.worker.postMessage(message);
   }
 
-  onMessage(callback: (e: MessageEvent) => void) {
+  onMessage(callback: (e: MessageEvent) => void): void {
     this.messageHandler = callback;
   }
 
-  onError(callback: (e: ErrorEvent) => void) {
+  onError(callback: (e: ErrorEvent) => void): void {
     this.errorHandler = callback;
   }
 
-  close() {
+  close(): void {
     this.unmount();
     close();
   }
 
-  unmount() {
+  unmount(): void {
     this.worker.removeEventListener('message', this.handleMessage);
     this.worker.removeEventListener('error', this.handleError);
   }
 
-  private handleMessage = (e: MessageEvent) => {
+  private handleMessage = (e: MessageEvent): void => {
     if (e.data === 'terminate') {
       this.close();
       return;
@@ -42,7 +42,7 @@ export class CtxService {
     this.messageHandler(e);
   }
 
-  private handleError = (e: ErrorEvent) => {
+  private handleError = (e: ErrorEvent): void => {
     if (!this.errorHandler) return;
 
     this.errorHandler(e);

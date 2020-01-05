@@ -23,14 +23,14 @@ export class Point {
   toPlain(): grider.Point {
     return {
       x: this.x,
-      y: this.y
+      y: this.y,
     };
   }
 
   static fromPlain(
-    {x, y}: grider.Point
+    {x, y}: grider.Point,
   ): Point {
-    return new Point(x, y)
+    return new Point(x, y);
   }
 
   containedByLine(line: Line): boolean {
@@ -53,7 +53,7 @@ export class Point {
     return isEqual;
   }
 
-  distanceToLine(line: Line) {
+  distanceToLine(line: Line): number {
     return line.distanceToPoint(this);
   }
 

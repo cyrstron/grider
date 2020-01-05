@@ -1,14 +1,13 @@
-import { CenterPoint } from '../../../../../points/center-point';
-import { GeoPoint } from '../../../../../points/geo-point';
-import { calcTopLeft } from '../../utils/calc-top-left';
-import { CentersMatrix } from '../centers-matrix';
-import { PolyMatrix } from '../poly-matrix';
-import { getOuterCentersMatrix } from './utils/get-outer-centers';
+import {CenterPoint} from '../../../../../points/center-point';
+import {GeoPoint} from '../../../../../points/geo-point';
+import {calcTopLeft} from '../../utils/calc-top-left';
+import {CentersMatrix} from '../centers-matrix';
+import {PolyMatrix} from '../poly-matrix';
+import {getOuterCentersMatrix} from './utils/get-outer-centers';
 
 type OuterCentersMatrixPayload = Array<Array<(CenterPoint | 'outer' | undefined)>>;
 
 export class OuterCentersMatrix extends PolyMatrix {
-
   get startIndexes(): [number, number] {
     return this.startIndexesBy((value) => value instanceof CenterPoint);
   }
@@ -53,5 +52,4 @@ export class OuterCentersMatrix extends PolyMatrix {
       topLeft,
     );
   }
-
 }

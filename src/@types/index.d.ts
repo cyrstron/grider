@@ -1,4 +1,4 @@
-declare module "*.worker" {
+declare module '*.worker' {
   class WebpackWorker extends Worker {
     constructor();
   }
@@ -8,7 +8,7 @@ declare module "*.worker" {
 
 declare namespace grider {
   export type Cardinal = 'north' | 'south' | 'east' | 'west';
-  
+
   export interface Point {
     x: number;
     y: number;
@@ -18,81 +18,81 @@ declare namespace grider {
     west: number;
     east: number;
   }
-  
+
   export interface GeoPoint {
-    lat: number,
-    lng: number
+    lat: number;
+    lng: number;
   }
-  
+
   export type PointRectKeys = 'i' | 'j';
-  
+
   export interface PointRect {
     i: number;
     j: number;
     [key: string]: number;
   }
-  
+
   export type PointHexKeys = PointRectKeys | 'k';
-  
+
   export interface PointHex extends PointRect {
     k: number;
   }
-  
+
   export type GridPoint = {
-    i: number,
-    j: number,
-    k?: number,
+    i: number;
+    j: number;
+    k?: number;
   };
-  
+
   export type ShapeType = 'hex' | 'rect';
-  
+
   export type GridHexagon = [
-    PointHex, 
-    PointHex, 
-    PointHex, 
-    PointHex, 
-    PointHex, 
+    PointHex,
+    PointHex,
+    PointHex,
+    PointHex,
+    PointHex,
     PointHex
   ];
-  
+
   export type GridRectangle = [
-    PointRect, 
-    PointRect, 
-    PointRect, 
-    PointRect, 
+    PointRect,
+    PointRect,
+    PointRect,
+    PointRect,
   ];
-  
+
   export type CorrectionType = 'merc' | 'none';
   export type OrientType = 'horizontal' | 'vertical';
-  
+
   export interface GridConfig {
     isHorizontal?: boolean;
     type: ShapeType;
     correction: CorrectionType;
     cellSize: number;
   }
-  
+
   export interface Axis {
     name: 'lat' | 'lng';
     angle: number;
   }
-  
+
   export interface GridAxis {
     name: PointHexKeys;
     angle: number;
   }
-  
+
   export interface InitCoof {
     vertical: number;
     horizontal: number;
   }
-  
+
   export interface InitCoofs {
     merc: InitCoof;
     none: InitCoof;
     area: InitCoof;
   }
-  
+
   export interface GridParams {
     isHorizontal: boolean;
     type: ShapeType;
@@ -102,13 +102,13 @@ declare namespace grider {
     initHeight: number;
     correction: CorrectionType;
   }
-  
+
   export interface Constants {
     equatorLength: number;
     radius: number;
     meridianLength: number;
     googleTileSize: number;
-  }  
+  }
 
   export interface PatternConfig {
     pattern: grider.Point[][];
@@ -141,38 +141,38 @@ declare namespace grider {
   }
 
   export interface GridPattern {
-    tile: GridTile,
-    start: Point,
-    end: Point,
+    tile: GridTile;
+    start: Point;
+    end: Point;
   }
 
   export interface MapGridTile {
-    tilePoint: TilePoint,
-    patterns: GridPattern[]
+    tilePoint: TilePoint;
+    patterns: GridPattern[];
   }
 
   export interface WorkerPost<Payload> {
-    type: string,
-    payload: Payload
+    type: string;
+    payload: Payload;
   }
 
   export interface WorkerAnswer<Data> extends MessageEvent {
-    data: Data
+    data: Data;
   }
 
   export interface GeoJSONPolygon {
-    type: "Polygon",
-    coordinates: Array<[number, number]>[],
+    type: 'Polygon';
+    coordinates: Array<[number, number]>[];
   }
 
   export interface GeoJSONLineString {
-    type: "LineString",
-    coordinates: Array<[number, number]>,
+    type: 'LineString';
+    coordinates: Array<[number, number]>;
   }
 
   export interface GeoJSONPoint {
-    type: "Point",
-    coordinates: [number, number],
+    type: 'Point';
+    coordinates: [number, number];
   }
 }
 

@@ -1,8 +1,7 @@
-import { MercPoint } from '../points/merc-point';
+import {MercPoint} from '../points/merc-point';
 import {Line} from './line';
 
 export class MercLine extends Line {
-
   static fromTwoPoints(pointA: MercPoint, pointB: MercPoint): MercLine {
     const {a, b, c} = Line.fromTwoPoints(pointA, pointB);
 

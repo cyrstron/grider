@@ -1,3 +1,7 @@
+export function degToRad(deg: number): number {
+  return deg * Math.PI / 180;
+}
+
 export function floorNumStrByOrder(str: string): string {
   const strLen = str.length;
 
@@ -53,7 +57,7 @@ export function findPrimeFactors(value: number): number[] {
   if (value < 2) return [];
 
   let tempValue: number = value;
-  let checker: number = 2;
+  let checker = 2;
   const result: number[] = [];
 
   while (checker * checker <= tempValue) {
@@ -70,10 +74,6 @@ export function findPrimeFactors(value: number): number[] {
   }
 
   return result;
-}
-
-export function degToRad(deg: number): number {
-  return deg * Math.PI / 180;
 }
 
 export function radToDeg(rad: number): number {

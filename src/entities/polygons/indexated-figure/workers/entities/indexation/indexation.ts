@@ -1,9 +1,9 @@
-import { GeoPoint } from '../../../../../points/geo-point';
-import { Point } from '../../../../../points/point';
-import { TileMercPoint } from '../../../../../points/tile-merc-point';
-import { BoundIntersection } from '../bound-intersection';
+import {GeoPoint} from '../../../../../points/geo-point';
+import {Point} from '../../../../../points/point';
+import {TileMercPoint} from '../../../../../points/tile-merc-point';
+import {BoundIntersection} from '../bound-intersection';
 import {SideIndexation} from '../side-indexation';
-import { TileIntersection } from '../tile-intersection';
+import {TileIntersection} from '../tile-intersection';
 import {spreadPointsBySides} from './utils/spread-points';
 
 export interface SpreadedPoint {
@@ -14,8 +14,7 @@ export type SpreadedSide = SpreadedPoint[];
 export type SpreadedFigure = SpreadedSide[];
 
 export class Indexation {
-
-  static fromPoints(points: GeoPoint[]) {
+  static fromPoints(points: GeoPoint[]): Indexation {
     const spreadedPoints = spreadPointsBySides(points);
 
     const indexations = spreadedPoints.map(
@@ -30,7 +29,7 @@ export class Indexation {
     public indexations: SideIndexation[],
   ) {}
 
-  tileIntersection(tilePoint: TileMercPoint) {
+  tileIntersection(tilePoint: TileMercPoint): TileIntersection {
     const north: BoundIntersection[] = [];
     const south: BoundIntersection[] = [];
     const east: BoundIntersection[] = [];

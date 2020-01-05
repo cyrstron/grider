@@ -2,8 +2,6 @@ import {GeoPoint} from '../../points/geo-point';
 import {GeoSegment} from '../../segments/geo-segment';
 import {GenericPolygon} from '../generic-polygon';
 
-import { GridParams } from '../../grid-params';
-
 export class GeoPolygon<
   SegmentType extends GeoSegment = GeoSegment
 > extends GenericPolygon<GeoPoint, SegmentType> {
@@ -109,7 +107,7 @@ export class GeoPolygon<
     ) => isContained || segment.containsLng(point.lng), false);
   }
 
-  isValidForFigure(params: GridParams): boolean {
+  isValidForFigure(): boolean {
     if (this.outmapPoints.length > 0) return false;
 
     if (this.points.length < 3) return false;
@@ -118,18 +116,10 @@ export class GeoPolygon<
 
     if (selfIntersections.length > 0) return false;
 
-    // const invalidCells = this.cellsInvalidForFigure(params);
-
-    // if (invalidCells.length > 0) return false;
-
     return true;
   }
 
-  // cellsInvalidForFigure(params: GridParams): Cell[] {
-  //   return getInvalidCells(this, params);
-  // }
-
-  get outmapPoints() {
+  get outmapPoints(): GeoPoint[] {
     return this.points.filter((point) => {
       const {y} = point.toMerc();
 
@@ -139,45 +129,45 @@ export class GeoPolygon<
 
   get easternPoint(): GeoPoint {
     return this.points.reduce((
-        easternPoint,
-        point,
-      ) => point.isEasternTo(easternPoint) ?
-        point :
-        easternPoint,
-      this.points[0],
+      easternPoint,
+      point,
+    ) => point.isEasternTo(easternPoint) ?
+      point :
+      easternPoint,
+    this.points[0],
     );
   }
 
   get westernPoint(): GeoPoint {
     return this.points.reduce((
-        westernPoint,
-        point,
-      ) => point.isWesternTo(westernPoint) ?
-        point :
-        westernPoint,
-      this.points[0],
+      westernPoint,
+      point,
+    ) => point.isWesternTo(westernPoint) ?
+      point :
+      westernPoint,
+    this.points[0],
     );
   }
 
   get northernPoint(): GeoPoint {
     return this.points.reduce((
-        northernPoint,
-        point,
-      ) => point.isNorthernTo(northernPoint) ?
-        point :
-        northernPoint,
-      this.points[0],
+      northernPoint,
+      point,
+    ) => point.isNorthernTo(northernPoint) ?
+      point :
+      northernPoint,
+    this.points[0],
     );
   }
 
   get southernPoint(): GeoPoint {
     return this.points.reduce((
-        southernPoint,
-        point,
-      ) => point.isSouthernTo(southernPoint) ?
-        point :
-        southernPoint,
-      this.points[0],
+      southernPoint,
+      point,
+    ) => point.isSouthernTo(southernPoint) ?
+      point :
+      southernPoint,
+    this.points[0],
     );
   }
 

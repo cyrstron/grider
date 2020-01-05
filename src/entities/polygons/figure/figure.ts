@@ -1,16 +1,15 @@
-import { GridParams } from '../../grid-params';
-import { GeoPoint } from '../../points/geo-point';
+import {GridParams} from '../../grid-params';
+import {GeoPoint} from '../../points/geo-point';
 import {GeoPolygon} from '../geo-polygon/geo-polygon';
 
 import {FigureWorker} from './utils/figure-worker';
-import { Cell } from '../cell';
-import { getInvalidCells } from './workers/utils/cells-invalid-for-figure';
+import {Cell} from '../cell';
+import {getInvalidCells} from './workers/utils/cells-invalid-for-figure';
 
 export class Figure extends GeoPolygon {
-
   static worker?: FigureWorker;
 
-  static resetWorker() {
+  static resetWorker(): void {
     if (!Figure.worker) return;
 
     Figure.worker.terminate();
@@ -29,7 +28,7 @@ export class Figure extends GeoPolygon {
   static async fromShape(
     shape: GeoPolygon,
     params: GridParams,
-    isInner: boolean = true,
+    isInner = true,
   ): Promise<Figure> {
     if (!Figure.worker) {
       Figure.worker = new FigureWorker();
@@ -50,7 +49,7 @@ export class Figure extends GeoPolygon {
   static async validateShape(
     shape: GeoPolygon,
     params: GridParams,
-  ): Promise<{cells: Cell[], points: GeoPoint[]}> {
+  ): Promise<{cells: Cell[]; points: GeoPoint[]}> {
     if (!Figure.worker && typeof window !== 'undefined') {
       Figure.worker = new FigureWorker();
     }
@@ -66,7 +65,7 @@ export class Figure extends GeoPolygon {
       data = {
         points: shape.selfIntersections,
         cells: getInvalidCells(shape, params),
-      }
+      };
     }
 
     return data;

@@ -61,6 +61,7 @@ export class GeoPoint {
   }
 
   calcMercDistance(pointB: GeoPoint): number {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let pointA: GeoPoint = this;
 
     if (this.isCloserThroughAntiMeridian(pointB)) {
@@ -136,11 +137,11 @@ export class GeoPoint {
     return {
       type: 'Point',
       coordinates: [this.lng, this.lat],
-    }
+    };
   }
 
   static fromPlain(
-    {lat, lng}: grider.GeoPoint
+    {lat, lng}: grider.GeoPoint,
   ): GeoPoint {
     return new GeoPoint(lat, lng);
   }

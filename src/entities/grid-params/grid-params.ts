@@ -1,4 +1,4 @@
-import { TileMercPoint } from '../points/tile-merc-point';
+import {TileMercPoint} from '../points/tile-merc-point';
 import {
   axesParams,
   calcAxesParams,
@@ -8,7 +8,6 @@ import {
 } from './utils';
 
 export class GridParams {
-
   static fromConfig({
     isHorizontal = false,
     type,
@@ -68,7 +67,7 @@ export class GridParams {
     return initSizeDeg * tileWidth * zoomCoofX / 360;
   }
 
-  isEqual(params: GridParams) {
+  isEqual(params: GridParams): boolean {
     return this.isHorizontal === params.isHorizontal &&
       this.type === params.type &&
       this.correction === params.correction &&

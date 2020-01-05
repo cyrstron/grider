@@ -1,9 +1,9 @@
-import { WorkerService } from "../../../../services/worker-service";
+import {WorkerService} from '../../../../services/worker-service';
 import Worker from '../workers/build-poly.worker';
-import { GridParams } from "../../../grid-params";
-import { GeoPolygon } from "../../geo-polygon";
-import { GeoPoint, CenterPoint } from "../../../points";
-import { Cell } from "../../cell";
+import {GridParams} from '../../../grid-params';
+import {GeoPolygon} from '../../geo-polygon';
+import {GeoPoint, CenterPoint} from '../../../points';
+import {Cell} from '../../cell';
 
 export class FigureWorker {
   worker: WorkerService;
@@ -12,7 +12,7 @@ export class FigureWorker {
     this.worker = new WorkerService(new Worker());
   }
 
-  terminate() {
+  terminate(): void {
     this.worker.terminate();
   }
 
@@ -20,8 +20,8 @@ export class FigureWorker {
     await this.worker.post({
       type: 'params',
       payload: {
-        params: params.toPlain()
-      }
+        params: params.toPlain(),
+      },
     });
   }
 
@@ -30,26 +30,26 @@ export class FigureWorker {
       type: 'build-poly',
       payload: {
         shape: shape.toPlain(),
-        isInner
-      }
+        isInner,
+      },
     }) as grider.WorkerAnswer<{points: grider.GeoPoint[]}>;
 
     return data.points.map((point) => GeoPoint.fromPlain(point));
   }
 
   async validateShape(shape: GeoPolygon, params: GridParams): Promise<{
-    points: GeoPoint[],
-    cells: Cell[],
+    points: GeoPoint[];
+    cells: Cell[];
   }> {
     const {data: {centers, points}} = await this.worker.post({
       type: 'validate',
       payload: {
         shape: shape.toPlain(),
         params: params.toPlain(),
-      }
+      },
     }) as grider.WorkerAnswer<{
-      points: grider.GeoPoint[],
-      centers: grider.GridPoint[],
+      points: grider.GeoPoint[];
+      centers: grider.GridPoint[];
     }>;
 
     return {

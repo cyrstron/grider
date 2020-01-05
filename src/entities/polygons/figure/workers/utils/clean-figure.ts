@@ -1,12 +1,4 @@
-import { GeoPoint } from '../../../../points/geo-point';
-
-export function cleanFigure(points: GeoPoint[]): GeoPoint[] {
-  const indexes = indexatePoints(points);
-  const {inner, outer} = calcSplitIndexes(indexes, points);
-  const sliceIndexes = calcSliceIndexes(outer, inner);
-
-  return clearPoints(points, sliceIndexes);
-}
+import {GeoPoint} from '../../../../points/geo-point';
 
 function indexatePoints(
   points: GeoPoint[],
@@ -31,76 +23,7 @@ function indexatePoints(
   }, {}) as {[key: string]: number | number[]};
 }
 
-function calcSplitIndexes(
-  indexes: {[key: string]: number | number[]},
-  points: GeoPoint[],
-): {
-  inner: number[][],
-  outer: [number, number],
-} {
-  const pointsLength = points.length;
-
-  return Object.keys(indexes)
-  .reduce((
-    repeatedPointIndexes: {
-      inner: number[][],
-      outer: [number, number],
-    },
-    key: string,
-  ): {
-    inner: number[][],
-    outer: [number, number],
-  } => {
-    let indexValue = indexes[key];
-
-    if (!Array.isArray(indexValue)) return repeatedPointIndexes;
-
-    if (indexValue.length > 2) {
-      indexValue = pickIndexes(indexValue, points.length);
-    }
-
-    const min = Math.min(...indexValue);
-    const max = Math.max(...indexValue);
-
-    const isOuter = (max - min > pointsLength + min - max) &&
-      repeatedPointIndexes.outer[0] <= min &&
-      repeatedPointIndexes.outer[1] >= max;
-
-    if (isOuter) {
-      repeatedPointIndexes.outer = [min, max];
-      return repeatedPointIndexes;
-    }
-
-    let isNew = true;
-
-    repeatedPointIndexes.inner.forEach((
-      innerIndexes: number[],
-      index: number,
-    ) => {
-      if (!isNew) return;
-
-      const minInner = Math.min(...innerIndexes);
-      const maxInner = Math.max(...innerIndexes);
-
-      if (minInner > min && maxInner < max) {
-        repeatedPointIndexes.inner[index] = [min, max];
-      } else if (minInner < min && maxInner > max) {
-        isNew = false;
-      }
-    });
-
-    if (isNew) {
-      repeatedPointIndexes.inner.push([min, max]);
-    }
-
-    return repeatedPointIndexes;
-  }, {
-    inner: [],
-    outer: [0, pointsLength],
-  });
-}
-
-function pickIndexes(indexes: number[], figureLength: number) {
+function pickIndexes(indexes: number[], figureLength: number): [number, number] {
   const picked = indexes.reduce((
     result: [number, number],
     indexValue,
@@ -124,6 +47,75 @@ function pickIndexes(indexes: number[], figureLength: number) {
   return picked;
 }
 
+function calcSplitIndexes(
+  indexes: {[key: string]: number | number[]},
+  points: GeoPoint[],
+): {
+  inner: number[][];
+  outer: [number, number];
+} {
+  const pointsLength = points.length;
+
+  return Object.keys(indexes)
+    .reduce((
+      repeatedPointIndexes: {
+      inner: number[][];
+      outer: [number, number];
+    },
+      key: string,
+    ): {
+    inner: number[][];
+    outer: [number, number];
+  } => {
+      let indexValue = indexes[key];
+
+      if (!Array.isArray(indexValue)) return repeatedPointIndexes;
+
+      if (indexValue.length > 2) {
+        indexValue = pickIndexes(indexValue, points.length);
+      }
+
+      const min = Math.min(...indexValue);
+      const max = Math.max(...indexValue);
+
+      const isOuter = (max - min > pointsLength + min - max) &&
+      repeatedPointIndexes.outer[0] <= min &&
+      repeatedPointIndexes.outer[1] >= max;
+
+      if (isOuter) {
+        repeatedPointIndexes.outer = [min, max];
+        return repeatedPointIndexes;
+      }
+
+      let isNew = true;
+
+      repeatedPointIndexes.inner.forEach((
+        innerIndexes: number[],
+        index: number,
+      ) => {
+        if (!isNew) return;
+
+        const minInner = Math.min(...innerIndexes);
+        const maxInner = Math.max(...innerIndexes);
+
+        if (minInner > min && maxInner < max) {
+          repeatedPointIndexes.inner[index] = [min, max];
+        } else if (minInner < min && maxInner > max) {
+          isNew = false;
+        }
+      });
+
+      if (isNew) {
+        repeatedPointIndexes.inner.push([min, max]);
+      }
+
+      return repeatedPointIndexes;
+    }, {
+      inner: [],
+      outer: [0, pointsLength],
+    });
+}
+
 function calcSliceIndexes(
   outer: number[],
   inner: number[][],
@@ -131,9 +123,9 @@ function calcSliceIndexes(
   return [
     ...outer,
     ...inner.reduce((
-        indexes: number[],
-        innerIndexes: number[],
-      ): number[] => [...indexes, ...innerIndexes], []),
+      indexes: number[],
+      innerIndexes: number[],
+    ): number[] => [...indexes, ...innerIndexes], []),
   ]
     .sort((a, b) => a - b)
     .reduce((
@@ -142,7 +134,6 @@ function calcSliceIndexes(
       index: number,
       sortedIndexes: number[],
     ): Array<[number, number]> => {
-
       if (index % 2) return sliceIndexes;
 
       const nextIndex = sortedIndexes[index + 1];
@@ -172,4 +163,12 @@ function clearPoints(
   }
 
   return clearedPoints;
+}
+
+export function cleanFigure(points: GeoPoint[]): GeoPoint[] {
+  const indexes = indexatePoints(points);
+  const {inner, outer} = calcSplitIndexes(indexes, points);
+  const sliceIndexes = calcSliceIndexes(outer, inner);
+
+  return clearPoints(points, sliceIndexes);
 }

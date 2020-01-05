@@ -14,7 +14,7 @@ export class WorkerService extends CtxService {
   > = new Map();
 
   post(
-    message: any
+    message: any,
   ): Promise<MessageEvent> {
     if (!this.runningTaskMessage) {
       this.runningTaskMessage = message;
@@ -29,7 +29,7 @@ export class WorkerService extends CtxService {
     });
   }
 
-  nextTask() {
+  nextTask(): void {
     if (this.postQueue.length === 0) {
       this.runningTaskMessage = null;
     } else {
@@ -42,7 +42,7 @@ export class WorkerService extends CtxService {
     }
   }
 
-  messageHandler = (event: MessageEvent) => {
+  messageHandler = (event: MessageEvent): void => {
     const endedTask = this.runningTaskMessage as any;
     const resolve = this.resolves.get(endedTask);
 
@@ -54,7 +54,7 @@ export class WorkerService extends CtxService {
     this.nextTask();
   }
 
-  errorHandler = (event: ErrorEvent) => {
+  errorHandler = (event: ErrorEvent): void => {
     const endedTask = this.runningTaskMessage as any;
     const reject = this.rejects.get(endedTask);
 
@@ -66,16 +66,16 @@ export class WorkerService extends CtxService {
     this.nextTask();
   }
 
-  clearMessage(message: any) {
+  clearMessage(message: any): void {
     this.resolves.delete(message);
     this.rejects.delete(message);
   }
 
-  terminate() {
+  terminate(): void {
     this.worker.terminate();
   }
 
-  unmount() {
+  unmount(): void {
     this.resolves = new Map();
     this.rejects = new Map();
     this.postQueue = [];

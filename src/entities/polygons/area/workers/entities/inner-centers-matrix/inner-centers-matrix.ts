@@ -1,14 +1,13 @@
-import { CenterPoint } from '../../../../../points/center-point';
-import { GeoPoint } from '../../../../../points/geo-point';
-import { calcTopLeft } from '../../utils/calc-top-left';
-import { CentersMatrix } from '../centers-matrix';
+import {CenterPoint} from '../../../../../points/center-point';
+import {GeoPoint} from '../../../../../points/geo-point';
+import {calcTopLeft} from '../../utils/calc-top-left';
+import {CentersMatrix} from '../centers-matrix';
 import {PolyMatrix} from '../poly-matrix';
-import { getInnerCentersMatrix } from './utils/get-inner-centers';
+import {getInnerCentersMatrix} from './utils/get-inner-centers';
 
 type InnerCentersMatrixPayload = Array<Array<CenterPoint | 'inner' | undefined>>;
 
 export class InnerCentersMatrix extends PolyMatrix {
-
   get startIndexes(): [number, number] {
     return this.startIndexesBy((value) => value === 'inner');
   }

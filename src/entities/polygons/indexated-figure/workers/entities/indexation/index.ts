@@ -1,6 +1,6 @@
 export {
-    Indexation,
-    SpreadedFigure,
-    SpreadedPoint,
-    SpreadedSide,
+  Indexation,
+  SpreadedFigure,
+  SpreadedPoint,
+  SpreadedSide,
 } from './indexation';

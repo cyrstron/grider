@@ -4,8 +4,8 @@ import {calcClosestMultiple} from '../../../utils/math.utils';
 const SIN60 = Math.sqrt(3) / 2;
 
 export const axesParams: {
-  hex: [grider.GridAxis, grider.GridAxis, grider.GridAxis],
-  rect: [grider.GridAxis, grider.GridAxis],
+  hex: [grider.GridAxis, grider.GridAxis, grider.GridAxis];
+  rect: [grider.GridAxis, grider.GridAxis];
 } = {
   get hex(): [grider.GridAxis, grider.GridAxis, grider.GridAxis] {
     return [{
@@ -31,8 +31,8 @@ export const axesParams: {
 };
 
 export const initCoofs: {
-  hex: grider.InitCoofs,
-  rect: grider.InitCoofs,
+  hex: grider.InitCoofs;
+  rect: grider.InitCoofs;
 } = {
   hex: {
     get merc(): grider.InitCoof {
@@ -83,13 +83,13 @@ export function calcAxesParams(
   let angle;
 
   switch (type) {
-    case 'hex':
-      angle = 120;
-      break;
-    case 'rect':
-    default:
-      angle = 90;
-      break;
+  case 'hex':
+    angle = 120;
+    break;
+  case 'rect':
+  default:
+    angle = 90;
+    break;
   }
 
   const mainAxis = isHorizontal ? 'lng' : 'lat';

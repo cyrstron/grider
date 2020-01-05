@@ -1,8 +1,7 @@
 import {GridParams} from '../../../grid-params';
 import {createPatterns} from './utils/create-patterns';
-import { CtxService } from '../../../../services/ctx-service';
-import { TileMercPoint } from '../../../points';
-import { GridPattern } from '../../grid-pattern';
+import {CtxService} from '../../../../services/ctx-service';
+import {TileMercPoint} from '../../../points';
 
 const ctx: Worker = self as any;
 const worker = new CtxService(ctx);
@@ -13,22 +12,22 @@ interface ParamsMessage {
   type: 'params';
   payload: {
     params: grider.GridParams;
-  }
+  };
 }
 
 interface GridTileMessage {
-  type: 'grid-tile',
+  type: 'grid-tile';
   payload: {
-    tilePoint: grider.TilePoint
-  }
-};
+    tilePoint: grider.TilePoint;
+  };
+}
 
 worker.onMessage((e: MessageEvent) => {
   const {data} = e;
 
   if (data.type === 'params') {
     const {
-      payload: {params}
+      payload: {params},
     } = data as ParamsMessage;
 
     gridParams = GridParams.fromPlain(params);
@@ -43,22 +42,20 @@ worker.onMessage((e: MessageEvent) => {
 
     const {
       payload: {
-        tilePoint
-      }
+        tilePoint,
+      },
     } = data as GridTileMessage;
 
-    let patterns: GridPattern[];
-
-    patterns = createPatterns(
-      TileMercPoint.fromPlain(tilePoint), 
-      gridParams
+    const patterns = createPatterns(
+      TileMercPoint.fromPlain(tilePoint),
+      gridParams,
     );
-  
+
     worker.post({
-      mapTile :{
+      mapTile: {
         patterns: patterns.map((pattern) => pattern.toPlain()),
         tilePoint,
-      }
+      },
     });
   }
 });

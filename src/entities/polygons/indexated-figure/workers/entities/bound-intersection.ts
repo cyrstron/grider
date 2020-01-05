@@ -1,6 +1,6 @@
-import { GeoPoint } from '../../../../points/geo-point';
-import { GeoSegment } from '../../../../segments/geo-segment';
-import { GeoPolygon } from '../../../geo-polygon';
+import {GeoPoint} from '../../../../points/geo-point';
+import {GeoSegment} from '../../../../segments/geo-segment';
+import {GeoPolygon} from '../../../geo-polygon';
 
 export class BoundIntersection {
   static fromPoints(
@@ -33,7 +33,7 @@ export class BoundIntersection {
     let intersection = new GeoPoint(lat, lng);
     let toPoint: GeoPoint | undefined;
     let toIndex: number | undefined;
-    let isReplaced: boolean = false;
+    let isReplaced = false;
 
     const diff = indexA - indexB;
 

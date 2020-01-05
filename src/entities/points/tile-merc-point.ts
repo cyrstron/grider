@@ -1,16 +1,15 @@
 import {constants} from '../../constants';
-import { GridParams } from '../grid-params';
-import { GeoPolygon } from '../polygons/geo-polygon';
-import { GeoSegment } from '../segments/geo-segment';
-import { CenterPoint } from './center-point';
-import { GeoPoint } from './geo-point';
-import { MercPoint } from './merc-point';
-import { Point } from './point';
+import {GridParams} from '../grid-params';
+import {GeoPolygon} from '../polygons/geo-polygon';
+import {GeoSegment} from '../segments/geo-segment';
+import {CenterPoint} from './center-point';
+import {GeoPoint} from './geo-point';
+import {MercPoint} from './merc-point';
+import {Point} from './point';
 
 type Bounds = {[key in grider.Cardinal]: GeoSegment};
 
 export class TileMercPoint extends MercPoint implements Bounds {
-
   get zoomCoofX(): number {
     return 2 ** this.zoom * constants.googleTileSize / this.tileWidth;
   }
@@ -21,11 +20,11 @@ export class TileMercPoint extends MercPoint implements Bounds {
 
   get northTile(): TileMercPoint {
     const {
-        tileX,
-        tileY,
-        tileHeight,
-        tileWidth,
-        zoom,
+      tileX,
+      tileY,
+      tileHeight,
+      tileWidth,
+      zoom,
     } = this;
 
     return TileMercPoint.fromTile(
@@ -39,11 +38,11 @@ export class TileMercPoint extends MercPoint implements Bounds {
 
   get southTile(): TileMercPoint {
     const {
-        tileX,
-        tileY,
-        tileHeight,
-        tileWidth,
-        zoom,
+      tileX,
+      tileY,
+      tileHeight,
+      tileWidth,
+      zoom,
     } = this;
 
     return TileMercPoint.fromTile(
@@ -57,11 +56,11 @@ export class TileMercPoint extends MercPoint implements Bounds {
 
   get eastTile(): TileMercPoint {
     const {
-        tileX,
-        tileY,
-        tileHeight,
-        tileWidth,
-        zoom,
+      tileX,
+      tileY,
+      tileHeight,
+      tileWidth,
+      zoom,
     } = this;
 
     return TileMercPoint.fromTile(
@@ -75,11 +74,11 @@ export class TileMercPoint extends MercPoint implements Bounds {
 
   get westTile(): TileMercPoint {
     const {
-        tileX,
-        tileY,
-        tileHeight,
-        tileWidth,
-        zoom,
+      tileX,
+      tileY,
+      tileHeight,
+      tileWidth,
+      zoom,
     } = this;
 
     return TileMercPoint.fromTile(
@@ -161,14 +160,14 @@ export class TileMercPoint extends MercPoint implements Bounds {
   }
 
   static fromPlain({
-      x,
-      y,
-      tileX,
-      tileY,
-      tileWidth,
-      tileHeight,
-      zoom
-    }: grider.TilePoint
+    x,
+    y,
+    tileX,
+    tileY,
+    tileWidth,
+    tileHeight,
+    zoom,
+  }: grider.TilePoint,
   ): TileMercPoint {
     return new TileMercPoint(x, y, tileX, tileY, tileWidth, tileHeight, zoom);
   }
@@ -281,14 +280,14 @@ export class TileMercPoint extends MercPoint implements Bounds {
   }
 
   toPlain(): {
-    x: number,
-    y: number,
-    tileX: number,
-    tileY: number,
-    zoom: number,
-    tileHeight: number,
-    tileWidth: number,
-  } {
+    x: number;
+    y: number;
+    tileX: number;
+    tileY: number;
+    zoom: number;
+    tileHeight: number;
+    tileWidth: number;
+    } {
     return {
       x: this.x,
       y: this.y,
@@ -297,6 +296,6 @@ export class TileMercPoint extends MercPoint implements Bounds {
       zoom: this.zoom,
       tileHeight: this.tileHeight,
       tileWidth: this.tileWidth,
-    }
+    };
   }
 }

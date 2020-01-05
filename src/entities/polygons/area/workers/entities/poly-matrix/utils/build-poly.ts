@@ -1,9 +1,9 @@
-import { GeoPoint } from '../../../../../../points/geo-point';
-import { PolyMatrix } from '../poly-matrix';
+import {GeoPoint} from '../../../../../../points/geo-point';
+import {PolyMatrix} from '../poly-matrix';
 
 export function buildPoly(
   matrix: PolyMatrix,
-  isInner: boolean = false,
+  isInner = false,
 ): GeoPoint[] {
   const [startI, startJ] = matrix.startIndexes;
   const points = matrix.startPoints;

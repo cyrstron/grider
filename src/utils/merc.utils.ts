@@ -22,7 +22,7 @@ export function xToSemiLng(x: number): number {
   return (x - 0.5) * 360;
 }
 
-export function reduceX(x: number) {
+export function reduceX(x: number): number {
   x = x % 1;
 
   return x < 0 ? x : x;

@@ -19,8 +19,8 @@ export class GenericPolygon<
   ) {}
 
   intersectsPoly(poly: GenericPolygon<PointType, SegmentType>): PointType[] {
-    return this.reduceSides((intersects, sideA, indexA) => {
-      return poly.reduceSides((intersects, sideB, indexB) => {
+    return this.reduceSides((intersects, sideA) => {
+      return poly.reduceSides((intersects, sideB) => {
         const intersect = sideA.intersectionPoint(sideB);
 
         if (intersect) {
@@ -88,11 +88,11 @@ export class GenericPolygon<
     } as SegmentType;
   }
 
-  nextIndex(index: number) {
+  nextIndex(index: number): number {
     return index === this.points.length - 1 ? 0 : index + 1;
   }
 
-  prevIndex(index: number) {
+  prevIndex(index: number): number {
     const {length} = this.points;
 
     return index === 0 ? length - 1 : index - 1;
@@ -191,7 +191,7 @@ export class GenericPolygon<
       nextSide: SegmentType,
     ) => ReturnedValue,
     initValue: ReturnedValue,
-  ) {
+  ): ReturnedValue {
     return this.points.reduce((
       initValue,
       _point,

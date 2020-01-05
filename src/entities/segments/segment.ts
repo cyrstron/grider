@@ -14,7 +14,7 @@ export class Segment {
   get minX(): number {
     const {
       pointA: {x: x1},
-      pointB: {x : x2},
+      pointB: {x: x2},
     } = this;
 
     return Math.min(x1, x2);
@@ -23,7 +23,7 @@ export class Segment {
   get maxX(): number {
     const {
       pointA: {x: x1},
-      pointB: {x : x2},
+      pointB: {x: x2},
     } = this;
 
     return Math.max(x1, x2);
@@ -32,7 +32,7 @@ export class Segment {
   get minY(): number {
     const {
       pointA: {y: y1},
-      pointB: {y : y2},
+      pointB: {y: y2},
     } = this;
 
     return Math.min(y1, y2);
@@ -41,31 +41,31 @@ export class Segment {
   get maxY(): number {
     const {
       pointA: {y: y1},
-      pointB: {y : y2},
+      pointB: {y: y2},
     } = this;
 
     return Math.max(y1, y2);
   }
 
-  get minXPoint() {
+  get minXPoint(): Point {
     const {x} = this.pointA;
 
     return this.minX === x ? this.pointA : this.pointB;
   }
 
-  get maxXPoint() {
+  get maxXPoint(): Point {
     const {x} = this.pointA;
 
     return this.maxX === x ? this.pointA : this.pointB;
   }
 
-  get minYPoint() {
+  get minYPoint(): Point {
     const {y} = this.pointA;
 
     return this.minY === y ? this.pointA : this.pointB;
   }
 
-  get maxYPoint() {
+  get maxYPoint(): Point {
     const {y} = this.pointA;
 
     return this.maxY === y ? this.pointA : this.pointB;

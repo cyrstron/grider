@@ -1,8 +1,7 @@
-import { GeoSegment } from '../../../../segments/geo-segment';
-import { BoundIntersection } from './bound-intersection';
+import {GeoSegment} from '../../../../segments/geo-segment';
+import {BoundIntersection} from './bound-intersection';
 
 export class SplitGeoSegment extends GeoSegment {
-
   static splitsByLng(
     bounds: BoundIntersection[],
     direction: grider.Cardinal,

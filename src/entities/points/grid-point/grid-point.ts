@@ -1,5 +1,4 @@
 import {GridParams} from '../../grid-params';
-// import {CenterPoint} from '../center-point';
 import {GeoPoint} from '../geo-point';
 import {
   correctForGeo,
@@ -11,8 +10,7 @@ import {
 } from './utils/transformer';
 
 export class GridPoint {
-
-  static fromGeo(point: GeoPoint, params: GridParams) {
+  static fromGeo(point: GeoPoint, params: GridParams): GridPoint {
     const correctedGeoPoint = correctForGrid(point, params);
     const {
       axes: axesParams,
@@ -88,11 +86,7 @@ export class GridPoint {
     return correctForGeo(geoPoint, this.params);
   }
 
-  // round(): CenterPoint {
-  //   return CenterPoint.fromGrid(this);
-  // }
-
-  onSameAxis(prevPoint: GridPoint, nextPoint: GridPoint) {
+  onSameAxis(prevPoint: GridPoint, nextPoint: GridPoint): boolean {
     let diff = (
       (this.i - prevPoint.i) * (this.j - nextPoint.j) -
       (this.i - nextPoint.i) * (this.j - prevPoint.j)

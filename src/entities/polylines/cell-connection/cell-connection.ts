@@ -1,10 +1,9 @@
-import { CenterPoint } from '../../points/center-point';
-import { GeoPoint } from '../../points/geo-point';
-import { Cell } from '../../polygons/cell';
-import { GeoSegment } from '../../segments';
+import {CenterPoint} from '../../points/center-point';
+import {GeoPoint} from '../../points/geo-point';
+import {Cell} from '../../polygons/cell';
+import {GeoSegment} from '../../segments';
 
 export class CellConnection {
-
   static fromCenters(
     centerA: CenterPoint,
     centerB: CenterPoint,

@@ -1,10 +1,10 @@
-import { GeoPoint } from '../../../../../../points/geo-point';
-import { GeoSegment } from '../../../../../../segments/geo-segment';
+import {GeoPoint} from '../../../../../../points/geo-point';
+import {GeoSegment} from '../../../../../../segments/geo-segment';
 import {SpreadedFigure} from '../indexation';
 
 export function spreadPointsBySides(
   points: GeoPoint[],
-) {
+): SpreadedFigure {
   const spreadedPoints = points.slice(0, -1)
     .reduce((
       spreadedPoints: SpreadedFigure,

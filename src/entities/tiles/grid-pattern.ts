@@ -1,7 +1,7 @@
-import { GridParams } from '../grid-params';
-import { Point } from '../points/point';
+import {GridParams} from '../grid-params';
+import {Point} from '../points/point';
 import {TileMercPoint} from '../points/tile-merc-point';
-import { GridTile } from './grid-tile/grid-tile';
+import {GridTile} from './grid-tile/grid-tile';
 
 export class GridPattern {
   static fromTileCoords(
@@ -45,7 +45,7 @@ export class GridPattern {
       start: this.start.toPlain(),
       end: this.end.toPlain(),
       tile: this.tile.toPlain(),
-    }
+    };
   }
 
   static fromPlain({
@@ -54,14 +54,14 @@ export class GridPattern {
     tile,
   }: grider.GridPattern,
   tilePoint: TileMercPoint,
-  params: GridParams
+  params: GridParams,
   ): GridPattern {
     return new GridPattern(
       tilePoint,
       GridTile.fromPlain(tile, tilePoint, params),
       Point.fromPlain(start),
       Point.fromPlain(end),
-      params
-    )
+      params,
+    );
   }
 }

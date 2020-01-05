@@ -1,10 +1,10 @@
-import { CenterPoint } from '../../../../../points/center-point';
-import { GeoPoint } from '../../../../../points/geo-point';
-import { CentersMatrix } from '../centers-matrix';
-import { buildPoly } from './utils/build-poly';
+import {CenterPoint} from '../../../../../points/center-point';
+import {GeoPoint} from '../../../../../points/geo-point';
+import {CentersMatrix} from '../centers-matrix';
+import {buildPoly} from './utils/build-poly';
 import {callNextIndexes} from './utils/next-indexes';
 import {getNextPoints} from './utils/next-points';
-import { getStartIndexesTouchedBy } from './utils/start-indexes';
+import {getStartIndexesTouchedBy} from './utils/start-indexes';
 import {getStartPoints} from './utils/start-point';
 
 export abstract class PolyMatrix extends CentersMatrix {
@@ -19,7 +19,7 @@ export abstract class PolyMatrix extends CentersMatrix {
 
   startIndexesBy(
     callback: (value: CenterPoint | 'inner' | 'outer' | undefined) => boolean,
-  ) {
+  ): [number, number] {
     return getStartIndexesTouchedBy(this, callback);
   }
 
@@ -37,7 +37,7 @@ export abstract class PolyMatrix extends CentersMatrix {
     points: GeoPoint[],
     outerI: number,
     outerJ: number,
-    isInner: boolean = false,
+    isInner = false,
   ): GeoPoint[] {
     return getNextPoints(this, points, outerI, outerJ, isInner);
   }

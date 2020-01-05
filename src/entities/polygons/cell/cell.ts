@@ -1,8 +1,8 @@
-import { GridParams } from '../../grid-params';
+import {GridParams} from '../../grid-params';
 import {CenterPoint} from '../../points/center-point';
-import { GeoPoint } from '../../points/geo-point';
-import { GridPoint } from '../../points/grid-point';
-import { PeakPoint } from '../../points/peak-point';
+import {GeoPoint} from '../../points/geo-point';
+import {GridPoint} from '../../points/grid-point';
+import {PeakPoint} from '../../points/peak-point';
 import {CellSide} from '../../segments/cell-side';
 import {GeoSegment} from '../../segments/geo-segment';
 import {GeoPolygon} from '../geo-polygon/geo-polygon';
@@ -12,7 +12,32 @@ import {getCommonPoints} from './utils/common-points';
 import {getIntersectedWithSegmentNeighbor} from './utils/intersected-neighbors';
 
 export class Cell extends GeoPolygon<CellSide> {
-  get neighbors() {
+  center: CenterPoint;
+  peaks: PeakPoint[];
+
+  constructor(
+    center: CenterPoint,
+  ) {
+    const peaks = expand(center)
+      .map(({i, j, k}) => new PeakPoint(center.params, i, j, k));
+    const points = peaks.map((peak) => peak.toGeo().toFormatted());
+
+    super(points);
+
+    this.peaks = peaks;
+    this.center = center;
+  }
+
+  get neighbors(): {
+    west?: Cell;
+    southWest: Cell;
+    east?: Cell;
+    southEast: Cell;
+    south?: Cell;
+    northEast: Cell;
+    north?: Cell;
+    northWest: Cell;
+    } {
     const {
       west,
       southWest,
@@ -36,7 +61,11 @@ export class Cell extends GeoPolygon<CellSide> {
     };
   }
 
-  get northNeighbors() {
+  get northNeighbors(): {
+    northEast?: Cell;
+    north?: Cell;
+    northWest?: Cell;
+    } {
     const {
       northEast,
       north,
@@ -50,7 +79,11 @@ export class Cell extends GeoPolygon<CellSide> {
     };
   }
 
-  get southNeighbors() {
+  get southNeighbors(): {
+    southWest?: Cell;
+    southEast?: Cell;
+    south?: Cell;
+    } {
     const {
       southWest,
       southEast,
@@ -64,7 +97,11 @@ export class Cell extends GeoPolygon<CellSide> {
     };
   }
 
-  get westNeighbors() {
+  get westNeighbors(): {
+    west?: Cell;
+    southWest?: Cell;
+    northWest?: Cell;
+    } {
     const {
       west,
       southWest,
@@ -78,7 +115,11 @@ export class Cell extends GeoPolygon<CellSide> {
     };
   }
 
-  get eastNeighbors() {
+  get eastNeighbors(): {
+    east?: Cell;
+    southEast?: Cell;
+    northEast?: Cell;
+    } {
     const {
       east,
       southEast,
@@ -92,7 +133,9 @@ export class Cell extends GeoPolygon<CellSide> {
     };
   }
 
-  get northEastNeighbors() {
+  get northEastNeighbors(): {
+    northEast: Cell;
+    } {
     const {
       northEast,
     } = this.center.northEastNeighbors;
@@ -102,7 +145,9 @@ export class Cell extends GeoPolygon<CellSide> {
     };
   }
 
-  get southWestNeighbors() {
+  get southWestNeighbors(): {
+    southWest: Cell;
+    } {
     const {
       southWest,
     } = this.center.southWestNeighbors;
@@ -112,7 +157,9 @@ export class Cell extends GeoPolygon<CellSide> {
     };
   }
 
-  get northWestNeighbors() {
+  get northWestNeighbors(): {
+    northWest: Cell;
+    } {
     const {
       northWest,
     } = this.center.northWestNeighbors;
@@ -122,7 +169,9 @@ export class Cell extends GeoPolygon<CellSide> {
     };
   }
 
-  get southEastNeighbors() {
+  get southEastNeighbors(): {
+    southEast: Cell;
+    } {
     const {
       southEast,
     } = this.center.southEastNeighbors;
@@ -142,36 +191,22 @@ export class Cell extends GeoPolygon<CellSide> {
     return new Cell(cellCenter);
   }
 
-  static fromGridPoint(point: GridPoint) {
+  static fromGridPoint(point: GridPoint): Cell {
     const cellCenter = CenterPoint.fromGrid(point);
 
     return new Cell(cellCenter);
   }
 
-  static fromCenterPoint(point: CenterPoint) {
+  static fromCenterPoint(point: CenterPoint): Cell {
     return new Cell(point);
   }
-  center: CenterPoint;
-  peaks: PeakPoint[];
 
-  constructor(
-    center: CenterPoint,
-  ) {
-    const peaks = expand(center)
-      .map(({i, j, k}) => new PeakPoint(center.params, i, j, k));
-    const points = peaks.map((peak) => peak.toGeo().toFormatted());
-
-    super(points);
-
-    this.peaks = peaks;
-    this.center = center;
-  }
 
   findEqualGeoPoint(
     point: GeoPoint,
   ): GeoPoint | undefined {
     return this.points
-    .find((cellPoint) => cellPoint.isEqual(point));
+      .find((cellPoint) => cellPoint.isEqual(point));
   }
 
   intersectedWithSegmentNeighbor(
@@ -291,7 +326,7 @@ export class Cell extends GeoPolygon<CellSide> {
     );
   }
 
-  nextCellBySide(cellSide: CellSide) {
+  nextCellBySide(cellSide: CellSide): Cell {
     const nextCenter = this.center.nextCenterByCellSide(cellSide);
 
     return new Cell(nextCenter);

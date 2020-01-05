@@ -1,5 +1,5 @@
-import { GeoSegment } from '../../../segments/geo-segment';
-import { Cell } from '../cell';
+import {GeoSegment} from '../../../segments/geo-segment';
+import {Cell} from '../cell';
 
 export function getIntersectedWithSegmentNeighbor(
   cell: Cell,

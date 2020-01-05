@@ -1,18 +1,17 @@
-import { GridParams } from '../../grid-params';
+import {GridParams} from '../../grid-params';
 
-import { CenterPoint } from '../../points/center-point';
-import { GeoPoint } from '../../points/geo-point';
-import { Point } from '../../points/point';
-import { TileMercPoint } from '../../points/tile-merc-point';
+import {CenterPoint} from '../../points/center-point';
+import {GeoPoint} from '../../points/geo-point';
+import {Point} from '../../points/point';
+import {TileMercPoint} from '../../points/tile-merc-point';
 import {expandTile} from './utils/expand';
 
 export class GridTile {
-
   static fromTileCoords(
     tilePoint: TileMercPoint,
     start: Point,
     params: GridParams,
-  ) {
+  ): GridTile {
     const {
       tileX,
       tileY,
@@ -74,20 +73,20 @@ export class GridTile {
 
   static fromPlain(
     {points, tileHeight, tileWidth}: {
-      points: grider.Point[][],
-      tileHeight: number,
-      tileWidth: number,
+      points: grider.Point[][];
+      tileHeight: number;
+      tileWidth: number;
     },
     tilePoint: TileMercPoint,
-    params: GridParams, 
-  ) {
+    params: GridParams,
+  ): GridTile {
     return new GridTile(
       points.map((line) => line.map(({x, y}) => new Point(x, y))),
       tilePoint,
       tileWidth,
       tileHeight,
-      params
-    )
+      params,
+    );
   }
 
   constructor(
@@ -103,6 +102,6 @@ export class GridTile {
       points: this.points.map((line) => line.map(({x, y}) => ({x, y}))),
       tileHeight: this.tileHeight,
       tileWidth: this.tileWidth,
-    }
+    };
   }
 }

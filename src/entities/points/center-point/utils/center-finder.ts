@@ -1,5 +1,5 @@
 import {CellSide} from '../../../segments/cell-side';
-import { CenterPoint } from '../center-point';
+import {CenterPoint} from '../center-point';
 
 export function getNextCenterByCellSide(
   center: CenterPoint,

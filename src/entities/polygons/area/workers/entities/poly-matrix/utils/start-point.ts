@@ -1,9 +1,9 @@
-import { GeoPoint } from '../../../../../../points/geo-point';
-import { PolyMatrix } from '../poly-matrix';
+import {GeoPoint} from '../../../../../../points/geo-point';
+import {PolyMatrix} from '../poly-matrix';
 
 export function getStartPoints(
   matrix: PolyMatrix,
-) {
+): GeoPoint[] {
   const {
     topLeft: {
       params: {isHorizontal},
@@ -25,20 +25,20 @@ export function getStartPoints(
     const cell = matrix.equivalentCell(i, j);
 
     return cell.commonPoints(outerCell)
-        .sort((pointA, pointB) => {
-          const isByEastern = (
-            !isHorizontal && pointA.lng !== pointB.lng
-          ) || (
-            isHorizontal && pointA.lat === pointB.lat
-          );
+      .sort((pointA, pointB) => {
+        const isByEastern = (
+          !isHorizontal && pointA.lng !== pointB.lng
+        ) || (
+          isHorizontal && pointA.lat === pointB.lat
+        );
 
-          if (isByEastern) {
-            return pointA.isEasternTo(pointB) === isEastern ? 1 : -1;
-          } else {
-            return pointA.isNorthernTo(pointB) === isNorthern ? 1 : -1;
-          }
-        });
-    })
+        if (isByEastern) {
+          return pointA.isEasternTo(pointB) === isEastern ? 1 : -1;
+        } else {
+          return pointA.isNorthernTo(pointB) === isNorthern ? 1 : -1;
+        }
+      });
+  })
     .reduce((points, commonPoints) => {
       points.push(...commonPoints);
 

@@ -6,27 +6,6 @@ import {GridParams} from '../../../grid-params';
 import {GeoPoint} from '../../geo-point';
 import {GridPoint} from '../grid-point';
 
-export function toGrid(
-  point: GeoPoint,
-  axisParams: grider.GridAxis,
-  params: GridParams,
-): number {
-  const rotatedAxis = rotateToGrid(point, axisParams, params.isHorizontal);
-  const scaledAxis = toGridScale(rotatedAxis, params);
-
-  return scaledAxis;
-}
-
-export function toGeo(
-  point: GridPoint,
-  axisParams: grider.Axis,
-): number {
-  const rotatedAxis = rotateToGeo(point, axisParams);
-  const scaledAxis = toGeoScale(rotatedAxis, point.params);
-
-  return scaledAxis;
-}
-
 function rotateToGrid(
   point: GeoPoint,
   axisParams: grider.GridAxis,
@@ -65,15 +44,15 @@ function rotateToGeo(
   let axis;
 
   switch (axisParams.name) {
-    case mainAxis:
-      axis = (point.i - point.j * sin) / cos;
-      break;
-    case auxAxis:
-      axis = (point.j - point.i * cos) / sin;
-      break;
-    default:
-      axis = point.j * sin + point.i * cos;
-      break;
+  case mainAxis:
+    axis = (point.i - point.j * sin) / cos;
+    break;
+  case auxAxis:
+    axis = (point.j - point.i * cos) / sin;
+    break;
+  default:
+    axis = point.j * sin + point.i * cos;
+    break;
   }
 
   return axis;
@@ -97,4 +76,25 @@ function toGeoScale(
   const result = value * size / 10000000;
 
   return result;
+}
+
+export function toGrid(
+  point: GeoPoint,
+  axisParams: grider.GridAxis,
+  params: GridParams,
+): number {
+  const rotatedAxis = rotateToGrid(point, axisParams, params.isHorizontal);
+  const scaledAxis = toGridScale(rotatedAxis, params);
+
+  return scaledAxis;
+}
+
+export function toGeo(
+  point: GridPoint,
+  axisParams: grider.Axis,
+): number {
+  const rotatedAxis = rotateToGeo(point, axisParams);
+  const scaledAxis = toGeoScale(rotatedAxis, point.params);
+
+  return scaledAxis;
 }

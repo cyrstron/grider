@@ -1,11 +1,10 @@
-import { TileMercPoint } from '../../../../points/tile-merc-point';
-import { BoundIntersection } from './bound-intersection';
-import { SplitGeoSegment } from './split-geo-segment';
+import {TileMercPoint} from '../../../../points/tile-merc-point';
+import {BoundIntersection} from './bound-intersection';
+import {SplitGeoSegment} from './split-geo-segment';
 
 type Intersects = {[key in grider.Cardinal]: SplitGeoSegment[]};
 
 export class TileIntersection implements Intersects {
-
   get isContained(): boolean {
     return this.reduce((
       isContained: boolean,

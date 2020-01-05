@@ -1,7 +1,7 @@
-import { WorkerService } from "../../../../services/worker-service";
+import {WorkerService} from '../../../../services/worker-service';
 import Worker from '../workers/build-area.worker';
-import { GridParams } from "../../../grid-params";
-import { GeoPoint, CenterPoint } from "../../../points";
+import {GridParams} from '../../../grid-params';
+import {GeoPoint, CenterPoint} from '../../../points';
 import {pickBiggestSet, buildArea} from '../workers/utils/build-area';
 
 export class AreaWorker {
@@ -14,7 +14,7 @@ export class AreaWorker {
     }
   }
 
-  terminate() {
+  terminate(): void {
     if (!this.worker) return;
 
     this.worker.terminate();
@@ -26,8 +26,8 @@ export class AreaWorker {
     await this.worker.post({
       type: 'params',
       payload: {
-        params: params.toPlain()
-      }
+        params: params.toPlain(),
+      },
     });
   }
 
@@ -35,7 +35,7 @@ export class AreaWorker {
     if (centers.length === 0) return [];
 
     const params = centers[0].params;
-    
+
     if (!this.worker) {
       return pickBiggestSet(centers);
     }
@@ -45,7 +45,7 @@ export class AreaWorker {
       payload: {
         centers: centers.map((center) => center.toPlain()),
         params: params.toPlain(),
-      }
+      },
     }) as grider.WorkerAnswer<{centers: grider.GridPoint[]}>;
 
     return data.centers.map((point) => CenterPoint.fromPlain(point, params));
@@ -60,7 +60,7 @@ export class AreaWorker {
       type: 'join-centers',
       payload: {
         centers: centers.map((center) => center.toPlain()),
-      }
+      },
     }) as grider.WorkerAnswer<{polygons: grider.GeoPoint[][]}>;
 
     return data.polygons.map((poly) => poly.map((point) => GeoPoint.fromPlain(point)));

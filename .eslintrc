@@ -1,0 +1,55 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "google"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "env": {
+    "commonjs": true,
+    "node": true,
+    "browser": true
+  },
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parser": "@typescript-eslint/parser",  
+      "settings": {},
+      "extends": [
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "google"
+      ],
+      "rules": {
+        "no-invalid-this": 0,
+        "require-jsdoc": 0,
+        "max-len": ["error", {
+          "code": 100,
+          "ignoreComments": true,
+          "ignoreTrailingComments": true,
+          "ignoreStrings": true,
+          "ignoreRegExpLiterals": true,
+          "ignoreUrls": true
+        }],
+        "indent": ["error", 2],
+        "no-unsafe-finally": 0,
+        "@typescript-eslint/no-explicit-any": 0,
+        "linebreak-style": 0,
+        "@typescript-eslint/no-non-null-assertion": 0,
+        "no-constant-condition": ["error", {
+          "checkLoops": false
+        }]
+      }
+    }
+  ]
+}

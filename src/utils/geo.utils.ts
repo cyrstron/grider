@@ -38,12 +38,6 @@ export function formatLat(lat: number): number {
   return +lat.toFixed(7);
 }
 
-export function formatLng(lng: number): number {
-  lng = reduceLng(lng);
-
-  return +lng.toFixed(7);
-}
-
 export function reduceLat(lat: number): number {
   if (lat > 360 || lat < -360) {
     lat %= 360;
@@ -70,4 +64,10 @@ export function reduceLng(lng: number): number {
   } else {
     return lng;
   }
+}
+
+export function formatLng(lng: number): number {
+  lng = reduceLng(lng);
+
+  return +lng.toFixed(7);
 }

@@ -1,6 +1,6 @@
-import { GridParams } from '../../grid-params';
-import { GeoPoint } from '../../points/geo-point';
-import { TileMercPoint } from '../../points/tile-merc-point';
+import {GridParams} from '../../grid-params';
+import {GeoPoint} from '../../points/geo-point';
+import {TileMercPoint} from '../../points/tile-merc-point';
 import {Figure} from '../figure';
 import {GeoPolygon} from '../geo-polygon';
 import {Point} from '../../points';
@@ -12,7 +12,7 @@ export class IndexatedFigure extends Figure {
   static async fromShape(
     shape: GeoPolygon,
     params: GridParams,
-    isInner: boolean = true,
+    isInner = true,
   ): Promise<IndexatedFigure> {
     if (!IndexatedFigure.indexWorker) {
       IndexatedFigure.indexWorker = new IndexationWorker();
@@ -20,7 +20,11 @@ export class IndexatedFigure extends Figure {
 
     const {points: fullPoints} = await Figure.fromShape(shape, params, isInner);
 
-    const simplifiedPoints = await IndexatedFigure.indexWorker.indexatePoints(fullPoints, shape, params);
+    const simplifiedPoints = await IndexatedFigure.indexWorker.indexatePoints(
+      fullPoints,
+      shape,
+      params,
+    );
 
     return new IndexatedFigure(
       simplifiedPoints as GeoPoint[],

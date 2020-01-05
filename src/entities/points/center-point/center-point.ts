@@ -1,6 +1,6 @@
-import { GridParams } from '../../grid-params';
+import {GridParams} from '../../grid-params';
 import {CellSide} from '../../segments/cell-side';
-import { GeoPoint } from '../geo-point';
+import {GeoPoint} from '../geo-point';
 import {GridPoint} from '../grid-point';
 import {
   getNextCenterByCellSide,
@@ -23,15 +23,15 @@ import {
 
 export class CenterPoint extends GridPoint {
   get neighbors(): {
-    south?: CenterPoint,
-    north?: CenterPoint,
-    west?: CenterPoint,
-    east?: CenterPoint,
-    southEast: CenterPoint,
-    southWest: CenterPoint,
-    northEast: CenterPoint,
-    northWest: CenterPoint,
-  } {
+    south?: CenterPoint;
+    north?: CenterPoint;
+    west?: CenterPoint;
+    east?: CenterPoint;
+    southEast: CenterPoint;
+    southWest: CenterPoint;
+    northEast: CenterPoint;
+    northWest: CenterPoint;
+    } {
     const {
       south,
       north,
@@ -56,10 +56,10 @@ export class CenterPoint extends GridPoint {
   }
 
   get northNeighbors(): {
-    north?: CenterPoint,
-    northEast?: CenterPoint,
-    northWest?: CenterPoint,
-  } {
+    north?: CenterPoint;
+    northEast?: CenterPoint;
+    northWest?: CenterPoint;
+    } {
     const {
       northWest,
       north,
@@ -74,10 +74,10 @@ export class CenterPoint extends GridPoint {
   }
 
   get southNeighbors(): {
-    south?: CenterPoint,
-    southEast?: CenterPoint,
-    southWest?: CenterPoint,
-  } {
+    south?: CenterPoint;
+    southEast?: CenterPoint;
+    southWest?: CenterPoint;
+    } {
     const {
       southWest,
       south,
@@ -92,10 +92,10 @@ export class CenterPoint extends GridPoint {
   }
 
   get westNeighbors(): {
-    west?: CenterPoint,
-    northWest?: CenterPoint,
-    southWest?: CenterPoint,
-  } {
+    west?: CenterPoint;
+    northWest?: CenterPoint;
+    southWest?: CenterPoint;
+    } {
     const {
       southWest,
       west,
@@ -110,10 +110,10 @@ export class CenterPoint extends GridPoint {
   }
 
   get eastNeighbors(): {
-    east?: CenterPoint,
-    southEast?: CenterPoint,
-    northEast?: CenterPoint,
-  } {
+    east?: CenterPoint;
+    southEast?: CenterPoint;
+    northEast?: CenterPoint;
+    } {
     const {
       southEast,
       east,
@@ -128,8 +128,8 @@ export class CenterPoint extends GridPoint {
   }
 
   get northEastNeighbors(): {
-    northEast: CenterPoint,
-  } {
+    northEast: CenterPoint;
+    } {
     const {
       northEast,
     } = getNorthEast(this);
@@ -140,8 +140,8 @@ export class CenterPoint extends GridPoint {
   }
 
   get southWestNeighbors(): {
-    southWest: CenterPoint,
-  } {
+    southWest: CenterPoint;
+    } {
     const {
       southWest,
     } = getSouthWest(this);
@@ -152,8 +152,8 @@ export class CenterPoint extends GridPoint {
   }
 
   get northWestNeighbors(): {
-    northWest: CenterPoint,
-  } {
+    northWest: CenterPoint;
+    } {
     const {
       northWest,
     } = getNorthWest(this);
@@ -164,8 +164,8 @@ export class CenterPoint extends GridPoint {
   }
 
   get southEastNeighbors(): {
-    southEast: CenterPoint,
-  } {
+    southEast: CenterPoint;
+    } {
     const {
       southEast,
     } = getSouthEast(this);
@@ -199,7 +199,7 @@ export class CenterPoint extends GridPoint {
 
     const {i, j, k} = round(reducedGridCenter);
 
-    return new CenterPoint(point.params, i, j , k);
+    return new CenterPoint(point.params, i, j, k);
   }
 
   nextCenterByCellSide(cellSide: CellSide): CenterPoint {
@@ -212,6 +212,7 @@ export class CenterPoint extends GridPoint {
   }
 
   isNeighbor(center: CenterPoint): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let pointA: CenterPoint = this;
     let pointB: CenterPoint = center;
 
@@ -242,7 +243,7 @@ export class CenterPoint extends GridPoint {
       undefined :
       this.k - (iDiff + jDiff);
 
-    const centerGeo = new CenterPoint(this.params, i, j , k)
+    const centerGeo = new CenterPoint(this.params, i, j, k)
       .toGeo();
 
     return CenterPoint.fromGeo(centerGeo, this.params);
@@ -253,7 +254,7 @@ export class CenterPoint extends GridPoint {
       i: this.i,
       j: this.j,
       k: this.k,
-    }
+    };
   }
 
   static fromPlain(

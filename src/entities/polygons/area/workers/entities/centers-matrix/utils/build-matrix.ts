@@ -1,9 +1,9 @@
-import { CenterPoint } from '../../../../../../points/center-point';
+import {CenterPoint} from '../../../../../../points/center-point';
 
 export function buildMatrix(
   centers: CenterPoint[],
   isAntimeridian: boolean,
-) {
+): (CenterPoint | undefined)[][] {
   centers = isAntimeridian ?
     centers.map((center) => center.toOppositeHemishpere()) :
     [...centers];

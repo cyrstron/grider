@@ -2,13 +2,12 @@ import {floorNumStrByOrder} from '../../../../../../utils/math.utils';
 import {GeoSegment} from '../../../../../segments/geo-segment';
 import {SpreadedSide} from '../indexation';
 
-import { GeoPoint } from '../../../../../points/geo-point';
-import { GeoPolygon } from '../../../../geo-polygon';
-import { BoundIntersection } from '../bound-intersection';
+import {GeoPoint} from '../../../../../points/geo-point';
+import {GeoPolygon} from '../../../../geo-polygon';
+import {BoundIntersection} from '../bound-intersection';
 import {indexateKeys} from './utils/indexate-keys';
 
 export class SideIndexation {
-
   get isAntiMeridian(): boolean {
     return this.approximation.isAntiMeridian;
   }

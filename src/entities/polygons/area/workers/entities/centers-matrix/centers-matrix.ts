@@ -1,15 +1,14 @@
-import { CenterPoint } from '../../../../../points/center-point';
-import { Cell } from '../../../../cell';
+import {CenterPoint} from '../../../../../points/center-point';
+import {Cell} from '../../../../cell';
 import {calcTopLeft} from '../../utils/calc-top-left';
-import { calcNearestAndTouchedIndexes, calcNearestIndexes } from '../../utils/nearest-indexes';
+import {calcNearestAndTouchedIndexes, calcNearestIndexes} from '../../utils/nearest-indexes';
 import {buildMatrix} from './utils/build-matrix';
 import {isOnAntiMeridian} from './utils/is-anti-meridian';
-import { getNearestEmpties } from './utils/nearest-empties';
+import {getNearestEmpties} from './utils/nearest-empties';
 
 type MatrixPayload = Array<Array<CenterPoint | 'outer' | 'inner' | undefined>>;
 
 export class CentersMatrix {
-
   get outerCoords(): number[][] {
     const outerEmptinessIndexes: number[][] = [];
 
@@ -144,7 +143,7 @@ export class CentersMatrix {
   }
 
   equivalentCell(i: number, j: number): Cell {
-    const equivalentCenter =  this.equivalentCenter(i, j);
+    const equivalentCenter = this.equivalentCenter(i, j);
 
     return Cell.fromCenter(equivalentCenter);
   }
@@ -154,7 +153,7 @@ export class CentersMatrix {
       .filter(
         ([i, j]) => this.payload[i] && (
           this.payload[i][j] instanceof CenterPoint
-      ));
+        ));
   }
 
   nearestCenters(i: number, j: number): number[][] {
@@ -162,7 +161,7 @@ export class CentersMatrix {
       .filter(
         ([i, j]) => this.payload[i] && (
           this.payload[i][j] instanceof CenterPoint
-      ));
+        ));
   }
 
   touchedEmpties(i: number, j: number): number[][] {
@@ -170,7 +169,7 @@ export class CentersMatrix {
       .filter(
         ([i, j]) => this.payload[i] && !(
           this.payload[i][j] instanceof CenterPoint
-      ));
+        ));
   }
 
   nearestEmpties(i: number, j: number): number[][] {
@@ -178,7 +177,7 @@ export class CentersMatrix {
       .filter(
         ([i, j]) => this.payload[i] && !(
           this.payload[i][j] instanceof CenterPoint
-      ));
+        ));
   }
 
   touchedInnerEmpties(i: number, j: number): number[][] {
@@ -186,7 +185,7 @@ export class CentersMatrix {
       .filter(
         ([i, j]) => this.payload[i] && (
           this.payload[i][j] === 'inner'
-      ));
+        ));
   }
 
   nearestInnerEmpties(i: number, j: number): number[][] {
@@ -194,7 +193,7 @@ export class CentersMatrix {
       .filter(
         ([i, j]) => this.payload[i] && (
           this.payload[i][j] === 'inner'
-      ));
+        ));
   }
 
   touchedOuterEmpties(i: number, j: number): number[][] {
@@ -202,7 +201,7 @@ export class CentersMatrix {
       .filter(
         ([i, j]) => this.payload[i] && (
           this.payload[i][j] === 'outer'
-      ));
+        ));
   }
 
   nearestOuterEmpties(i: number, j: number): number[][] {
@@ -210,6 +209,6 @@ export class CentersMatrix {
       .filter(
         ([i, j]) => this.payload[i] && (
           this.payload[i][j] === 'outer'
-      ));
+        ));
   }
 }

@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 /// <reference path="@types/index.d.ts" />
 
 export {

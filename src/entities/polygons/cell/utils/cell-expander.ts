@@ -1,17 +1,5 @@
 import {CenterPoint} from '../../../points/center-point';
 
-export function expand(
-  center: CenterPoint,
-): grider.GridPoint[] {
-  const {type} = center.params;
-
-  if (type === 'hex') {
-    return getHexPoints(center);
-  } else {
-    return getRectPoints(center);
-  }
-}
-
 function getHexPoints(
   {i, j, k}: CenterPoint,
 ): grider.GridPoint[] {
@@ -58,4 +46,16 @@ function getRectPoints(
     i: i - (1 / 2),
     j: j - (1 / 2),
   }];
+}
+
+export function expand(
+  center: CenterPoint,
+): grider.GridPoint[] {
+  const {type} = center.params;
+
+  if (type === 'hex') {
+    return getHexPoints(center);
+  } else {
+    return getRectPoints(center);
+  }
 }
