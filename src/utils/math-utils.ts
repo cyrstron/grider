@@ -2,6 +2,10 @@ export function degToRad(deg: number): number {
   return deg * Math.PI / 180;
 }
 
+export function radToDeg(rad: number): number {
+  return rad * 180 / Math.PI;
+}
+
 export function floorNumStrByOrder(str: string): string {
   const strLen = str.length;
 
@@ -74,10 +78,6 @@ export function findPrimeFactors(value: number): number[] {
   }
 
   return result;
-}
-
-export function radToDeg(rad: number): number {
-  return rad * 180 / Math.PI;
 }
 
 export function decRemain(value: number): number {
