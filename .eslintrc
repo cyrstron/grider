@@ -31,6 +31,15 @@
         "google"
       ],
       "rules": {
+        "no-unused-vars": [
+          "error",
+          {
+            "ignoreRestSiblings": true
+          }
+        ],
+        "@typescript-eslint/no-unused-vars": ["error", {
+          "ignoreRestSiblings": true
+        }],
         "no-invalid-this": 0,
         "require-jsdoc": 0,
         "max-len": ["error", {
