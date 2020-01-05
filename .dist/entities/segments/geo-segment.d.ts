@@ -5,7 +5,7 @@ import { MercSegment } from './merc-segment';
 export declare class GeoSegment {
     pointA: GeoPoint;
     pointB: GeoPoint;
-    readonly points: GeoPoint[];
+    readonly points: [GeoPoint, GeoPoint];
     readonly isAntiMeridian: boolean;
     readonly isParallel: boolean;
     readonly isMeridian: boolean;

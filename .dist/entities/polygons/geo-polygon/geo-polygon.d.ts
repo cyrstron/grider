@@ -1,7 +1,6 @@
 import { GeoPoint } from '../../points/geo-point';
 import { GeoSegment } from '../../segments/geo-segment';
 import { GenericPolygon } from '../generic-polygon';
-import { GridParams } from '../../grid-params';
 export declare class GeoPolygon<SegmentType extends GeoSegment = GeoSegment> extends GenericPolygon<GeoPoint, SegmentType> {
     sideByIndex(index: number): SegmentType;
     sideByIndexInversed(index: number): SegmentType;
@@ -16,7 +15,7 @@ export declare class GeoPolygon<SegmentType extends GeoSegment = GeoSegment> ext
     arePointsInsidePoly(poly: GeoPolygon): boolean;
     arePointsOutsidePoly(poly: GeoPolygon): boolean;
     containsPoint(point: GeoPoint): boolean;
-    isValidForFigure(params: GridParams): boolean;
+    isValidForFigure(): boolean;
     readonly outmapPoints: GeoPoint[];
     readonly easternPoint: GeoPoint;
     readonly westernPoint: GeoPoint;

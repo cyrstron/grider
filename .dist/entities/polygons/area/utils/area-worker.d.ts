@@ -1,6 +1,6 @@
-import { WorkerService } from "../../../../services/worker-service";
-import { GridParams } from "../../../grid-params";
-import { GeoPoint, CenterPoint } from "../../../points";
+import { WorkerService } from '../../../../services/worker-service';
+import { GridParams } from '../../../grid-params';
+import { GeoPoint, CenterPoint } from '../../../points';
 export declare class AreaWorker {
     worker?: WorkerService;
     params?: GridParams;

@@ -1,2 +1,3 @@
 import { GeoPoint } from '../../../../../../points/geo-point';
-export declare function spreadPointsBySides(points: GeoPoint[]): import("../indexation").SpreadedPoint[][];
+import { SpreadedFigure } from '../indexation';
+export declare function spreadPointsBySides(points: GeoPoint[]): SpreadedFigure;

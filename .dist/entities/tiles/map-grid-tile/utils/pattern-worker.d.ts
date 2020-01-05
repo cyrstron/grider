@@ -1,6 +1,6 @@
-import { WorkerService } from "../../../../services/worker-service";
-import { GridParams } from "../../../grid-params";
-import { TileMercPoint } from "../../../points";
+import { WorkerService } from '../../../../services/worker-service';
+import { GridParams } from '../../../grid-params';
+import { TileMercPoint } from '../../../points';
 export declare class PatternWorker {
     worker: WorkerService;
     constructor();

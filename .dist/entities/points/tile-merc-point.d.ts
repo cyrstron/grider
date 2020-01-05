@@ -23,7 +23,7 @@ export declare class TileMercPoint extends MercPoint implements Bounds {
     readonly east: GeoSegment;
     readonly west: GeoSegment;
     static fromTile(tileX: number, tileY: number, tileWidth: number, tileHeight: number, zoom: number): TileMercPoint;
-    static fromPlain({ x, y, tileX, tileY, tileWidth, tileHeight, zoom }: grider.TilePoint): TileMercPoint;
+    static fromPlain({ x, y, tileX, tileY, tileWidth, tileHeight, zoom, }: grider.TilePoint): TileMercPoint;
     static fromMerc(mercPoint: MercPoint, tileWidth: number, tileHeight: number, zoom: number): TileMercPoint;
     tileX: number;
     tileY: number;

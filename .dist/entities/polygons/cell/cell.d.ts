@@ -7,35 +7,38 @@ import { CellSide } from '../../segments/cell-side';
 import { GeoSegment } from '../../segments/geo-segment';
 import { GeoPolygon } from '../geo-polygon/geo-polygon';
 export declare class Cell extends GeoPolygon<CellSide> {
+    center: CenterPoint;
+    peaks: PeakPoint[];
+    constructor(center: CenterPoint);
     readonly neighbors: {
-        west: Cell | undefined;
+        west?: Cell;
         southWest: Cell;
-        east: Cell | undefined;
+        east?: Cell;
         southEast: Cell;
-        south: Cell | undefined;
+        south?: Cell;
         northEast: Cell;
-        north: Cell | undefined;
+        north?: Cell;
         northWest: Cell;
     };
     readonly northNeighbors: {
-        northEast: Cell | undefined;
-        north: Cell | undefined;
-        northWest: Cell | undefined;
+        northEast?: Cell;
+        north?: Cell;
+        northWest?: Cell;
     };
     readonly southNeighbors: {
-        southWest: Cell | undefined;
-        southEast: Cell | undefined;
-        south: Cell | undefined;
+        southWest?: Cell;
+        southEast?: Cell;
+        south?: Cell;
     };
     readonly westNeighbors: {
-        west: Cell | undefined;
-        southWest: Cell | undefined;
-        northWest: Cell | undefined;
+        west?: Cell;
+        southWest?: Cell;
+        northWest?: Cell;
     };
     readonly eastNeighbors: {
-        east: Cell | undefined;
-        southEast: Cell | undefined;
-        northEast: Cell | undefined;
+        east?: Cell;
+        southEast?: Cell;
+        northEast?: Cell;
     };
     readonly northEastNeighbors: {
         northEast: Cell;
@@ -53,9 +56,6 @@ export declare class Cell extends GeoPolygon<CellSide> {
     static fromGeoPoint(point: GeoPoint, params: GridParams): Cell;
     static fromGridPoint(point: GridPoint): Cell;
     static fromCenterPoint(point: CenterPoint): Cell;
-    center: CenterPoint;
-    peaks: PeakPoint[];
-    constructor(center: CenterPoint);
     findEqualGeoPoint(point: GeoPoint): GeoPoint | undefined;
     intersectedWithSegmentNeighbor(segment: GeoSegment): Cell | undefined;
     intersectedWithSegmentsNeighbors(segments: GeoSegment[]): Cell[];

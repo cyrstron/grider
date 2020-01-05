@@ -9,7 +9,6 @@ export interface Neighbors {
     north?: grider.GridPoint;
     northWest: grider.GridPoint;
 }
-export declare function getAll(center: CenterPoint): Neighbors;
 export declare function getNorthWest(center: CenterPoint): {
     northWest: grider.GridPoint;
 };
@@ -42,3 +41,4 @@ export declare function getWest(center: CenterPoint): {
     southWest?: grider.GridPoint;
     northWest?: grider.GridPoint;
 };
+export declare function getAll(center: CenterPoint): Neighbors;

@@ -1,7 +1,7 @@
-import { WorkerService } from "../../../../services/worker-service";
-import { GridParams } from "../../../grid-params";
-import { GeoPolygon } from "../../geo-polygon";
-import { GeoPoint, TileMercPoint, Point } from "../../../points";
+import { WorkerService } from '../../../../services/worker-service';
+import { GridParams } from '../../../grid-params';
+import { GeoPolygon } from '../../geo-polygon';
+import { GeoPoint, TileMercPoint, Point } from '../../../points';
 export declare class IndexationWorker {
     worker: WorkerService;
     constructor();

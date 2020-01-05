@@ -1,8 +1,8 @@
-import { WorkerService } from "../../../../services/worker-service";
-import { GridParams } from "../../../grid-params";
-import { GeoPolygon } from "../../geo-polygon";
-import { GeoPoint } from "../../../points";
-import { Cell } from "../../cell";
+import { WorkerService } from '../../../../services/worker-service';
+import { GridParams } from '../../../grid-params';
+import { GeoPolygon } from '../../geo-polygon';
+import { GeoPoint } from '../../../points';
+import { Cell } from '../../cell';
 export declare class FigureWorker {
     worker: WorkerService;
     constructor();
