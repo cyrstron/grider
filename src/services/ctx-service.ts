@@ -1,6 +1,6 @@
 export class CtxService {
-  messageHandler?: (e: MessageEvent) => void;
-  errorHandler?: (e: ErrorEvent) => void;
+  protected messageHandler?: (e: MessageEvent) => void;
+  protected errorHandler?: (e: ErrorEvent) => void;
 
   constructor(
     public worker: Worker,
@@ -23,10 +23,11 @@ export class CtxService {
 
   close(): void {
     this.unmount();
-    close();
+
+    self.close();
   }
 
-  unmount(): void {
+  protected unmount(): void {
     this.worker.removeEventListener('message', this.handleMessage);
     this.worker.removeEventListener('error', this.handleError);
   }

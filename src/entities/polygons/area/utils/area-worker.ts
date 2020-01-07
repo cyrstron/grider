@@ -17,7 +17,7 @@ export class AreaWorker {
   terminate(): void {
     if (!this.worker) return;
 
-    this.worker.terminate();
+    this.worker.close();
   }
 
   async postParams(params: GridParams): Promise<void> {

@@ -28,18 +28,22 @@ export class MercPoint extends Point {
     return new MercPoint(x, this.y);
   }
 
-  calcMercDistance(pointB: MercPoint): number {
-    const pointA = this.isCloserThroughAntiMeridian(pointB) ?
-      this.toOppositeHemisphere() : this;
-
-    return pointA.distanceToPoint(pointB);
-  }
-
   isCloserThroughAntiMeridian(point: MercPoint): boolean {
     const minX = Math.min(this.x, point.x);
     const maxX = Math.max(this.x, point.x);
 
-    return maxX - minX > 1;
+    return maxX - minX > 0.5;
+  }
+
+  calcMercDistance(pointB: MercPoint): number {
+    let pointA = this as MercPoint;
+
+    if (pointA.isCloserThroughAntiMeridian(pointB)) {
+      pointA = pointA.toOppositeHemisphere();
+      pointB = pointB.toOppositeHemisphere();
+    }
+
+    return pointA.distanceToPoint(pointB);
   }
 
   toSphereLiteral(): grider.GeoPoint {

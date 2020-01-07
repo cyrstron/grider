@@ -10,6 +10,30 @@ import {Point} from './point';
 type Bounds = {[key in grider.Cardinal]: GeoSegment};
 
 export class TileMercPoint extends MercPoint implements Bounds {
+  tileX: number;
+  tileY: number;
+  tileWidth: number;
+  tileHeight: number;
+  zoom: number;
+
+  constructor(
+    x: number,
+    y: number,
+    tileX: number,
+    tileY: number,
+    tileWidth: number,
+    tileHeight: number,
+    zoom: number,
+  ) {
+    super(x, y);
+
+    this.tileX = tileX;
+    this.tileY = tileY;
+    this.tileWidth = tileWidth;
+    this.tileHeight = tileHeight;
+    this.zoom = zoom;
+  }
+
   get zoomCoofX(): number {
     return 2 ** this.zoom * constants.googleTileSize / this.tileWidth;
   }
@@ -138,83 +162,6 @@ export class TileMercPoint extends MercPoint implements Bounds {
     );
   }
 
-  static fromTile(
-    tileX: number,
-    tileY: number,
-    tileWidth: number,
-    tileHeight: number,
-    zoom: number,
-  ): TileMercPoint {
-    const x = tileX / (2 ** (zoom) * (constants.googleTileSize / tileWidth));
-    const y = tileY / (2 ** (zoom) * (constants.googleTileSize / tileHeight));
-
-    return new TileMercPoint(
-      x,
-      y,
-      tileX,
-      tileY,
-      tileWidth,
-      tileHeight,
-      zoom,
-    );
-  }
-
-  static fromPlain({
-    x,
-    y,
-    tileX,
-    tileY,
-    tileWidth,
-    tileHeight,
-    zoom,
-  }: grider.TilePoint,
-  ): TileMercPoint {
-    return new TileMercPoint(x, y, tileX, tileY, tileWidth, tileHeight, zoom);
-  }
-
-  static fromMerc(
-    mercPoint: MercPoint,
-    tileWidth: number,
-    tileHeight: number,
-    zoom: number,
-  ): TileMercPoint {
-    const tileX = mercPoint.x * (2 ** (zoom) * (constants.googleTileSize / tileWidth));
-    const tileY = mercPoint.y * (2 ** (zoom) * (constants.googleTileSize / tileHeight));
-
-    return new TileMercPoint(
-      mercPoint.x,
-      mercPoint.y,
-      tileX,
-      tileY,
-      tileWidth,
-      tileHeight,
-      zoom,
-    );
-  }
-  tileX: number;
-  tileY: number;
-  tileWidth: number;
-  tileHeight: number;
-  zoom: number;
-
-  constructor(
-    x: number,
-    y: number,
-    tileX: number,
-    tileY: number,
-    tileWidth: number,
-    tileHeight: number,
-    zoom: number,
-  ) {
-    super(x, y);
-
-    this.tileX = tileX;
-    this.tileY = tileY;
-    this.tileWidth = tileWidth;
-    this.tileHeight = tileHeight;
-    this.zoom = zoom;
-  }
-
   gridPatternStartPoint(params: GridParams): Point {
     const geoPoint = GeoPoint.fromMerc(this);
     const gridCenter = CenterPoint.fromGeo(geoPoint, params);
@@ -297,5 +244,59 @@ export class TileMercPoint extends MercPoint implements Bounds {
       tileHeight: this.tileHeight,
       tileWidth: this.tileWidth,
     };
+  }
+
+  static fromTile(
+    tileX: number,
+    tileY: number,
+    tileWidth: number,
+    tileHeight: number,
+    zoom: number,
+  ): TileMercPoint {
+    const x = tileX / (2 ** (zoom) * (constants.googleTileSize / tileWidth));
+    const y = tileY / (2 ** (zoom) * (constants.googleTileSize / tileHeight));
+
+    return new TileMercPoint(
+      x,
+      y,
+      tileX,
+      tileY,
+      tileWidth,
+      tileHeight,
+      zoom,
+    );
+  }
+
+  static fromPlain({
+    x,
+    y,
+    tileX,
+    tileY,
+    tileWidth,
+    tileHeight,
+    zoom,
+  }: grider.TilePoint,
+  ): TileMercPoint {
+    return new TileMercPoint(x, y, tileX, tileY, tileWidth, tileHeight, zoom);
+  }
+
+  static fromMerc(
+    mercPoint: MercPoint,
+    tileWidth: number,
+    tileHeight: number,
+    zoom: number,
+  ): TileMercPoint {
+    const tileX = mercPoint.x * (2 ** (zoom) * (constants.googleTileSize / tileWidth));
+    const tileY = mercPoint.y * (2 ** (zoom) * (constants.googleTileSize / tileHeight));
+
+    return new TileMercPoint(
+      mercPoint.x,
+      mercPoint.y,
+      tileX,
+      tileY,
+      tileWidth,
+      tileHeight,
+      zoom,
+    );
   }
 }

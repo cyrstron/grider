@@ -1,14 +1,17 @@
 import { CtxService } from './ctx-service';
+export interface WorkerMessage<Payload = any> {
+    type: string;
+    payload: Payload;
+}
 export declare class WorkerService extends CtxService {
     private postQueue;
     private runningTaskMessage;
     private resolves;
     private rejects;
-    post(message: any): Promise<MessageEvent>;
-    nextTask(): void;
-    messageHandler: (event: MessageEvent) => void;
-    errorHandler: (event: ErrorEvent) => void;
-    clearMessage(message: any): void;
-    terminate(): void;
-    unmount(): void;
+    post<Payload = any>(message: WorkerMessage<Payload>): Promise<MessageEvent>;
+    private nextTask;
+    protected messageHandler: (event: MessageEvent) => void;
+    protected errorHandler: (event: ErrorEvent) => void;
+    private clearMessage;
+    close(): void;
 }

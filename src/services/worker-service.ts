@@ -1,5 +1,10 @@
 import {CtxService} from './ctx-service';
 
+export interface WorkerMessage<Payload = any> {
+  type: string;
+  payload: Payload;
+}
+
 export class WorkerService extends CtxService {
   private postQueue: any[] = [];
   private runningTaskMessage: any | null = null;
@@ -13,8 +18,8 @@ export class WorkerService extends CtxService {
     (e: ErrorEvent) => void
   > = new Map();
 
-  post(
-    message: any,
+  post<Payload = any>(
+    message: WorkerMessage<Payload>,
   ): Promise<MessageEvent> {
     if (!this.runningTaskMessage) {
       this.runningTaskMessage = message;
@@ -29,7 +34,7 @@ export class WorkerService extends CtxService {
     });
   }
 
-  nextTask(): void {
+  private nextTask(): void {
     if (this.postQueue.length === 0) {
       this.runningTaskMessage = null;
     } else {
@@ -42,7 +47,7 @@ export class WorkerService extends CtxService {
     }
   }
 
-  messageHandler = (event: MessageEvent): void => {
+  protected messageHandler = (event: MessageEvent): void => {
     const endedTask = this.runningTaskMessage as any;
     const resolve = this.resolves.get(endedTask);
 
@@ -54,7 +59,7 @@ export class WorkerService extends CtxService {
     this.nextTask();
   }
 
-  errorHandler = (event: ErrorEvent): void => {
+  protected errorHandler = (event: ErrorEvent): void => {
     const endedTask = this.runningTaskMessage as any;
     const reject = this.rejects.get(endedTask);
 
@@ -66,21 +71,19 @@ export class WorkerService extends CtxService {
     this.nextTask();
   }
 
-  clearMessage(message: any): void {
+  private clearMessage(message: any): void {
     this.resolves.delete(message);
     this.rejects.delete(message);
   }
 
-  terminate(): void {
-    this.worker.terminate();
-  }
+  close(): void {
+    super.unmount();
 
-  unmount(): void {
     this.resolves = new Map();
     this.rejects = new Map();
     this.postQueue = [];
     this.runningTaskMessage = null;
 
-    super.unmount();
+    this.worker.terminate();
   }
 }

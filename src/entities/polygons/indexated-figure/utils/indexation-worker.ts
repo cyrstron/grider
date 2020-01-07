@@ -12,7 +12,7 @@ export class IndexationWorker {
   }
 
   terminate(): void {
-    this.worker.terminate();
+    this.worker.close();
   }
 
   async indexatePoints(
@@ -20,7 +20,11 @@ export class IndexationWorker {
     shape: GeoPolygon,
     params: GridParams,
   ): Promise<GeoPoint[]> {
-    const {data} = await this.worker.post({
+    const {data} = await this.worker.post<{
+      points: grider.GeoPoint[];
+      shape: grider.GeoPoint[];
+      params: grider.GridParams;
+    }>({
       type: 'indexate',
       payload: {
         points: points.map((point) => point.toPlain()),
@@ -33,7 +37,7 @@ export class IndexationWorker {
   }
 
   async buildTile(tilePoint: TileMercPoint): Promise<Point[]> {
-    const {data} = await this.worker.post({
+    const {data} = await this.worker.post<{tile: grider.TilePoint}>({
       type: 'tile-intersects',
       payload: {
         tile: tilePoint.toPlain(),

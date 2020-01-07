@@ -18,7 +18,7 @@ export class GeoSegment {
   }
 
   get isMeridian(): boolean {
-    return this.pointA.lat === this.pointB.lat;
+    return this.pointA.lng === this.pointB.lng;
   }
 
   get easternPoint(): GeoPoint {

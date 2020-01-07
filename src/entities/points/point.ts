@@ -27,12 +27,6 @@ export class Point {
     };
   }
 
-  static fromPlain(
-    {x, y}: grider.Point,
-  ): Point {
-    return new Point(x, y);
-  }
-
   containedByLine(line: Line): boolean {
     return line.hasPoint(this);
   }
@@ -63,5 +57,11 @@ export class Point {
 
   closestOnSegment(segment: Segment): Point {
     return segment.closestToPoint(this);
+  }
+
+  static fromPlain(
+    {x, y}: grider.Point,
+  ): Point {
+    return new Point(x, y);
   }
 }

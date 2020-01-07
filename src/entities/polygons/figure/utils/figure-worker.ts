@@ -13,7 +13,7 @@ export class FigureWorker {
   }
 
   terminate(): void {
-    this.worker.terminate();
+    this.worker.close();
   }
 
   async postParams(params: GridParams): Promise<void> {

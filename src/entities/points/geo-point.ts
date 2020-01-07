@@ -61,8 +61,7 @@ export class GeoPoint {
   }
 
   calcMercDistance(pointB: GeoPoint): number {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let pointA: GeoPoint = this;
+    let pointA = this as GeoPoint;
 
     if (this.isCloserThroughAntiMeridian(pointB)) {
       pointA = this.toOppositeHemisphere();

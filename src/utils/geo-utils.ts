@@ -26,18 +26,6 @@ export function lngToX(lng: number): number {
   return (xRad / Math.PI + 1) / 2;
 }
 
-export function formatLat(lat: number): number {
-  if (lat > 90) {
-    lat = 90;
-  }
-
-  if (lat < -90) {
-    lat = -90;
-  }
-
-  return +lat.toFixed(7);
-}
-
 export function reduceLat(lat: number): number {
   if (lat > 360 || lat < -360) {
     lat %= 360;
@@ -46,7 +34,7 @@ export function reduceLat(lat: number): number {
   if (lat > 90) {
     return 180 - lat;
   } else if (lat < -90) {
-    return -180 + lat;
+    return -lat - 180;
   } else {
     return lat;
   }
@@ -64,6 +52,18 @@ export function reduceLng(lng: number): number {
   } else {
     return lng;
   }
+}
+
+export function formatLat(lat: number): number {
+  if (lat > 90) {
+    lat = 90;
+  }
+
+  if (lat < -90) {
+    lat = -90;
+  }
+
+  return +lat.toFixed(7);
 }
 
 export function formatLng(lng: number): number {
