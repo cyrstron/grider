@@ -1,6 +1,7 @@
 import {TileMercPoint} from '../tile-merc-point';
 import {Point} from '../point';
 import {GeoSegment} from '../../segments';
+import {GeoPolygon} from '../../polygons';
 
 describe('constructor', () => {
   it('should create TileMercPoint instance', () => {
@@ -289,8 +290,38 @@ describe('startPointDiff', () => {
     const tilePoint = new TileMercPoint(0.25, 0.25, 1, 1, 256, 256, 2);
     const startTilePoint = TileMercPoint.fromTile(1.1, 1.1, 256, 256, 2);
 
-    console.log(tilePoint.startPointDiff(startTilePoint));
-
     expect(tilePoint.startPointDiff(startTilePoint)).toBeInstanceOf(Point);
   });
+
+  it('should return diff point', () => {
+    const tilePoint = new TileMercPoint(0.25, 0.25, 1, 1, 256, 256, 2);
+    const startTilePoint = TileMercPoint.fromTile(0.9, 0.9, 256, 256, 2);
+
+    const point = tilePoint.startPointDiff(startTilePoint)
+      .toPlain();
+
+    expect(+point.x.toFixed(15)).toBe(-0.1);
+    expect(+point.y.toFixed(15)).toBe(-0.1);
+  });
+
+  it('should return valid diff point for points through anti-meridian', () => {
+    const tilePoint = TileMercPoint.fromTile(0, 1, 256, 256, 2);
+    const startTilePoint = TileMercPoint.fromTile(3.9, 0.9, 256, 256, 2);
+
+    const point = tilePoint.startPointDiff(startTilePoint)
+      .toPlain();
+
+    expect(+point.x.toFixed(15)).toBe(-0.1);
+    expect(+point.y.toFixed(15)).toBe(-0.1);
+  });
+});
+
+describe('toPoly', () => {
+  it('should return instance of GeoPolygon', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    expect(tilePoint.toPoly()).toBeInstanceOf(GeoPolygon);
+  });
+
+  it.todo('should return valid polygon');
 });
