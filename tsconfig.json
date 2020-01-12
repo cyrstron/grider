@@ -30,5 +30,10 @@
     "./src/**/*", 
     "tsconfig.json"
   ],
-  "exclude": ["node_modules/**/*", "./.dist/**/*", "./**/*.js"]
+  "exclude": [
+    "node_modules/**/*", 
+    "./.dist/**/*", 
+    "./**/*.js",
+    "./**/*.test.ts"
+  ]
 }
