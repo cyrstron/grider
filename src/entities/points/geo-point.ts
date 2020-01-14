@@ -11,29 +11,6 @@ import {
 import {MercPoint} from './merc-point';
 
 export class GeoPoint {
-  static createFormatted(
-    lat: number,
-    lng: number,
-  ): GeoPoint {
-    lat = formatLat(lat);
-    lng = formatLng(lng);
-
-    return new GeoPoint(lat, lng);
-  }
-
-  static fromUnsafeCoords(lat: number, lng: number): GeoPoint {
-    lat = reduceLat(lat);
-    lng = reduceLng(lng);
-
-    return new GeoPoint(lat, lng);
-  }
-
-  static fromMerc(point: MercPoint): GeoPoint {
-    const {lat, lng} = point.toSphereLiteral();
-
-    return new GeoPoint(lat, lng);
-  }
-
   constructor(
     public lat: number,
     public lng: number,
@@ -147,5 +124,28 @@ export class GeoPoint {
 
   static fromGeoJSON({coordinates: [lng, lat]}: grider.GeoJSONPoint): GeoPoint {
     return GeoPoint.fromPlain({lat, lng});
+  }
+
+  static createFormatted(
+    lat: number,
+    lng: number,
+  ): GeoPoint {
+    lat = formatLat(lat);
+    lng = formatLng(lng);
+
+    return new GeoPoint(lat, lng);
+  }
+
+  static fromUnsafeCoords(lat: number, lng: number): GeoPoint {
+    lat = reduceLat(lat);
+    lng = reduceLng(lng);
+
+    return new GeoPoint(lat, lng);
+  }
+
+  static fromMerc(point: MercPoint): GeoPoint {
+    const {lat, lng} = point.toSphereLiteral();
+
+    return new GeoPoint(lat, lng);
   }
 }
