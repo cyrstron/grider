@@ -2,6 +2,8 @@ import {TileMercPoint} from '../tile-merc-point';
 import {Point} from '../point';
 import {GeoSegment} from '../../segments';
 import {GeoPolygon} from '../../polygons';
+import {GeoPoint} from '../geo-point';
+import {MercPoint} from '../merc-point';
 
 describe('constructor', () => {
   it('should create TileMercPoint instance', () => {
@@ -323,5 +325,176 @@ describe('toPoly', () => {
     expect(tilePoint.toPoly()).toBeInstanceOf(GeoPolygon);
   });
 
-  it.todo('should return valid polygon');
+  describe('polygon point', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    const poly = tilePoint.toPoly();
+
+    it('should has north-west point equal to tile point', () => {
+      const northWestPoint = poly.points.reduce((northWest, point) => {
+        if (!northWest) return point;
+
+        return !northWest.isSouthernTo(point) && !northWest.isEasternTo(point) ?
+          northWest :
+          point;
+      });
+
+      const standard = GeoPoint.fromMerc(tilePoint).toPlain();
+
+      expect(northWestPoint.toPlain()).toStrictEqual(standard);
+    });
+
+    it('should has north-east point equal to tile east tile point', () => {
+      const northEastPoint = poly.points.reduce((northEast, point) => {
+        if (!northEast) return point;
+
+        return !northEast.isSouthernTo(point) && !northEast.isWesternTo(point) ?
+          northEast :
+          point;
+      });
+
+      const standard = GeoPoint.fromMerc(tilePoint.eastTile).toPlain();
+
+      expect(northEastPoint.toPlain()).toStrictEqual(standard);
+    });
+
+    it('should has south-east point equal to tile south-east tile point', () => {
+      const southEastPoint = poly.points.reduce((southEast, point) => {
+        if (!southEast) return point;
+
+        return !southEast.isNorthernTo(point) && !southEast.isWesternTo(point) ?
+          southEast :
+          point;
+      });
+
+      const standard = GeoPoint.fromMerc(tilePoint.eastTile.southTile).toPlain();
+
+      expect(southEastPoint.toPlain()).toStrictEqual(standard);
+    });
+
+    it('should has south-west point equal to tile south tile point', () => {
+      const southWestPoint = poly.points.reduce((southWest, point) => {
+        if (!southWest) return point;
+
+        return !southWest.isNorthernTo(point) && !southWest.isEasternTo(point) ?
+          southWest :
+          point;
+      });
+
+      const standard = GeoPoint.fromMerc(tilePoint.southTile).toPlain();
+
+      expect(southWestPoint.toPlain()).toStrictEqual(standard);
+    });
+  });
+});
+
+describe('containsPoint', () => {
+  it('should return true if point contained by tile', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    const isContained = tilePoint.containsPoint({lat: 50, lng: -50});
+
+    expect(isContained).toBe(true);
+  });
+
+  it('should return false if point northern of tile', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    const isContained = tilePoint.containsPoint({lat: 80, lng: -50});
+
+    expect(isContained).toBe(false);
+  });
+
+  it('should return false if point southern of tile', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    const isContained = tilePoint.containsPoint({lat: -20, lng: -50});
+
+    expect(isContained).toBe(false);
+  });
+
+  it('should return false if point eastern of tile', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    const isContained = tilePoint.containsPoint({lat: 50, lng: 20});
+
+    expect(isContained).toBe(false);
+  });
+
+  it('should return false if point western of tile', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    const isContained = tilePoint.containsPoint({lat: 50, lng: -100});
+
+    expect(isContained).toBe(false);
+  });
+});
+
+describe('projectGeoPoints', () => {
+  it('should return projected point relative to the tile pixels', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    const [point] = tilePoint.projectGeoPoints([
+      new GeoPoint(0, -45),
+    ]);
+
+    expect(point.toPlain()).toStrictEqual({x: 128, y: 256});
+  });
+});
+
+describe('fromTile', () => {
+  it('should return instance of TileMercPoint', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    expect(tilePoint).toBeInstanceOf(TileMercPoint);
+  });
+
+  it('should return valid tile point', () => {
+    const tilePoint = TileMercPoint.fromTile(1, 1, 256, 256, 2);
+
+    const standard = new TileMercPoint(0.25, 0.25, 1, 1, 256, 256, 2).toPlain();
+
+    expect(tilePoint.toPlain()).toStrictEqual(standard);
+  });
+});
+
+describe('fromPlain', () => {
+  const tilePoint = TileMercPoint.fromPlain({
+    x: 0.25,
+    y: 0.25,
+    tileX: 1,
+    tileY: 1,
+    tileWidth: 256,
+    tileHeight: 256,
+    zoom: 2,
+  });
+
+  it('should return instance of TileMercPoint', () => {
+    expect(tilePoint).toBeInstanceOf(TileMercPoint);
+  });
+
+  it('should return valid tile point', () => {
+    const standard = new TileMercPoint(0.25, 0.25, 1, 1, 256, 256, 2).toPlain();
+
+    expect(tilePoint.toPlain()).toStrictEqual(standard);
+  });
+});
+
+describe('fromMerc', () => {
+  const tilePoint = TileMercPoint.fromMerc(
+    new MercPoint(0.25, 0.25),
+    256,
+    256,
+    2,
+  );
+
+  it('should return instance of TileMercPoint', () => {
+    expect(tilePoint).toBeInstanceOf(TileMercPoint);
+  });
+
+  it('should return valid tile point', () => {
+    const standard = new TileMercPoint(0.25, 0.25, 1, 1, 256, 256, 2).toPlain();
+
+    expect(tilePoint.toPlain()).toStrictEqual(standard);
+  });
 });

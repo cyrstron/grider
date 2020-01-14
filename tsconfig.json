@@ -34,6 +34,7 @@
     "node_modules/**/*", 
     "./.dist/**/*", 
     "./**/*.js",
-    "./**/*.test.ts"
+    "./**/*.test.ts",
+    "./src/tests/**/*"
   ]
 }

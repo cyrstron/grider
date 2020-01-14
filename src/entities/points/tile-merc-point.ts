@@ -200,7 +200,7 @@ export class TileMercPoint extends MercPoint implements Bounds {
     ]);
   }
 
-  containsPoint({lat, lng}: GeoPoint): boolean {
+  containsPoint({lat, lng}: grider.GeoPoint): boolean {
     return (
       lat <= this.northBound &&
       lat >= this.southBound &&
