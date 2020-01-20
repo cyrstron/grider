@@ -11,4 +11,9 @@ module.exports = {
   ],
   preset: 'ts-jest',
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  globals: {
+    'ts-jest': {
+      tsConfig: './tsconfig.test.json',
+    },
+  },
 };

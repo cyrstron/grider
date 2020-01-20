@@ -59,7 +59,8 @@ export class GeoPoint {
   }
 
   toSemiSphere(): GeoPoint {
-    const {lat, lng} = this.toMerc().toSemiSphereLiteral();
+    const {lat, lng} = this.toMerc()
+      .toSemiSphereLiteral();
 
     return new GeoPoint(lat, lng);
   }

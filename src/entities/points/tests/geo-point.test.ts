@@ -1,7 +1,6 @@
 import {GeoPoint} from '../geo-point';
 import {MercPoint} from '../merc-point';
 
-
 describe('instance', () => {
   describe('instance creation', () => {
     it('should create Point instance', () => {
@@ -9,7 +8,6 @@ describe('instance', () => {
     });
   });
 });
-
 
 describe('isEqual', () => {
   it('should return true for equal point', () => {
@@ -258,5 +256,113 @@ describe('isSouthernTo', () => {
 });
 
 describe('toPlain', () => {
-  it.todo('should return plain geo-point');
+  it('should return plain geo-point', () => {
+    const point = new GeoPoint(50, 60);
+
+    expect(point.toPlain()).toStrictEqual({lat: 50, lng: 60});
+  });
 });
+
+describe('toGeoJSON', () => {
+  it('should return GeoJSON point', () => {
+    const point = new GeoPoint(50, 60).toGeoJSON();
+    const standard = {type: 'Point', coordinates: [60, 50]};
+
+    expect(point).toStrictEqual(standard);
+  });
+});
+
+describe('fromPlain', () => {
+  it('should return GeoPoint instance', () => {
+    const point = GeoPoint.fromPlain({lat: 50, lng: 60});
+
+    expect(point).toBeInstanceOf(GeoPoint);
+  });
+
+  it('should return equivalent GeoPoint', () => {
+    const point = GeoPoint.fromPlain({lat: 50, lng: 60}).toPlain();
+
+    expect(point).toStrictEqual({lat: 50, lng: 60});
+  });
+});
+
+describe('fromGeoJSON', () => {
+  it('should return GeoPoint instance', () => {
+    const point = GeoPoint.fromGeoJSON({type: 'Point', coordinates: [60, 50]});
+
+    expect(point).toBeInstanceOf(GeoPoint);
+  });
+
+  it('should return equivalent GeoPoint', () => {
+    const point = GeoPoint.fromGeoJSON({type: 'Point', coordinates: [60, 50]}).toPlain();
+
+    expect(point).toStrictEqual({lat: 50, lng: 60});
+  });
+});
+
+describe('createFormatted', () => {
+  it('should return GeoPoint instance', () => {
+    const point = GeoPoint.createFormatted(50, 60);
+
+    expect(point).toBeInstanceOf(GeoPoint);
+  });
+
+  it('should return formatted GeoPoint', () => {
+    const point = GeoPoint.createFormatted(50.00000000000001, 60);
+
+    expect(point.toPlain()).toStrictEqual({lat: 50, lng: 60});
+  });
+
+  describe('when coordinates are not valid', () => {
+    it('should crop latitude GeoPoint', () => {
+      const point = GeoPoint.createFormatted(100, 60);
+
+      expect(point.toPlain()).toStrictEqual({lat: 90, lng: 60});
+    });
+
+    it('should reduce longitude GeoPoint', () => {
+      const point = GeoPoint.createFormatted(50, 350);
+
+      expect(point.toPlain()).toStrictEqual({lat: 50, lng: -10});
+    });
+  });
+});
+
+describe('fromUnsafeCoords', () => {
+  it('should return GeoPoint instance', () => {
+    const point = GeoPoint.fromUnsafeCoords(50, 60);
+
+    expect(point).toBeInstanceOf(GeoPoint);
+  });
+
+  describe('when coordinates are not valid', () => {
+    it('should reduce latitude GeoPoint', () => {
+      const point = GeoPoint.fromUnsafeCoords(100, 60);
+
+      expect(point.toPlain()).toStrictEqual({lat: 80, lng: 60});
+    });
+
+    it('should reduce longitude GeoPoint', () => {
+      const point = GeoPoint.fromUnsafeCoords(60, 350);
+
+      expect(point.toPlain()).toStrictEqual({lat: 60, lng: -10});
+    });
+  });
+});
+
+describe('fromMerc', () => {
+  it('should return GeoPoint instance', () => {
+    const mercPoint = new MercPoint(0.4, 0.4);
+    const point = GeoPoint.fromMerc(mercPoint);
+
+    expect(point).toBeInstanceOf(GeoPoint);
+  });
+
+  it('should return valid GeoPoint', () => {
+    const mercPoint = new MercPoint(0.4, 0.4);
+    const point = GeoPoint.fromMerc(mercPoint);
+
+    expect(point.toPlain()).toStrictEqual({lat: 33.84122032047678, lng: -35.99999999999999});
+  });
+});
+

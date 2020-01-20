@@ -1,5 +1,4 @@
 import {GridParams} from '../../../grid-params';
-import {GeoPolygon} from '../../../polygons/geo-polygon';
 import {GeoPoint} from '../../geo-point';
 
 export function correctForGrid(
@@ -24,19 +23,9 @@ export function correctForGeo(
   if (correction === 'merc') {
     const {lat, lng} = point;
 
-    return new GeoPoint(lat, lng * 2).fromSemiSphere().toFormatted();
+    return new GeoPoint(lat, lng * 2).fromSemiSphere()
+      .toFormatted();
   } else {
     return point.toFormatted();
-  }
-}
-
-export function correctPoly(
-  poly: GeoPolygon,
-  {correction}: GridParams,
-): GeoPolygon {
-  if (correction === 'merc') {
-    return poly;
-  } else {
-    return poly;
   }
 }

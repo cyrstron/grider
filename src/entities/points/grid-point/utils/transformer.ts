@@ -6,7 +6,7 @@ import {GridParams} from '../../../grid-params';
 import {GeoPoint} from '../../geo-point';
 import {GridPoint} from '../grid-point';
 
-function rotateToGrid(
+export function rotateToGrid(
   point: GeoPoint,
   axisParams: grider.GridAxis,
   isHorizontal: boolean,
@@ -26,7 +26,7 @@ function rotateToGrid(
   return axisValue;
 }
 
-function rotateToGeo(
+export function rotateToGeo(
   point: GridPoint,
   axisParams: grider.Axis,
 ): number {
@@ -58,7 +58,7 @@ function rotateToGeo(
   return axis;
 }
 
-function toGridScale(
+export function toGridScale(
   value: number,
   gridParams: grider.GridParams,
 ): number {
@@ -68,7 +68,7 @@ function toGridScale(
   return result;
 }
 
-function toGeoScale(
+export function toGeoScale(
   value: number,
   gridParams: grider.GridParams,
 ): number {
