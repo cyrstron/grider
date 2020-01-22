@@ -46,20 +46,20 @@ export class GridPoint {
     return this;
   }
 
-  isEasternTo(center: GridPoint): boolean {
-    return this.toGeo().isEasternTo(center.toGeo());
+  isEasternTo(point: GridPoint): boolean {
+    return this.toGeo().isEasternTo(point.toGeo());
   }
 
-  isWesternTo(center: GridPoint): boolean {
-    return this.toGeo().isWesternTo(center.toGeo());
+  isWesternTo(point: GridPoint): boolean {
+    return this.toGeo().isWesternTo(point.toGeo());
   }
 
-  isNorthernTo(center: GridPoint): boolean {
-    return this.toGeo().isNorthernTo(center.toGeo());
+  isNorthernTo(point: GridPoint): boolean {
+    return this.toGeo().isNorthernTo(point.toGeo());
   }
 
-  isSouthernTo(center: GridPoint): boolean {
-    return this.toGeo().isSouthernTo(center.toGeo());
+  isSouthernTo(point: GridPoint): boolean {
+    return this.toGeo().isSouthernTo(point.toGeo());
   }
 
   isEqual(point: GridPoint): boolean {

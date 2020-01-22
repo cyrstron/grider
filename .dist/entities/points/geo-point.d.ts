@@ -2,9 +2,6 @@ import { MercPoint } from './merc-point';
 export declare class GeoPoint {
     lat: number;
     lng: number;
-    static createFormatted(lat: number, lng: number): GeoPoint;
-    static fromUnsafeCoords(lat: number, lng: number): GeoPoint;
-    static fromMerc(point: MercPoint): GeoPoint;
     constructor(lat: number, lng: number);
     isEqual(point: GeoPoint): boolean;
     isCloserThroughAntiMeridian(point: GeoPoint): boolean;
@@ -22,4 +19,7 @@ export declare class GeoPoint {
     toGeoJSON(): grider.GeoJSONPoint;
     static fromPlain({ lat, lng }: grider.GeoPoint): GeoPoint;
     static fromGeoJSON({ coordinates: [lng, lat] }: grider.GeoJSONPoint): GeoPoint;
+    static createFormatted(lat: number, lng: number): GeoPoint;
+    static fromUnsafeCoords(lat: number, lng: number): GeoPoint;
+    static fromMerc(point: MercPoint): GeoPoint;
 }

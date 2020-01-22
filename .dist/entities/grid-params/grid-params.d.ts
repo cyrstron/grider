@@ -1,6 +1,5 @@
 import { TileMercPoint } from '../points/tile-merc-point';
 export declare class GridParams {
-    static fromConfig({ isHorizontal, type, correction, cellSize, }: grider.GridConfig): GridParams;
     isHorizontal: boolean;
     type: grider.ShapeType;
     axes: grider.GridAxis[];
@@ -13,4 +12,5 @@ export declare class GridParams {
     isEqual(params: GridParams): boolean;
     toPlain(): grider.GridParams;
     static fromPlain(params: grider.GridParams): GridParams;
+    static fromConfig({ isHorizontal, type, correction, cellSize, }: grider.GridConfig): GridParams;
 }
