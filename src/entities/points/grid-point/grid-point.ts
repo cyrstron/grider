@@ -10,21 +10,6 @@ import {
 } from './utils/transformer';
 
 export class GridPoint {
-  static fromGeo(point: GeoPoint, params: GridParams): GridPoint {
-    const correctedGeoPoint = correctForGrid(point, params);
-    const {
-      axes: axesParams,
-    } = params;
-
-    const {i, j, k} = axesParams.reduce((gridPoint: any, axisParams) => {
-      gridPoint[axisParams.name] = toGrid(correctedGeoPoint, axisParams, params);
-
-      return gridPoint;
-    }, {}) as grider.GridPoint;
-
-    return new GridPoint(params, i, j, k);
-  }
-
   i: number;
   j: number;
   k?: number;
@@ -97,5 +82,20 @@ export class GridPoint {
     }
 
     return 0 === Math.round(diff);
+  }
+
+  static fromGeo(point: GeoPoint, params: GridParams): GridPoint {
+    const correctedGeoPoint = correctForGrid(point, params);
+    const {
+      axes: axesParams,
+    } = params;
+
+    const {i, j, k} = axesParams.reduce((gridPoint: any, axisParams) => {
+      gridPoint[axisParams.name] = toGrid(correctedGeoPoint, axisParams, params);
+
+      return gridPoint;
+    }, {}) as grider.GridPoint;
+
+    return new GridPoint(params, i, j, k);
   }
 }

@@ -1,4 +1,5 @@
-import {WebWorkerMock} from '../../tests/mocks/web-worker-mock';
+// eslint-disable-next-line jest/no-mocks-import
+import {WebWorkerMock} from '../../__mocks__/web-worker-mock';
 import {CtxService} from '../ctx-service';
 
 function createCtxService(

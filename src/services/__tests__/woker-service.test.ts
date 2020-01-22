@@ -1,5 +1,6 @@
+// eslint-disable-next-line jest/no-mocks-import
+import {WebWorkerMock} from '../../__mocks__/web-worker-mock';
 import {WorkerService, WorkerMessage} from '../worker-service';
-import {WebWorkerMock} from '../../tests/mocks/web-worker-mock';
 
 function createWorkerService(
   worker: Worker = new WebWorkerMock(),
