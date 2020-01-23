@@ -71,10 +71,40 @@ export class GridPoint {
     return correctForGeo(geoPoint, this.params);
   }
 
-  onSameAxis(prevPoint: GridPoint, nextPoint: GridPoint): boolean {
+  isCloserThroughAntiMeridian(point: GridPoint): boolean {
+    const pointA = this.toGeo();
+    const pointB = point.toGeo();
+
+    return pointA.isCloserThroughAntiMeridian(pointB);
+  }
+
+  toOppositeHemisphere(): GridPoint {
+    const geoPoint = this.toGeo().toOppositeHemisphere();
+
+    return GridPoint.fromGeo(geoPoint, this.params);
+  }
+
+  onSameLineWith(prevPoint: GridPoint, nextPoint: GridPoint): boolean {
+    let pointA = this as GridPoint;
+    let pointB = prevPoint as GridPoint;
+    let pointC = nextPoint as GridPoint;
+
+    if (
+      pointA.isCloserThroughAntiMeridian(pointB) ||
+      pointA.isCloserThroughAntiMeridian(pointC)
+    ) {
+      pointA = pointA.toOppositeHemisphere();
+      pointB = pointB.toOppositeHemisphere();
+      pointC = pointC.toOppositeHemisphere();
+
+      console.log(pointA);
+      console.log(pointB);
+      console.log(pointC);
+    }
+
     let diff = (
-      (this.i - prevPoint.i) * (this.j - nextPoint.j) -
-      (this.i - nextPoint.i) * (this.j - prevPoint.j)
+      (pointA.i - pointB.i) * (pointA.j - pointC.j) -
+      (pointA.i - pointC.i) * (pointA.j - pointB.j)
     );
 
     if (this.params.type === 'hex') {
