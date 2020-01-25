@@ -1,5 +1,5 @@
 import {GridParams} from '../../grid-params';
-import {GridPoint} from '../grid-point';
+import {GridPoint} from '.';
 import {GeoPoint} from '../geo-point';
 
 function createParams(config: Partial<grider.GridConfig> = {}): GridParams {
@@ -288,6 +288,193 @@ describe('onSameLineWith', () => {
   });
 });
 
+describe('toPlain', () => {
+  describe('when grid is rectagonal', () => {
+    const params = createParams();
+    const point = new GridPoint(params, 1, 2);
+
+    it('should return plain grid point representation', () => {
+      expect(point.toPlain()).toStrictEqual({
+        i: 1,
+        j: 2,
+      });
+    });
+  });
+
+  describe('when grid is hexagonal', () => {
+    const params = createParams({type: 'hex'});
+    const point = new GridPoint(params, 1, 2, -3);
+
+    it('should return plain grid point representation', () => {
+      expect(point.toPlain()).toStrictEqual({
+        i: 1,
+        j: 2,
+        k: -3,
+      });
+    });
+  });
+});
+
+describe('fromPlain', () => {
+  it('should return a grid point', () => {
+    const params = createParams();
+    const point = GridPoint.fromPlain({
+      i: 1,
+      j: 2,
+    }, params);
+
+    expect(point).toBeInstanceOf(GridPoint);
+  });
+
+  describe('when grid is rectagonal', () => {
+    const params = createParams();
+    const point = GridPoint.fromPlain({
+      i: 1,
+      j: 2,
+    }, params);
+
+    it('should has same axis values', () => {
+      expect(point.toPlain()).toStrictEqual({
+        i: 1,
+        j: 2,
+      });
+    });
+  });
+
+  describe('when grid is hexagonal', () => {
+    const params = createParams({type: 'hex'});
+    const point = GridPoint.fromPlain({
+      i: 1,
+      j: 2,
+      k: -3,
+    }, params);
+
+    it('should has same axis values', () => {
+      expect(point.toPlain()).toStrictEqual({
+        i: 1,
+        j: 2,
+        k: -3,
+      });
+    });
+  });
+});
+
 describe('fromGeo', () => {
-  it.todo('should convert grid point to geo point');
+  it('should return grid point', () => {
+    const params = createParams();
+    const point = GridPoint.fromGeo(
+      new GeoPoint(50, 50),
+      params,
+    );
+
+    expect(point).toBeInstanceOf(GridPoint);
+  });
+
+  describe('when the grid is rectagonal & correction is none', () => {
+    const params = createParams({cellSize: 1000});
+    const point = GridPoint.fromGeo(
+      new GeoPoint(50, 50),
+      params,
+    );
+
+    it('should convert geo point to grid point', () => {
+      expect(point.toPlain()).toStrictEqual({
+        i: 5555.555555555556,
+        j: 5555.555555555556,
+      });
+    });
+
+    it('should be interconvertable with toGeo', () => {
+      const geoPoint = point.toGeo();
+
+      expect(geoPoint.toPlain()).toStrictEqual({
+        lat: 50,
+        lng: 50,
+      });
+    });
+  });
+
+  describe('when the grid is hexagonal & correction is none', () => {
+    const params = createParams({
+      cellSize: 1000,
+      type: 'hex',
+    });
+    const point = GridPoint.fromGeo(
+      new GeoPoint(50, 50),
+      params,
+    );
+
+    it('should convert geo point to grid point', () => {
+      expect(point.toPlain()).toStrictEqual({
+        i: 6415.002990995842,
+        j: 2348.054060057637,
+        k: -8763.05705105348,
+      });
+    });
+
+    it('should be interconvertable with toGeo', () => {
+      const geoPoint = point.toGeo();
+
+      expect(geoPoint.toPlain()).toStrictEqual({
+        lat: 50,
+        lng: 50,
+      });
+    });
+  });
+
+  describe('when the grid is rectagonal & correction is mercator', () => {
+    const params = createParams({
+      cellSize: 1000,
+      correction: 'merc',
+    });
+    const point = GridPoint.fromGeo(
+      new GeoPoint(50, 50),
+      params,
+    );
+
+    it('should convert geo point to grid point', () => {
+      expect(point.toPlain()).toStrictEqual({
+        i: 6434.209015151259,
+        j: 5555.555555555554,
+      });
+    });
+
+    it('should be interconvertable with toGeo', () => {
+      const geoPoint = point.toGeo();
+
+      expect(geoPoint.toPlain()).toStrictEqual({
+        lat: 50,
+        lng: 50,
+      });
+    });
+  });
+
+  describe('when the grid is hexagonal & correction is mercator', () => {
+    const params = createParams({
+      cellSize: 1000,
+      type: 'hex',
+      correction: 'merc',
+    });
+    const point = GridPoint.fromGeo(
+      new GeoPoint(50, 50),
+      params,
+    );
+
+    it('should convert geo point to grid point', () => {
+      expect(point.toPlain()).toStrictEqual({
+        i: 7429.584613839794,
+        j: 1840.7632486356597,
+        k: -9270.347862475453,
+      });
+    });
+
+    it('should be interconvertable with toGeo', () => {
+      const geoPoint = point.toGeo();
+
+      expect(geoPoint.toPlain()).toStrictEqual({
+        lat: 50,
+        lng: 50,
+      });
+    });
+  });
 });

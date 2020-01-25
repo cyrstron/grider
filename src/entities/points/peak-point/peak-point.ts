@@ -12,7 +12,8 @@ export class PeakPoint extends GridPoint {
         const geoPoint = new PeakPoint(this.params, i, j, k).toGeo();
         const reduced = GridPoint.fromGeo(geoPoint, this.params);
 
-        return new PeakPoint(this.params, reduced.i, reduced.j, reduced.k);
+        return new PeakPoint(this.params, reduced.i, reduced.j, reduced.k)
+          .toFormatted();
       });
   }
 
@@ -20,20 +21,14 @@ export class PeakPoint extends GridPoint {
     return this.nearestPeaks.map((peak) => peak.toGeo());
   }
 
-  static fromGeo(point: GeoPoint, params: GridParams): PeakPoint {
-    const {i, j, k} = GridPoint.fromGeo(point, params);
-
-    return new PeakPoint(params, i, j, k);
-  }
-
   toFormatted(): PeakPoint {
     const {params, i, j, k} = this;
 
     return new PeakPoint(
       params,
-      +i.toFixed(6),
-      +j.toFixed(6),
-      k && +k.toFixed(6),
+      +i.toFixed(3),
+      +j.toFixed(3),
+      k && +k.toFixed(3),
     );
   }
 
@@ -53,5 +48,18 @@ export class PeakPoint extends GridPoint {
 
       return okPoints;
     }, [] as PeakPoint[]);
+  }
+
+  static fromPlain(
+    {i, j, k}: grider.GridPoint,
+    params: GridParams,
+  ): PeakPoint {
+    return new PeakPoint(params, i, j, k);
+  }
+
+  static fromGeo(point: GeoPoint, params: GridParams): PeakPoint {
+    const {i, j, k} = GridPoint.fromGeo(point, params);
+
+    return new PeakPoint(params, i, j, k);
   }
 }

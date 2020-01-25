@@ -44,14 +44,14 @@ export class CenterPoint extends GridPoint {
     } = getAll(this);
 
     return {
-      south: south && CenterPoint.fromObject(south, this.params),
-      north: north && CenterPoint.fromObject(north, this.params),
-      west: west && CenterPoint.fromObject(west, this.params),
-      east: east && CenterPoint.fromObject(east, this.params),
-      southEast: CenterPoint.fromObject(southEast, this.params),
-      southWest: CenterPoint.fromObject(southWest, this.params),
-      northEast: CenterPoint.fromObject(northEast, this.params),
-      northWest: CenterPoint.fromObject(northWest, this.params),
+      south: south && CenterPoint.fromPlain(south, this.params),
+      north: north && CenterPoint.fromPlain(north, this.params),
+      west: west && CenterPoint.fromPlain(west, this.params),
+      east: east && CenterPoint.fromPlain(east, this.params),
+      southEast: CenterPoint.fromPlain(southEast, this.params),
+      southWest: CenterPoint.fromPlain(southWest, this.params),
+      northEast: CenterPoint.fromPlain(northEast, this.params),
+      northWest: CenterPoint.fromPlain(northWest, this.params),
     };
   }
 
@@ -67,9 +67,9 @@ export class CenterPoint extends GridPoint {
     } = getNorth(this);
 
     return {
-      northWest: northWest && CenterPoint.fromObject(northWest, this.params),
-      north: north && CenterPoint.fromObject(north, this.params),
-      northEast: northEast && CenterPoint.fromObject(northEast, this.params),
+      northWest: northWest && CenterPoint.fromPlain(northWest, this.params),
+      north: north && CenterPoint.fromPlain(north, this.params),
+      northEast: northEast && CenterPoint.fromPlain(northEast, this.params),
     };
   }
 
@@ -85,9 +85,9 @@ export class CenterPoint extends GridPoint {
     } = getSouth(this);
 
     return {
-      southWest: southWest && CenterPoint.fromObject(southWest, this.params),
-      south: south && CenterPoint.fromObject(south, this.params),
-      southEast: southEast && CenterPoint.fromObject(southEast, this.params),
+      southWest: southWest && CenterPoint.fromPlain(southWest, this.params),
+      south: south && CenterPoint.fromPlain(south, this.params),
+      southEast: southEast && CenterPoint.fromPlain(southEast, this.params),
     };
   }
 
@@ -103,9 +103,9 @@ export class CenterPoint extends GridPoint {
     } = getWest(this);
 
     return {
-      southWest: southWest && CenterPoint.fromObject(southWest, this.params),
-      west: west && CenterPoint.fromObject(west, this.params),
-      northWest: northWest && CenterPoint.fromObject(northWest, this.params),
+      southWest: southWest && CenterPoint.fromPlain(southWest, this.params),
+      west: west && CenterPoint.fromPlain(west, this.params),
+      northWest: northWest && CenterPoint.fromPlain(northWest, this.params),
     };
   }
 
@@ -121,9 +121,9 @@ export class CenterPoint extends GridPoint {
     } = getEast(this);
 
     return {
-      southEast: southEast && CenterPoint.fromObject(southEast, this.params),
-      east: east && CenterPoint.fromObject(east, this.params),
-      northEast: northEast && CenterPoint.fromObject(northEast, this.params),
+      southEast: southEast && CenterPoint.fromPlain(southEast, this.params),
+      east: east && CenterPoint.fromPlain(east, this.params),
+      northEast: northEast && CenterPoint.fromPlain(northEast, this.params),
     };
   }
 
@@ -135,7 +135,7 @@ export class CenterPoint extends GridPoint {
     } = getNorthEast(this);
 
     return {
-      northEast: CenterPoint.fromObject(northEast, this.params),
+      northEast: CenterPoint.fromPlain(northEast, this.params),
     };
   }
 
@@ -147,7 +147,7 @@ export class CenterPoint extends GridPoint {
     } = getSouthWest(this);
 
     return {
-      southWest: CenterPoint.fromObject(southWest, this.params),
+      southWest: CenterPoint.fromPlain(southWest, this.params),
     };
   }
 
@@ -159,7 +159,7 @@ export class CenterPoint extends GridPoint {
     } = getNorthWest(this);
 
     return {
-      northWest: CenterPoint.fromObject(northWest, this.params),
+      northWest: CenterPoint.fromPlain(northWest, this.params),
     };
   }
 
@@ -171,15 +171,8 @@ export class CenterPoint extends GridPoint {
     } = getSouthEast(this);
 
     return {
-      southEast: CenterPoint.fromObject(southEast, this.params),
+      southEast: CenterPoint.fromPlain(southEast, this.params),
     };
-  }
-
-  static fromObject(
-    {i, j, k}: grider.GridPoint,
-    params: GridParams,
-  ): CenterPoint {
-    return new CenterPoint(params, i, j, k);
   }
 
   static fromGeo(point: GeoPoint, params: GridParams): CenterPoint {
@@ -247,14 +240,6 @@ export class CenterPoint extends GridPoint {
       .toGeo();
 
     return CenterPoint.fromGeo(centerGeo, this.params);
-  }
-
-  toPlain(): grider.GridPoint {
-    return {
-      i: this.i,
-      j: this.j,
-      k: this.k,
-    };
   }
 
   static fromPlain(

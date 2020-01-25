@@ -1,9 +1,28 @@
 import {PeakPoint} from '../';
 
-function nearestHexPeaks(
+export function nearestRectPeaks(
+  {i, j}: PeakPoint,
+): grider.GridPoint[] {
+  return [{
+    i: i + 1,
+    j: j - 1,
+  }, {
+    i: i + 1,
+    j: j + 1,
+  }, {
+    i: i - 1,
+    j: j + 1,
+  }, {
+    i: i - 1,
+    j: j - 1,
+  }];
+}
+
+export function nearestHexPeaks(
   {i, j, k}: PeakPoint,
 ): grider.GridPoint[] {
   const iDiff = Math.round((i % 1) * 3);
+
   if (iDiff === 2) {
     return [{
       i: i + (2 / 3),
@@ -33,24 +52,6 @@ function nearestHexPeaks(
       k: k as number - (2 / 3),
     }];
   }
-}
-
-function nearestRectPeaks(
-  {i, j}: PeakPoint,
-): grider.GridPoint[] {
-  return [{
-    i: i + 1,
-    j: j - 1,
-  }, {
-    i: i + 1,
-    j: j + 1,
-  }, {
-    i: i - 1,
-    j: j + 1,
-  }, {
-    i: i - 1,
-    j: j - 1,
-  }];
 }
 
 export function calcNearestPeaks(

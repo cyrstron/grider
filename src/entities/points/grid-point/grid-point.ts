@@ -96,10 +96,6 @@ export class GridPoint {
       pointA = pointA.toOppositeHemisphere();
       pointB = pointB.toOppositeHemisphere();
       pointC = pointC.toOppositeHemisphere();
-
-      console.log(pointA);
-      console.log(pointB);
-      console.log(pointC);
     }
 
     let diff = (
@@ -112,6 +108,26 @@ export class GridPoint {
     }
 
     return 0 === Math.round(diff);
+  }
+
+  toPlain(): grider.GridPoint {
+    const plain: grider.GridPoint = {
+      i: this.i,
+      j: this.j,
+    };
+
+    if (this.k !== undefined) {
+      plain.k = this.k;
+    }
+
+    return plain;
+  }
+
+  static fromPlain(
+    {i, j, k}: grider.GridPoint,
+    params: GridParams,
+  ): GridPoint {
+    return new GridPoint(params, i, j, k);
   }
 
   static fromGeo(point: GeoPoint, params: GridParams): GridPoint {
