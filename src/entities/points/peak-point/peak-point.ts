@@ -12,8 +12,7 @@ export class PeakPoint extends GridPoint {
         const geoPoint = new PeakPoint(this.params, i, j, k).toGeo();
         const reduced = GridPoint.fromGeo(geoPoint, this.params);
 
-        return new PeakPoint(this.params, reduced.i, reduced.j, reduced.k)
-          .toFormatted();
+        return new PeakPoint(this.params, reduced.i, reduced.j, reduced.k);
       });
   }
 
