@@ -10,21 +10,6 @@ import {
 } from './utils/transformer';
 
 export class GridPoint {
-  static fromGeo(point: GeoPoint, params: GridParams): GridPoint {
-    const correctedGeoPoint = correctForGrid(point, params);
-    const {
-      axes: axesParams,
-    } = params;
-
-    const {i, j, k} = axesParams.reduce((gridPoint: any, axisParams) => {
-      gridPoint[axisParams.name] = toGrid(correctedGeoPoint, axisParams, params);
-
-      return gridPoint;
-    }, {}) as grider.GridPoint;
-
-    return new GridPoint(params, i, j, k);
-  }
-
   i: number;
   j: number;
   k?: number;
@@ -46,20 +31,20 @@ export class GridPoint {
     return this;
   }
 
-  isEasternTo(center: GridPoint): boolean {
-    return this.toGeo().isEasternTo(center.toGeo());
+  isEasternTo(point: GridPoint): boolean {
+    return this.toGeo().isEasternTo(point.toGeo());
   }
 
-  isWesternTo(center: GridPoint): boolean {
-    return this.toGeo().isWesternTo(center.toGeo());
+  isWesternTo(point: GridPoint): boolean {
+    return this.toGeo().isWesternTo(point.toGeo());
   }
 
-  isNorthernTo(center: GridPoint): boolean {
-    return this.toGeo().isNorthernTo(center.toGeo());
+  isNorthernTo(point: GridPoint): boolean {
+    return this.toGeo().isNorthernTo(point.toGeo());
   }
 
-  isSouthernTo(center: GridPoint): boolean {
-    return this.toGeo().isSouthernTo(center.toGeo());
+  isSouthernTo(point: GridPoint): boolean {
+    return this.toGeo().isSouthernTo(point.toGeo());
   }
 
   isEqual(point: GridPoint): boolean {
@@ -86,10 +71,36 @@ export class GridPoint {
     return correctForGeo(geoPoint, this.params);
   }
 
-  onSameAxis(prevPoint: GridPoint, nextPoint: GridPoint): boolean {
+  isCloserThroughAntiMeridian(point: GridPoint): boolean {
+    const pointA = this.toGeo();
+    const pointB = point.toGeo();
+
+    return pointA.isCloserThroughAntiMeridian(pointB);
+  }
+
+  toOppositeHemisphere(): GridPoint {
+    const geoPoint = this.toGeo().toOppositeHemisphere();
+
+    return GridPoint.fromGeo(geoPoint, this.params);
+  }
+
+  onSameLineWith(prevPoint: GridPoint, nextPoint: GridPoint): boolean {
+    let pointA = this as GridPoint;
+    let pointB = prevPoint as GridPoint;
+    let pointC = nextPoint as GridPoint;
+
+    if (
+      pointA.isCloserThroughAntiMeridian(pointB) ||
+      pointA.isCloserThroughAntiMeridian(pointC)
+    ) {
+      pointA = pointA.toOppositeHemisphere();
+      pointB = pointB.toOppositeHemisphere();
+      pointC = pointC.toOppositeHemisphere();
+    }
+
     let diff = (
-      (this.i - prevPoint.i) * (this.j - nextPoint.j) -
-      (this.i - nextPoint.i) * (this.j - prevPoint.j)
+      (pointA.i - pointB.i) * (pointA.j - pointC.j) -
+      (pointA.i - pointC.i) * (pointA.j - pointB.j)
     );
 
     if (this.params.type === 'hex') {
@@ -97,5 +108,40 @@ export class GridPoint {
     }
 
     return 0 === Math.round(diff);
+  }
+
+  toPlain(): grider.GridPoint {
+    const plain: grider.GridPoint = {
+      i: this.i,
+      j: this.j,
+    };
+
+    if (this.k !== undefined) {
+      plain.k = this.k;
+    }
+
+    return plain;
+  }
+
+  static fromPlain(
+    {i, j, k}: grider.GridPoint,
+    params: GridParams,
+  ): GridPoint {
+    return new GridPoint(params, i, j, k);
+  }
+
+  static fromGeo(point: GeoPoint, params: GridParams): GridPoint {
+    const correctedGeoPoint = correctForGrid(point, params);
+    const {
+      axes: axesParams,
+    } = params;
+
+    const {i, j, k} = axesParams.reduce((gridPoint: any, axisParams) => {
+      gridPoint[axisParams.name] = toGrid(correctedGeoPoint, axisParams, params);
+
+      return gridPoint;
+    }, {}) as grider.GridPoint;
+
+    return new GridPoint(params, i, j, k);
   }
 }

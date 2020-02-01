@@ -44,7 +44,7 @@ function checkPoint(
       gridSegment.forEach((point, index) => {
         if (index === indexA || index === indexB) return;
 
-        if (point.onSameAxis(startPoint, endPoint)) {
+        if (point.onSameLineWith(startPoint, endPoint)) {
           pointsInRow.push(
             [indexA, indexB, index]
               .sort((a, b) => a - b)
@@ -182,7 +182,7 @@ function simplifyHexFigure(
     const prevPoint = simplifiedGrid[prevIndex];
     const nextPoint = simplifiedGrid[nextIndex];
 
-    if (!point.onSameAxis(prevPoint, nextPoint)) {
+    if (!point.onSameLineWith(prevPoint, nextPoint)) {
       cleared.push(simplified[index]);
     }
 

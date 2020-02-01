@@ -29,6 +29,9 @@ module.exports = (env, argv) => ({
         test: /\.ts$/,
         loader: 'ts-loader',
         exclude: [/\.worker\.ts$/],
+        options: {
+          configFile: path.resolve(__dirname, 'tsconfig.build.json'),
+        },
       },
     ],
   },

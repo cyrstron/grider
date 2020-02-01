@@ -8,6 +8,12 @@ declare type Bounds = {
     [key in grider.Cardinal]: GeoSegment;
 };
 export declare class TileMercPoint extends MercPoint implements Bounds {
+    tileX: number;
+    tileY: number;
+    tileWidth: number;
+    tileHeight: number;
+    zoom: number;
+    constructor(x: number, y: number, tileX: number, tileY: number, tileWidth: number, tileHeight: number, zoom: number);
     readonly zoomCoofX: number;
     readonly zoomCoofY: number;
     readonly northTile: TileMercPoint;
@@ -22,19 +28,10 @@ export declare class TileMercPoint extends MercPoint implements Bounds {
     readonly south: GeoSegment;
     readonly east: GeoSegment;
     readonly west: GeoSegment;
-    static fromTile(tileX: number, tileY: number, tileWidth: number, tileHeight: number, zoom: number): TileMercPoint;
-    static fromPlain({ x, y, tileX, tileY, tileWidth, tileHeight, zoom, }: grider.TilePoint): TileMercPoint;
-    static fromMerc(mercPoint: MercPoint, tileWidth: number, tileHeight: number, zoom: number): TileMercPoint;
-    tileX: number;
-    tileY: number;
-    tileWidth: number;
-    tileHeight: number;
-    zoom: number;
-    constructor(x: number, y: number, tileX: number, tileY: number, tileWidth: number, tileHeight: number, zoom: number);
     gridPatternStartPoint(params: GridParams): Point;
     startPointDiff(startTilePoint: TileMercPoint): Point;
     toPoly(): GeoPolygon;
-    containsPoint({ lat, lng }: GeoPoint): boolean;
+    containsPoint({ lat, lng }: grider.GeoPoint): boolean;
     projectGeoPoints(points: GeoPoint[]): Point[];
     toPlain(): {
         x: number;
@@ -45,5 +42,8 @@ export declare class TileMercPoint extends MercPoint implements Bounds {
         tileHeight: number;
         tileWidth: number;
     };
+    static fromTile(tileX: number, tileY: number, tileWidth: number, tileHeight: number, zoom: number): TileMercPoint;
+    static fromPlain({ x, y, tileX, tileY, tileWidth, tileHeight, zoom, }: grider.TilePoint): TileMercPoint;
+    static fromMerc(mercPoint: MercPoint, tileWidth: number, tileHeight: number, zoom: number): TileMercPoint;
 }
 export {};

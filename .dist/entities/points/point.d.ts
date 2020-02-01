@@ -7,11 +7,11 @@ export declare class Point {
     distanceToPoint({ x, y }: grider.Point): number;
     toFormatted(): Point;
     toPlain(): grider.Point;
-    static fromPlain({ x, y }: grider.Point): Point;
     containedByLine(line: Line): boolean;
     containedBySegment(segment: Segment): boolean;
     isEqual(point: Point): boolean;
     distanceToLine(line: Line): number;
     closestOnLine(line: Line): Point;
     closestOnSegment(segment: Segment): Point;
+    static fromPlain({ x, y }: grider.Point): Point;
 }

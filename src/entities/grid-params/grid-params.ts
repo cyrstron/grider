@@ -8,30 +8,6 @@ import {
 } from './utils';
 
 export class GridParams {
-  static fromConfig({
-    isHorizontal = false,
-    type,
-    correction,
-    cellSize,
-  }: grider.GridConfig): GridParams {
-    const orientation = isHorizontal ? 'horizontal' : 'vertical';
-    const initSizeCoof: number = initCoofs[type][correction][orientation];
-
-    const axes = axesParams[type];
-    const geoAxes = calcAxesParams(isHorizontal, type);
-    const initSize = calcInitialCellWidth(cellSize, initSizeCoof);
-    const initHeight = calcInitialCellHeight(cellSize);
-
-    return new GridParams({
-      isHorizontal,
-      type,
-      axes,
-      geoAxes,
-      initSize,
-      initHeight,
-      correction,
-    });
-  }
   isHorizontal: boolean;
   type: grider.ShapeType;
   axes: grider.GridAxis[];
@@ -98,5 +74,30 @@ export class GridParams {
 
   static fromPlain(params: grider.GridParams): GridParams {
     return new GridParams(params);
+  }
+
+  static fromConfig({
+    isHorizontal = false,
+    type,
+    correction,
+    cellSize,
+  }: grider.GridConfig): GridParams {
+    const orientation = isHorizontal ? 'horizontal' : 'vertical';
+    const initSizeCoof: number = initCoofs[type][correction][orientation];
+
+    const axes = axesParams[type];
+    const geoAxes = calcAxesParams(isHorizontal, type);
+    const initSize = calcInitialCellWidth(cellSize, initSizeCoof);
+    const initHeight = calcInitialCellHeight(cellSize);
+
+    return new GridParams({
+      isHorizontal,
+      type,
+      axes,
+      geoAxes,
+      initSize,
+      initHeight,
+      correction,
+    });
   }
 }
