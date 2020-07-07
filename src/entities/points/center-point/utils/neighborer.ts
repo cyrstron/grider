@@ -38,7 +38,7 @@ export function getNorthWest(
   }
 
   return {
-    northWest: {i, j, k},
+    northWest: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -60,7 +60,7 @@ export function getNorthEast(
   }
 
   return {
-    northEast: {i, j, k},
+    northEast: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -82,7 +82,7 @@ export function getSouthWest(
   }
 
   return {
-    southWest: {i, j, k},
+    southWest: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -113,7 +113,7 @@ export function getSouthEast(
   }
 
   return {
-    southEast: {i, j, k},
+    southEast: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -147,7 +147,7 @@ export function getNorth(
   }
 
   return {
-    north: {i, j, k},
+    north: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -170,10 +170,10 @@ export function getSouth(
     i -= 1;
   } else if (type === 'rect' && mainGeoAxis === 'lng') {
     j -= 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else if (type === 'hex' && mainGeoAxis === 'lat') {
     j -= 1;
     k = k as number + 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lat') {
+  } else if (type === 'hex' && mainGeoAxis === 'lng') {
     return {
       ...getSouthEast(center),
       ...getSouthWest(center),
@@ -181,7 +181,7 @@ export function getSouth(
   }
 
   return {
-    south: {i, j, k},
+    south: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -204,18 +204,18 @@ export function getEast(
     j += 1;
   } else if (type === 'rect' && mainGeoAxis === 'lng') {
     i -= 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else if (type === 'hex' && mainGeoAxis === 'lat') {
     return {
       ...getSouthEast(center),
       ...getNorthEast(center),
     };
-  } else if (type === 'hex' && mainGeoAxis === 'lat') {
+  } else if (type === 'hex' && mainGeoAxis === 'lng') {
     j += 1;
     k = k as number - 1;
   }
 
   return {
-    east: {i, j, k},
+    east: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -238,18 +238,18 @@ export function getWest(
     j -= 1;
   } else if (type === 'rect' && mainGeoAxis === 'lng') {
     i += 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else if (type === 'hex' && mainGeoAxis === 'lat') {
     return {
       ...getSouthWest(center),
       ...getNorthWest(center),
     };
-  } else if (type === 'hex' && mainGeoAxis === 'lat') {
+  } else if (type === 'hex' && mainGeoAxis === 'lng') {
     j -= 1;
     k = k as number + 1;
   }
 
   return {
-    west: {i, j, k},
+    west: k === undefined ? {i, j} : {i, j, k},
   };
 }
 

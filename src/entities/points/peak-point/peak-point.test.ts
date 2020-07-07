@@ -339,7 +339,7 @@ describe('nearestNotSeparatedByPoly', () => {
   });
 
   describe('when all peaks are separated by poly', () => {
-    it('should return empty array', () => {
+    it('should return an empty array', () => {
       const gridParams = createParams();
       const point = new PeakPoint(gridParams, 0.5, 0.5);
       const poly = GeoPolygon.fromPlain([
@@ -356,15 +356,48 @@ describe('nearestNotSeparatedByPoly', () => {
   });
 
   describe('when some peaks are separated by poly', () => {
-    it.todo('should return array with not separated ones', () => {
+    it('should return array with not separated ones', () => {
       const gridParams = createParams();
       const point = new PeakPoint(gridParams, 0.5, 0.5);
+
       const poly = GeoPolygon.fromPlain([
         {lat: 0.02, lng: 0.02},
         {lat: 0.06, lng: 0.02},
-        {lat: 0.06, lng: 0.06},
-        {lat: 0.02, lng: 0.06},
+        {lat: 0.06, lng: 0},
+        {lat: 0.02, lng: 0},
       ]);
+
+      expect(point.nearestNotSeparatedByPoly(poly)).toStrictEqual(
+        expect.arrayContaining([
+          expect.objectContaining({i: 1.5, j: -0.49999999999999994}),
+          expect.objectContaining({i: 1.5, j: 1.5}),
+          expect.objectContaining({i: -0.5, j: 1.5}),
+        ]),
+      );
     });
+  });
+});
+
+describe('fromPlain', () => {
+  it('should return a grid point', () => {
+    const params = createParams();
+    const point = PeakPoint.fromPlain({
+      i: 1,
+      j: 2,
+    }, params);
+
+    expect(point).toBeInstanceOf(PeakPoint);
+  });
+});
+
+describe('fromGeo', () => {
+  it('should return grid point', () => {
+    const params = createParams();
+    const point = PeakPoint.fromGeo(
+      new GeoPoint(50, 50),
+      params,
+    );
+
+    expect(point).toBeInstanceOf(PeakPoint);
   });
 });

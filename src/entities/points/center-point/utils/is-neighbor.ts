@@ -1,8 +1,8 @@
 import {CenterPoint} from '../center-point';
 
-function isHexNeighbor(
-  {i: iA, j: jA, k: kA}: CenterPoint,
-  {i: iB, j: jB, k: kB}: CenterPoint,
+export function isHexNeighbor(
+  {i: iA, j: jA, k: kA}: grider.GridPoint,
+  {i: iB, j: jB, k: kB}: grider.GridPoint,
 ): boolean {
   const diffs = [
     iA - iB,
@@ -13,9 +13,9 @@ function isHexNeighbor(
   return diffs.includes(0) && diffs.includes(1) && diffs.includes(-1);
 }
 
-function isRectNeighbor(
-  {i: iA, j: jA}: CenterPoint,
-  {i: iB, j: jB}: CenterPoint,
+export function isRectNeighbor(
+  {i: iA, j: jA}: grider.GridPoint,
+  {i: iB, j: jB}: grider.GridPoint,
 ): boolean {
   const diffs = [Math.abs(iA - iB), Math.abs(jA - jB)];
 

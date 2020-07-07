@@ -120,6 +120,10 @@ describe('reduceLat', () => {
       expect(reduceLat(180)).toBe(0);
     });
 
+    it('should return 0 for 360', () => {
+      expect(reduceLat(360)).toBe(0);
+    });
+
     it('should return 80 value for 100', () => {
       expect(reduceLat(100)).toBe(80);
     });
@@ -148,6 +152,10 @@ describe('reduceLng', () => {
   describe('invalid values', () => {
     it('should return -180 value for 180', () => {
       expect(reduceLng(180)).toBe(-180);
+    });
+
+    it('should return 0 for 360', () => {
+      expect(reduceLng(360)).toBe(0);
     });
 
     it('should return -160 value for 200', () => {

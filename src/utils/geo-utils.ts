@@ -27,7 +27,7 @@ export function lngToX(lng: number): number {
 }
 
 export function reduceLat(lat: number): number {
-  if (lat > 360 || lat < -360) {
+  if (lat >= 360 || lat <= -360) {
     lat %= 360;
   }
 
@@ -41,7 +41,7 @@ export function reduceLat(lat: number): number {
 }
 
 export function reduceLng(lng: number): number {
-  if (lng > 360 || lng < -360) {
+  if (lng >= 360 || lng <= -360) {
     lng %= 360;
   }
 
