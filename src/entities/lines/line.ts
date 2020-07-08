@@ -2,31 +2,33 @@ import {Point} from '../points/point';
 import {Vector} from '../vectors/vector';
 
 export class Line {
-  get isParallelToAxisX(): boolean {
-    return this.b === 0;
-  }
-
-  get isParallelToAxisY(): boolean {
-    return this.a === 0;
-  }
-
-  static fromTwoPoints(
-    {x: x1, y: y1}: Point,
-    {x: x2, y: y2}: Point,
-  ): Line {
-    return new Line(
-      y1 - y2,
-      x2 - x1,
-      -((x1 * y2) - (y1 * x2)),
-    );
-  }
   constructor(
     public a: number,
     public b: number,
     public c: number,
   ) {}
 
-  calcAlikePoint(point: Point): Point {
+  get isParallelToAxisY(): boolean {
+    return this.b === 0;
+  }
+
+  get isParallelToAxisX(): boolean {
+    return this.a === 0;
+  }
+
+  xByY(y: number): number | undefined {
+    if (this.isParallelToAxisX) return;
+
+    return (this.c - this.b * y) / this.a;
+  }
+
+  yByX(x: number): number | undefined {
+    if (this.isParallelToAxisY) return;
+
+    return (this.c - this.a * x) / this.b;
+  }
+
+  calcSymmetricalPoint(point: Point): Point {
     const calcX = this.xByY(point.y);
     const calcY = this.yByX(point.x);
 
@@ -37,21 +39,9 @@ export class Line {
   }
 
   hasPoint(point: Point): boolean {
-    const alikePoint = this.calcAlikePoint(point);
+    const alikePoint = this.calcSymmetricalPoint(point);
 
     return alikePoint.isEqual(point);
-  }
-
-  xByY(y: number): number | undefined {
-    if (this.isParallelToAxisY) return;
-
-    return (this.c - this.b * y) / this.a;
-  }
-
-  yByX(x: number): number | undefined {
-    if (this.isParallelToAxisX) return;
-
-    return (this.c - this.a * x) / this.b;
   }
 
   distanceToPoint(
@@ -71,12 +61,12 @@ export class Line {
   ): Point {
     const {x, y} = point;
 
-    if (this.isParallelToAxisX) {
+    if (this.isParallelToAxisY) {
       return new Point(
         this.c / this.a,
         y,
       );
-    } else if (this.isParallelToAxisY) {
+    } else if (this.isParallelToAxisX) {
       return new Point(
         x,
         this.c / this.b,
@@ -129,17 +119,17 @@ export class Line {
     let x;
     let y;
 
-    if (line.isParallelToAxisX) {
+    if (line.isParallelToAxisY) {
       x = c / a;
-    } else if (this.isParallelToAxisX) {
+    } else if (this.isParallelToAxisY) {
       x = this.c / this.a;
     } else {
       x = this.intersectionX(line);
     }
 
-    if (line.isParallelToAxisY) {
+    if (line.isParallelToAxisX) {
       y = c / b;
-    } else if (this.isParallelToAxisY) {
+    } else if (this.isParallelToAxisX) {
       y = this.c / this.b;
     } else {
       y = this.intersectionY(line);
@@ -156,5 +146,16 @@ export class Line {
     if (x === undefined || y === undefined) return;
 
     return new Point(x, y);
+  }
+
+  static fromTwoPoints(
+    {x: x1, y: y1}: Point,
+    {x: x2, y: y2}: Point,
+  ): Line {
+    return new Line(
+      y1 - y2,
+      x2 - x1,
+      -((x1 * y2) - (y1 * x2)),
+    );
   }
 }
