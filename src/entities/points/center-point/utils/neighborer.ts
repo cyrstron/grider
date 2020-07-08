@@ -26,19 +26,19 @@ export function getNorthWest(
   if (type === 'rect' && mainGeoAxis === 'lat') {
     i += 1;
     j -= 1;
-  } else if (type === 'rect' && mainGeoAxis === 'lng') {
+  } else if (type === 'rect') {
     i -= 1;
     j += 1;
   } else if (type === 'hex' && mainGeoAxis === 'lat') {
     i += 1;
     j -= 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else {
     i -= 1;
     j += 1;
   }
 
   return {
-    northWest: {i, j, k},
+    northWest: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -54,13 +54,13 @@ export function getNorthEast(
   if (type === 'rect') {
     i += 1;
     j += 1;
-  } else if (type === 'hex') {
+  } else {
     i += 1;
     k = k as number - 1;
   }
 
   return {
-    northEast: {i, j, k},
+    northEast: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -76,13 +76,13 @@ export function getSouthWest(
   if (type === 'rect') {
     i -= 1;
     j -= 1;
-  } else if (type === 'hex') {
+  } else {
     i -= 1;
     k = k as number + 1;
   }
 
   return {
-    southWest: {i, j, k},
+    southWest: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -101,19 +101,19 @@ export function getSouthEast(
   if (type === 'rect' && mainGeoAxis === 'lat') {
     i -= 1;
     j += 1;
-  } else if (type === 'rect' && mainGeoAxis === 'lng') {
+  } else if (type === 'rect') {
     i += 1;
     j -= 1;
   } else if (type === 'hex' && mainGeoAxis === 'lat') {
     i -= 1;
     j += 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else {
     i += 1;
     j -= 1;
   }
 
   return {
-    southEast: {i, j, k},
+    southEast: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -134,12 +134,12 @@ export function getNorth(
 
   if (type === 'rect' && mainGeoAxis === 'lat') {
     i += 1;
-  } else if (type === 'rect' && mainGeoAxis === 'lng') {
+  } else if (type === 'rect') {
     j += 1;
   } else if (type === 'hex' && mainGeoAxis === 'lat') {
     j += 1;
     k = k as number - 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else {
     return {
       ...getNorthEast(center),
       ...getNorthWest(center),
@@ -147,7 +147,7 @@ export function getNorth(
   }
 
   return {
-    north: {i, j, k},
+    north: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -168,12 +168,12 @@ export function getSouth(
 
   if (type === 'rect' && mainGeoAxis === 'lat') {
     i -= 1;
-  } else if (type === 'rect' && mainGeoAxis === 'lng') {
+  } else if (type === 'rect') {
     j -= 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else if (type === 'hex' && mainGeoAxis === 'lat') {
     j -= 1;
     k = k as number + 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lat') {
+  } else {
     return {
       ...getSouthEast(center),
       ...getSouthWest(center),
@@ -181,7 +181,7 @@ export function getSouth(
   }
 
   return {
-    south: {i, j, k},
+    south: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -202,20 +202,20 @@ export function getEast(
 
   if (type === 'rect' && mainGeoAxis === 'lat') {
     j += 1;
-  } else if (type === 'rect' && mainGeoAxis === 'lng') {
+  } else if (type === 'rect') {
     i -= 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else if (type === 'hex' && mainGeoAxis === 'lat') {
     return {
       ...getSouthEast(center),
       ...getNorthEast(center),
     };
-  } else if (type === 'hex' && mainGeoAxis === 'lat') {
+  } else {
     j += 1;
     k = k as number - 1;
   }
 
   return {
-    east: {i, j, k},
+    east: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -236,20 +236,20 @@ export function getWest(
 
   if (type === 'rect' && mainGeoAxis === 'lat') {
     j -= 1;
-  } else if (type === 'rect' && mainGeoAxis === 'lng') {
+  } else if (type === 'rect') {
     i += 1;
-  } else if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else if (type === 'hex' && mainGeoAxis === 'lat') {
     return {
       ...getSouthWest(center),
       ...getNorthWest(center),
     };
-  } else if (type === 'hex' && mainGeoAxis === 'lat') {
+  } else {
     j -= 1;
     k = k as number + 1;
   }
 
   return {
-    west: {i, j, k},
+    west: k === undefined ? {i, j} : {i, j, k},
   };
 }
 
@@ -273,9 +273,7 @@ export function getAll(
       ...getNorthEast(center),
       ...getNorthWest(center),
     };
-  }
-
-  if (type === 'hex' && mainGeoAxis === 'lng') {
+  } else if (type === 'hex') {
     return {
       ...getEast(center),
       ...getWest(center),
@@ -284,16 +282,16 @@ export function getAll(
       ...getNorthEast(center),
       ...getNorthWest(center),
     };
+  } else {
+    return {
+      ...getNorth(center),
+      ...getSouth(center),
+      ...getEast(center),
+      ...getWest(center),
+      ...getSouthEast(center),
+      ...getSouthWest(center),
+      ...getNorthEast(center),
+      ...getNorthWest(center),
+    };
   }
-
-  return {
-    ...getNorth(center),
-    ...getSouth(center),
-    ...getEast(center),
-    ...getWest(center),
-    ...getSouthEast(center),
-    ...getSouthWest(center),
-    ...getNorthEast(center),
-    ...getNorthWest(center),
-  };
 }

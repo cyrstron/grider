@@ -120,6 +120,10 @@ describe('reduceLat', () => {
       expect(reduceLat(180)).toBe(0);
     });
 
+    it('should return 0 for 360', () => {
+      expect(reduceLat(360)).toBe(0);
+    });
+
     it('should return 80 value for 100', () => {
       expect(reduceLat(100)).toBe(80);
     });
@@ -148,6 +152,10 @@ describe('reduceLng', () => {
   describe('invalid values', () => {
     it('should return -180 value for 180', () => {
       expect(reduceLng(180)).toBe(-180);
+    });
+
+    it('should return 0 for 360', () => {
+      expect(reduceLng(360)).toBe(0);
     });
 
     it('should return -160 value for 200', () => {
@@ -185,7 +193,7 @@ describe('formatLat', () => {
     });
   });
 
-  describe('rounding values', () => {
+  describe('when rounding values', () => {
     it('should round to precision 7', () => {
       const value = 50.00000001;
 
@@ -225,7 +233,7 @@ describe('formatLng', () => {
     });
   });
 
-  describe('rounding values', () => {
+  describe('when rounding values', () => {
     it('should round to precision 7', () => {
       const value = 50.00000001;
 
@@ -236,6 +244,12 @@ describe('formatLng', () => {
       const value = 50.0000001;
 
       expect(formatLng(value)).toBe(value);
+    });
+
+    it('should reduce rounded values properly', () => {
+      const value = 179.9999999999;
+
+      expect(formatLng(value)).toBe(-180);
     });
   });
 });

@@ -64,17 +64,13 @@ export function findPrimeFactors(value: number): number[] {
   let checker = 2;
   const result: number[] = [];
 
-  while (checker * checker <= tempValue) {
+  while (checker <= tempValue) {
     if (tempValue % checker === 0) {
       result.push(checker);
       tempValue /= checker;
     } else {
       checker += 1;
     }
-  }
-
-  if (tempValue !== 1) {
-    result.push(tempValue);
   }
 
   return result;
