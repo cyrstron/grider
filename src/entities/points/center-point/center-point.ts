@@ -175,26 +175,6 @@ export class CenterPoint extends GridPoint {
     };
   }
 
-  static fromGeo(point: GeoPoint, params: GridParams): CenterPoint {
-    const gridPoint = GridPoint.fromGeo(point, params);
-
-    return CenterPoint.fromGrid(gridPoint);
-  }
-
-  static fromGrid(point: GridPoint): CenterPoint {
-    // To get the same center value on antimeridian.
-    const {i: preI, j: preJ, k: preK} = round(point);
-
-    const reducedGeoCenter = new GridPoint(point.params, preI, preJ, preK)
-      .toGeo();
-
-    const reducedGridCenter = GridPoint.fromGeo(reducedGeoCenter, point.params);
-
-    const {i, j, k} = round(reducedGridCenter);
-
-    return new CenterPoint(point.params, i, j, k);
-  }
-
   nextCenterByCellSide(cellSide: CellSide): CenterPoint {
     const {i, j, k} = getNextCenterByCellSide(this, cellSide);
 
@@ -205,8 +185,7 @@ export class CenterPoint extends GridPoint {
   }
 
   isNeighbor(center: CenterPoint): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let pointA: CenterPoint = this;
+    let pointA: CenterPoint = this as CenterPoint;
     let pointB: CenterPoint = center;
 
     if (this.isCloserThroughAntiMeridian(center)) {
@@ -247,5 +226,25 @@ export class CenterPoint extends GridPoint {
     params: GridParams,
   ): CenterPoint {
     return new CenterPoint(params, i, j, k);
+  }
+
+  static fromGeo(point: GeoPoint, params: GridParams): CenterPoint {
+    const gridPoint = GridPoint.fromGeo(point, params);
+
+    return CenterPoint.fromGrid(gridPoint);
+  }
+
+  static fromGrid(point: GridPoint): CenterPoint {
+    // To get the same center value on antimeridian.
+    const {i: preI, j: preJ, k: preK} = round(point);
+
+    const reducedGeoCenter = new GridPoint(point.params, preI, preJ, preK)
+      .toGeo();
+
+    const reducedGridCenter = GridPoint.fromGeo(reducedGeoCenter, point.params);
+
+    const {i, j, k} = round(reducedGridCenter);
+
+    return new CenterPoint(point.params, i, j, k);
   }
 }

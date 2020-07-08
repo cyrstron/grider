@@ -178,8 +178,8 @@ describe('get nearestPeaks', () => {
             }),
             expect.objectContaining({
               i: 0.667,
-              j: 19999.667,
-              k: -20000.333,
+              j: -20000.333,
+              k: 19999.667,
             }),
             expect.objectContaining({
               i: 0.667,

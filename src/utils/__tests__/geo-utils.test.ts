@@ -193,7 +193,7 @@ describe('formatLat', () => {
     });
   });
 
-  describe('rounding values', () => {
+  describe('when rounding values', () => {
     it('should round to precision 7', () => {
       const value = 50.00000001;
 
@@ -233,7 +233,7 @@ describe('formatLng', () => {
     });
   });
 
-  describe('rounding values', () => {
+  describe('when rounding values', () => {
     it('should round to precision 7', () => {
       const value = 50.00000001;
 
@@ -244,6 +244,12 @@ describe('formatLng', () => {
       const value = 50.0000001;
 
       expect(formatLng(value)).toBe(value);
+    });
+
+    it('should reduce rounded values properly', () => {
+      const value = 179.9999999999;
+
+      expect(formatLng(value)).toBe(-180);
     });
   });
 });

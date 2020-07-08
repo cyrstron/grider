@@ -55,6 +55,8 @@ export function reduceLng(lng: number): number {
 }
 
 export function formatLat(lat: number): number {
+  lat = +lat.toFixed(7);
+
   if (lat > 90) {
     lat = 90;
   }
@@ -67,7 +69,7 @@ export function formatLat(lat: number): number {
 }
 
 export function formatLng(lng: number): number {
-  lng = reduceLng(lng);
+  lng = +lng.toFixed(7);
 
-  return +lng.toFixed(7);
+  return +reduceLng(lng).toFixed(7);
 }
