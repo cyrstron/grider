@@ -19,16 +19,16 @@ export class Line {
   xByY(y: number): number | undefined {
     if (this.isParallelToAxisX) return;
 
-    return (this.c - this.b * y) / this.a;
+    return (-this.c - this.b * y) / this.a;
   }
 
   yByX(x: number): number | undefined {
     if (this.isParallelToAxisY) return;
 
-    return (this.c - this.a * x) / this.b;
+    return (-this.c - this.a * x) / this.b;
   }
 
-  calcSymmetricalPoint(point: Point): Point {
+  calcPointThroughLine(point: Point): Point {
     const calcX = this.xByY(point.y);
     const calcY = this.yByX(point.x);
 
@@ -39,9 +39,9 @@ export class Line {
   }
 
   hasPoint(point: Point): boolean {
-    const alikePoint = this.calcSymmetricalPoint(point);
+    const calcedPoint = this.calcPointThroughLine(point);
 
-    return alikePoint.isEqual(point);
+    return calcedPoint.isEqual(point);
   }
 
   distanceToPoint(
@@ -63,13 +63,13 @@ export class Line {
 
     if (this.isParallelToAxisY) {
       return new Point(
-        this.c / this.a,
+        this.xByY(y) as number,
         y,
       );
     } else if (this.isParallelToAxisX) {
       return new Point(
         x,
-        this.c / this.b,
+        this.yByX(x) as number,
       );
     }
 
@@ -86,54 +86,45 @@ export class Line {
     return new Line(
       1 / x,
       -(1 / y),
-      (x1 / x) - (y1 / y),
+      -(x1 / x) - (y1 / y),
     );
   }
 
-  intersectionX({a, b, c}: Line): number | undefined {
+  intersectionX(line: Line): number | undefined {
+    const {a, b, c} = line;
+
+    if (line.isParallelToAxisY) {
+      return - c / a;
+    } else if (this.isParallelToAxisY) {
+      return - this.c / this.a;
+    }
+
+    const deltaX = this.b * c - this.c * b;
     const delta = this.a * b - this.b * a;
-    const deltaX = this.c * b - this.b * c;
 
     if (!delta) return;
 
     return deltaX / delta;
   }
 
-  intersectionY({a, b, c}: Line): number | undefined {
-    const delta = this.a * b - this.b * a;
-    const deltaY = this.a * c - this.c * a;
+  intersectionY(line: Line): number | undefined {
+    const {a, b, c} = line;
 
-    if (!delta) return;
+    if (line.isParallelToAxisX) {
+      return - c / b;
+    } else if (this.isParallelToAxisX) {
+      return - this.c / this.b;
+    }
+
+    const deltaY = this.a * c - this.c * a;
+    const delta = this.b * a - this.a * b;
 
     return deltaY / delta;
   }
 
   intersectionPoint(line: Line): Point | undefined {
-    if (
-      (line.isParallelToAxisX && this.isParallelToAxisX) ||
-      (line.isParallelToAxisY && this.isParallelToAxisY)
-    ) return;
-
-    const {a, b, c} = line;
-
-    let x;
-    let y;
-
-    if (line.isParallelToAxisY) {
-      x = c / a;
-    } else if (this.isParallelToAxisY) {
-      x = this.c / this.a;
-    } else {
-      x = this.intersectionX(line);
-    }
-
-    if (line.isParallelToAxisX) {
-      y = c / b;
-    } else if (this.isParallelToAxisX) {
-      y = this.c / this.b;
-    } else {
-      y = this.intersectionY(line);
-    }
+    let x = this.intersectionX(line);
+    let y = this.intersectionY(line);
 
     if (x === undefined && y !== undefined) {
       x = this.xByY(y) || line.xByY(y);
@@ -155,7 +146,7 @@ export class Line {
     return new Line(
       y1 - y2,
       x2 - x1,
-      -((x1 * y2) - (y1 * x2)),
+      (x1 * y2) - (y1 * x2),
     );
   }
 }

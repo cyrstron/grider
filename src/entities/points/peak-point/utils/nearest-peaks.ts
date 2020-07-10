@@ -5,15 +5,15 @@ export function nearestRectPeaks(
 ): grider.GridPoint[] {
   return [{
     i: i + 1,
-    j: j - 1,
+    j: j,
   }, {
-    i: i + 1,
+    i: i,
     j: j + 1,
   }, {
     i: i - 1,
-    j: j + 1,
+    j: j,
   }, {
-    i: i - 1,
+    i: i,
     j: j - 1,
   }];
 }

@@ -8,8 +8,8 @@ export class MercLine extends Line {
     return new MercLine(a, b, c);
   }
 
-  calcSymmetricalPoint(point: MercPoint): MercPoint {
-    const {x, y} = super.calcSymmetricalPoint(point);
+  calcPointThroughLine(point: MercPoint): MercPoint {
+    const {x, y} = super.calcPointThroughLine(point);
 
     return new MercPoint(x, y);
   }

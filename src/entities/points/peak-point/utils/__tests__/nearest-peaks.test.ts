@@ -27,18 +27,18 @@ describe('nearestRectPeaks', () => {
   it('should return all nearest peaks values for rectagonal cell peak', () => {
     expect(nearestPeaks).toContainEqual({
       i: 1.5,
-      j: 2.5,
+      j: 1.5,
     });
     expect(nearestPeaks).toContainEqual({
       i: -0.5,
+      j: 1.5,
+    });
+    expect(nearestPeaks).toContainEqual({
+      i: 0.5,
       j: 2.5,
     });
     expect(nearestPeaks).toContainEqual({
-      i: 1.5,
-      j: 0.5,
-    });
-    expect(nearestPeaks).toContainEqual({
-      i: -0.5,
+      i: 0.5,
       j: 0.5,
     });
   });

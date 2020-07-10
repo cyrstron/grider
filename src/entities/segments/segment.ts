@@ -123,15 +123,19 @@ export class Segment {
     let segmentAHasPoint: boolean;
     let segmentBHasPoint: boolean;
 
-    const maxXA = Math.max(this.pointA.x, this.pointB.x);
-    const minXA = Math.min(this.pointA.x, this.pointB.x);
-    const maxYA = Math.max(this.pointA.y, this.pointB.y);
-    const minYA = Math.min(this.pointA.y, this.pointB.y);
+    const {
+      maxX: maxXA,
+      minX: minXA,
+      maxY: maxYA,
+      minY: minYA,
+    } = this;
 
-    const maxXB = Math.max(segment.pointA.x, segment.pointB.x);
-    const minXB = Math.min(segment.pointA.x, segment.pointB.x);
-    const maxYB = Math.max(segment.pointA.y, segment.pointB.y);
-    const minYB = Math.min(segment.pointA.y, segment.pointB.y);
+    const {
+      maxX: maxXB,
+      minX: minXB,
+      maxY: maxYB,
+      minY: minYB,
+    } = segment;
 
     if (this.line.a === 0) {
       segmentAHasPoint = intersection.x <= maxXA && intersection.x >= minXA &&

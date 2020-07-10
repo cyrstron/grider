@@ -49,20 +49,20 @@ describe('get nearestPeaks', () => {
         expect(formattedPeaks).toStrictEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              i: 1.5,
+              i: 0.5,
               j: 0.5,
             }),
             expect.objectContaining({
-              i: 1.5,
+              i: 0.5,
               j: 2.5,
             }),
             expect.objectContaining({
               i: -0.5,
-              j: 2.5,
+              j: 1.5,
             }),
             expect.objectContaining({
-              i: -0.5,
-              j: 0.5,
+              i: 1.5,
+              j: 1.5,
             }),
           ]),
         );
@@ -78,20 +78,20 @@ describe('get nearestPeaks', () => {
         expect(formattedPeaks).toStrictEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              i: 1.5,
+              i: 0.5,
               j: 19998.5,
             }),
             expect.objectContaining({
-              i: 1.5,
+              i: 0.5,
               j: -19999.5,
             }),
             expect.objectContaining({
               i: -0.5,
-              j: -19999.5,
+              j: 19999.5,
             }),
             expect.objectContaining({
-              i: -0.5,
-              j: 19998.5,
+              i: 1.5,
+              j: 19999.5,
             }),
           ]),
         );
@@ -218,18 +218,18 @@ describe('get nearestPeaksGeo', () => {
         expect.arrayContaining([
           expect.objectContaining({
             lat: 0.135,
-            lng: 0.045,
+            lng: 0.135,
           }),
           expect.objectContaining({
-            lat: 0.135,
+            lat: 0.045,
             lng: 0.225,
           }),
           expect.objectContaining({
             lat: -0.045,
-            lng: 0.225,
+            lng: 0.135,
           }),
           expect.objectContaining({
-            lat: -0.045,
+            lat: 0.045,
             lng: 0.045,
           }),
         ]),
@@ -356,6 +356,20 @@ describe('nearestNotSeparatedByPoly', () => {
   });
 
   describe('when some peaks are separated by poly', () => {
+    it('should return correct number of points', () => {
+      const gridParams = createParams();
+      const point = new PeakPoint(gridParams, 0.5, 0.5);
+
+      const poly = GeoPolygon.fromPlain([
+        {lat: 0.02, lng: 0.02},
+        {lat: 0.06, lng: 0.02},
+        {lat: 0.06, lng: 0},
+        {lat: 0.02, lng: 0},
+      ]);
+
+      expect(point.nearestNotSeparatedByPoly(poly)).toHaveLength(3);
+    });
+
     it('should return array with not separated ones', () => {
       const gridParams = createParams();
       const point = new PeakPoint(gridParams, 0.5, 0.5);
@@ -369,9 +383,9 @@ describe('nearestNotSeparatedByPoly', () => {
 
       expect(point.nearestNotSeparatedByPoly(poly)).toStrictEqual(
         expect.arrayContaining([
-          expect.objectContaining({i: 1.5, j: -0.49999999999999994}),
-          expect.objectContaining({i: 1.5, j: 1.5}),
-          expect.objectContaining({i: -0.5, j: 1.5}),
+          expect.objectContaining({i: 1.5, j: 0.5000000000000001}),
+          expect.objectContaining({i: 0.5, j: 1.5}),
+          expect.objectContaining({i: -0.5, j: 0.5}),
         ]),
       );
     });
