@@ -46,7 +46,6 @@ describe('rhumb line', () => {
     });
   });
 
-
   describe('latByLng', () => {
     it('should return proper lat for given lng', () => {
       const rhumb = new RhumbLine(0.04, 0.03, -0.02, false);

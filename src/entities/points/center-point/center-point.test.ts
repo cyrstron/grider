@@ -53,6 +53,42 @@ describe('constructor', () => {
         southWest: {i: -1, j: -1},
       });
     });
+
+    describe('when grid is hexagonal', () => {
+      describe('when grid is not horizontal', () => {
+        it('should return proper neighbors', () => {
+          const params = createParams({type: 'hex'});
+
+          const point = new CenterPoint(params, 0, 0, 0);
+
+          expect(point.neighbors).toMatchObject({
+            north: {i: 0, j: 1, k: -1},
+            south: {i: 0, j: -1, k: 1},
+            northEast: {i: 1, j: 0, k: -1},
+            northWest: {i: 1, j: -1, k: 0},
+            southEast: {i: -1, j: 1, k: 0},
+            southWest: {i: -1, j: 0, k: 1},
+          });
+        });
+      });
+
+      describe('when grid is horizontal', () => {
+        it('should return proper neighbors', () => {
+          const params = createParams({type: 'hex', isHorizontal: true});
+
+          const point = new CenterPoint(params, 0, 0, 0);
+
+          expect(point.neighbors).toMatchObject({
+            east: {i: 0, j: 1, k: -1},
+            west: {i: 0, j: -1, k: 1},
+            northEast: {i: 1, j: 0, k: -1},
+            northWest: {i: -1, j: 1, k: 0},
+            southEast: {i: 1, j: -1, k: 0},
+            southWest: {i: -1, j: 0, k: 1},
+          });
+        });
+      });
+    });
   });
 
   describe('get northNeighbors', () => {
@@ -80,30 +116,85 @@ describe('constructor', () => {
       });
     });
   });
-});
 
-describe('get southNeighbors', () => {
-  it('should return center points', () => {
-    const params = createParams();
+  describe('when grid is hexagonal', () => {
+    describe('when grid is not horizontal', () => {
+      it('should return proper neighbors', () => {
+        const params = createParams({type: 'hex'});
 
-    const point = new CenterPoint(params, 0, 0);
+        const point = new CenterPoint(params, 0, 0, 0);
 
-    const neighbors = Object.values(point.southNeighbors);
+        expect(point.northNeighbors).toMatchObject({
+          north: {i: 0, j: 1, k: -1},
+        });
+      });
+    });
 
-    expect(neighbors).toStrictEqual(
-      expect.arrayContaining([
-        expect.objectContaining(CenterPoint.prototype),
-      ]),
-    );
+    describe('when grid is horizontal', () => {
+      it('should return proper neighbors', () => {
+        const params = createParams({type: 'hex', isHorizontal: true});
+
+        const point = new CenterPoint(params, 0, 0, 0);
+
+        expect(point.northNeighbors).toMatchObject({
+          northEast: {i: 1, j: 0, k: -1},
+          northWest: {i: -1, j: 1, k: 0},
+        });
+      });
+    });
   });
 
-  it('should return proper neighbor center points', () => {
-    const params = createParams();
+  describe('get southNeighbors', () => {
+    it('should return center points', () => {
+      const params = createParams();
 
-    const point = new CenterPoint(params, 0, 0);
+      const point = new CenterPoint(params, 0, 0);
 
-    expect(point.southNeighbors).toMatchObject({
-      south: {i: -1, j: 0},
+      const neighbors = Object.values(point.southNeighbors);
+
+      expect(neighbors).toStrictEqual(
+        expect.arrayContaining([
+          expect.objectContaining(CenterPoint.prototype),
+        ]),
+      );
+    });
+
+    it('should return proper neighbor center points', () => {
+      const params = createParams();
+
+      const point = new CenterPoint(params, 0, 0);
+
+      expect(point.southNeighbors).toMatchObject({
+        south: {i: -1, j: 0},
+      });
+    });
+
+
+    describe('when grid is hexagonal', () => {
+      describe('when grid is not horizontal', () => {
+        it('should return proper neighbors', () => {
+          const params = createParams({type: 'hex'});
+
+          const point = new CenterPoint(params, 0, 0, 0);
+
+          expect(point.southNeighbors).toMatchObject({
+            south: {i: 0, j: -1, k: 1},
+          });
+        });
+      });
+
+      describe('when grid is horizontal', () => {
+        it('should return proper neighbors', () => {
+          const params = createParams({type: 'hex', isHorizontal: true});
+
+          const point = new CenterPoint(params, 0, 0, 0);
+
+          expect(point.southNeighbors).toMatchObject({
+            southEast: {i: 1, j: -1, k: 0},
+            southWest: {i: -1, j: 0, k: 1},
+          });
+        });
+      });
     });
   });
 
@@ -131,6 +222,34 @@ describe('get southNeighbors', () => {
         west: {i: 0, j: -1},
       });
     });
+
+
+    describe('when grid is hexagonal', () => {
+      describe('when grid is not horizontal', () => {
+        it('should return proper neighbors', () => {
+          const params = createParams({type: 'hex'});
+
+          const point = new CenterPoint(params, 0, 0, 0);
+
+          expect(point.westNeighbors).toMatchObject({
+            northWest: {i: 1, j: -1, k: 0},
+            southWest: {i: -1, j: 0, k: 1},
+          });
+        });
+      });
+
+      describe('when grid is horizontal', () => {
+        it('should return proper neighbors', () => {
+          const params = createParams({type: 'hex', isHorizontal: true});
+
+          const point = new CenterPoint(params, 0, 0, 0);
+
+          expect(point.westNeighbors).toMatchObject({
+            west: {i: 0, j: -1, k: 1},
+          });
+        });
+      });
+    });
   });
 
   describe('get eastNeighbors', () => {
@@ -155,6 +274,33 @@ describe('get southNeighbors', () => {
 
       expect(point.eastNeighbors).toMatchObject({
         east: {i: 0, j: 1},
+      });
+    });
+
+    describe('when grid is hexagonal', () => {
+      describe('when grid is not horizontal', () => {
+        it('should return proper neighbors', () => {
+          const params = createParams({type: 'hex'});
+
+          const point = new CenterPoint(params, 0, 0, 0);
+
+          expect(point.eastNeighbors).toMatchObject({
+            northEast: {i: 1, j: 0, k: -1},
+            southEast: {i: -1, j: 1, k: 0},
+          });
+        });
+      });
+
+      describe('when grid is horizontal', () => {
+        it('should return proper neighbors', () => {
+          const params = createParams({type: 'hex', isHorizontal: true});
+
+          const point = new CenterPoint(params, 0, 0, 0);
+
+          expect(point.eastNeighbors).toMatchObject({
+            east: {i: 0, j: 1, k: -1},
+          });
+        });
       });
     });
   });
@@ -595,30 +741,30 @@ describe('get southNeighbors', () => {
     });
   });
 
-  describe('fromPlain', () => {
+  describe('static fromPlain', () => {
     it('should return CenterPoint instance', () => {
       const gridParams = createParams();
       const point = CenterPoint.fromPlain({i: 1, j: 2}, gridParams);
 
       expect(point).toBeInstanceOf(CenterPoint);
     });
-  });
 
-  describe('when grid is rectagonal', () => {
-    const gridParams = createParams();
-    it('should return a proper center point', () => {
-      const point = CenterPoint.fromPlain({i: 1, j: 2}, gridParams);
+    describe('when grid is rectagonal', () => {
+      const gridParams = createParams();
+      it('should return a proper center point', () => {
+        const point = CenterPoint.fromPlain({i: 1, j: 2}, gridParams);
 
-      expect(point).toMatchObject({i: 1, j: 2});
+        expect(point).toMatchObject({i: 1, j: 2});
+      });
     });
-  });
 
-  describe('when grid is hexagonal', () => {
-    const gridParams = createParams({type: 'hex'});
-    it('should return a proper center point', () => {
-      const point = CenterPoint.fromPlain({i: 1, j: 2, k: -3}, gridParams);
+    describe('when grid is hexagonal', () => {
+      const gridParams = createParams({type: 'hex'});
+      it('should return a proper center point', () => {
+        const point = CenterPoint.fromPlain({i: 1, j: 2, k: -3}, gridParams);
 
-      expect(point).toMatchObject({i: 1, j: 2, k: -3});
+        expect(point).toMatchObject({i: 1, j: 2, k: -3});
+      });
     });
   });
 });
