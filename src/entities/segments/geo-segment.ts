@@ -137,8 +137,7 @@ export class GeoSegment {
   }
 
   intersectionPoint(segment: GeoSegment): GeoPoint | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let segmentA: GeoSegment = this;
+    let segmentA: GeoSegment = this as GeoSegment;
     let segmentB: GeoSegment = segment;
 
     const isAntiMeridian = this.isAntiMeridian || segment.isAntiMeridian;
@@ -162,8 +161,7 @@ export class GeoSegment {
   closestToPoint(point: GeoPoint): GeoPoint {
     const {isAntiMeridian} = this;
 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let segment: GeoSegment = this;
+    let segment: GeoSegment = this as GeoSegment;
 
     if (isAntiMeridian) {
       segment = segment.toOppositeHemisphere();

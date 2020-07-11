@@ -2,18 +2,6 @@ import {MercPoint} from '../points/merc-point';
 import {Line} from './line';
 
 export class MercLine extends Line {
-  static fromTwoPoints(pointA: MercPoint, pointB: MercPoint): MercLine {
-    const {a, b, c} = Line.fromTwoPoints(pointA, pointB);
-
-    return new MercLine(a, b, c);
-  }
-
-  calcPointThroughLine(point: MercPoint): MercPoint {
-    const {x, y} = super.calcPointThroughLine(point);
-
-    return new MercPoint(x, y);
-  }
-
   closestToPoint(point: MercPoint): MercPoint {
     const {x, y} = super.closestToPoint(point);
 
@@ -34,5 +22,11 @@ export class MercLine extends Line {
     const {x, y} = intersection;
 
     return new MercPoint(x, y);
+  }
+
+  static fromTwoPoints(pointA: MercPoint, pointB: MercPoint): MercLine {
+    const {a, b, c} = Line.fromTwoPoints(pointA, pointB);
+
+    return new MercLine(a, b, c);
   }
 }
