@@ -644,7 +644,6 @@ describe('constructor', () => {
         expect(point).toMatchObject({i: 667, j: 1111});
       });
 
-
       describe('when center point is on antimeridian', () => {
         it('should return same center point for both sides of antimeridian', () => {
           const gridPointA = new GeoPoint(60, 179.999999);

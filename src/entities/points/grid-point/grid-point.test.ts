@@ -50,6 +50,94 @@ describe('toFormatted', () => {
   });
 });
 
+describe(('isEasternTo'), () => {
+  const gridParams = createParams();
+
+  describe('when point is eastern', () => {
+    it('should return true', () => {
+      const pointA = new GridPoint(gridParams, 10, 20);
+      const pointB = new GridPoint(gridParams, 10, 15);
+
+      expect(pointA.isEasternTo(pointB)).toBe(true);
+    });
+  });
+
+  describe('when point is not eastern', () => {
+    it('should return false', () => {
+      const pointA = new GridPoint(gridParams, 10, 20);
+      const pointB = new GridPoint(gridParams, 10, 25);
+
+      expect(pointA.isEasternTo(pointB)).toBe(false);
+    });
+  });
+});
+
+describe(('isWesternTo'), () => {
+  const gridParams = createParams();
+
+  describe('when point is eastern', () => {
+    it('should return true', () => {
+      const pointA = new GridPoint(gridParams, 10, 20);
+      const pointB = new GridPoint(gridParams, 10, 25);
+
+      expect(pointA.isWesternTo(pointB)).toBe(true);
+    });
+  });
+
+  describe('when point is not eastern', () => {
+    it('should return false', () => {
+      const pointA = new GridPoint(gridParams, 10, 20);
+      const pointB = new GridPoint(gridParams, 10, 15);
+
+      expect(pointA.isWesternTo(pointB)).toBe(false);
+    });
+  });
+});
+
+describe(('isNorthernTo'), () => {
+  const gridParams = createParams();
+
+  describe('when point is eastern', () => {
+    it('should return true', () => {
+      const pointA = new GridPoint(gridParams, 10, 20);
+      const pointB = new GridPoint(gridParams, 5, 20);
+
+      expect(pointA.isNorthernTo(pointB)).toBe(true);
+    });
+  });
+
+  describe('when point is not eastern', () => {
+    it('should return false', () => {
+      const pointA = new GridPoint(gridParams, 10, 20);
+      const pointB = new GridPoint(gridParams, 15, 20);
+
+      expect(pointA.isNorthernTo(pointB)).toBe(false);
+    });
+  });
+});
+
+describe(('isSouthernTo'), () => {
+  const gridParams = createParams();
+
+  describe('when point is eastern', () => {
+    it('should return true', () => {
+      const pointA = new GridPoint(gridParams, 10, 20);
+      const pointB = new GridPoint(gridParams, 15, 20);
+
+      expect(pointA.isSouthernTo(pointB)).toBe(true);
+    });
+  });
+
+  describe('when point is not eastern', () => {
+    it('should return false', () => {
+      const pointA = new GridPoint(gridParams, 10, 20);
+      const pointB = new GridPoint(gridParams, 5, 20);
+
+      expect(pointA.isSouthernTo(pointB)).toBe(false);
+    });
+  });
+});
+
 describe('isEqual', () => {
   describe('when grid is rectagonal', () => {
     const gridParams = createParams();

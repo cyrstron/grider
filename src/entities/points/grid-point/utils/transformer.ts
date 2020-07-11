@@ -35,27 +35,16 @@ export function rotateToGeo(
   } = point.params;
 
   const mainAxis = isHorizontal ? 'lng' : 'lat';
-  const auxAxis = isHorizontal ? 'lat' : 'lng';
 
   const angle = axisParams.angle;
   const sin = sinDeg(angle);
   const cos = cosDeg(angle);
 
-  let axis;
-
-  switch (axisParams.name) {
-  case mainAxis:
-    axis = (point.i - point.j * sin) / cos;
-    break;
-  case auxAxis:
-    axis = (point.j - point.i * cos) / sin;
-    break;
-  default:
-    axis = point.j * sin + point.i * cos;
-    break;
+  if (axisParams.name === mainAxis) {
+    return (point.i - point.j * sin) / cos;
+  } else {
+    return (point.j - point.i * cos) / sin;
   }
-
-  return axis;
 }
 
 export function toGridScale(
