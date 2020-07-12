@@ -14,6 +14,15 @@ export class MercLine extends Line {
     return new MercLine(a, b, c);
   }
 
+  hasPoint(point: MercPoint): boolean {
+    const interceptPoint = new MercPoint(
+      this.xByY(point.y) || point.x,
+      this.yByX(point.x) || point.y,
+    );
+
+    return interceptPoint.isEqual(point);
+  }
+
   intersectionPoint(line: MercLine): MercPoint | undefined {
     const intersection = super.intersectionPoint(line);
 

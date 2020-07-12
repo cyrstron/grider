@@ -31,14 +31,12 @@ export class Line {
   }
 
   hasPoint(point: Point): boolean {
-    const xInterceptor = this.xByY(point.y);
-    const yInterceptor = this.yByX(point.x);
-
-    return (
-      yInterceptor === undefined || yInterceptor === point.y
-    ) && (
-      xInterceptor === undefined || xInterceptor === point.x
+    const interceptPoint = new Point(
+      this.xByY(point.y) || point.x,
+      this.yByX(point.x) || point.y,
     );
+
+    return interceptPoint.isEqual(point);
   }
 
   distanceToPoint(

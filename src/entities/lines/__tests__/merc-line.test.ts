@@ -46,6 +46,47 @@ describe('mercator line', () => {
     });
   });
 
+  describe('hasPoint', () => {
+    describe('when point is on the line', () => {
+      it('should return true', () => {
+        const line = MercLine.fromTwoPoints(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        const point = new MercPoint(0.5025, 0.4975);
+
+        expect(line.hasPoint(point)).toBe(true);
+      });
+    });
+
+    describe('when point is very close to line', () => {
+      it('should return true', () => {
+        const line = MercLine.fromTwoPoints(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        const point = new MercPoint(0.5024999999999997, 0.4975000000000003);
+
+        expect(line.hasPoint(point)).toBe(true);
+      });
+    });
+
+    describe('when point is not on line', () => {
+      it('should return false', () => {
+        const line = MercLine.fromTwoPoints(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        const point = new MercPoint(0.6, 0.4975000000000003);
+
+        expect(line.hasPoint(point)).toBe(false);
+      });
+    });
+  });
+
   describe('static fromTwoPoints', () => {
     it('should return a line', () => {
       const pointA = new MercPoint(0.5, 0.4);

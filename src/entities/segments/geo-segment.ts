@@ -5,106 +5,6 @@ import {GeoPolygon} from '../polygons/geo-polygon/geo-polygon';
 import {MercSegment} from './merc-segment';
 
 export class GeoSegment {
-  get points(): [GeoPoint, GeoPoint] {
-    return [this.pointA, this.pointB];
-  }
-
-  get isAntiMeridian(): boolean {
-    return this.pointA.isCloserThroughAntiMeridian(this.pointB);
-  }
-
-  get isParallel(): boolean {
-    return this.pointA.lat === this.pointB.lat;
-  }
-
-  get isMeridian(): boolean {
-    return this.pointA.lng === this.pointB.lng;
-  }
-
-  get easternPoint(): GeoPoint {
-    if (this.isMeridian) {
-      return this.pointA;
-    }
-
-    return this.pointA.isEasternTo(this.pointB) ?
-      this.pointA :
-      this.pointB;
-  }
-
-  get westernPoint(): GeoPoint {
-    if (this.isMeridian) {
-      return this.pointA;
-    }
-
-    return this.pointA.isWesternTo(this.pointB) ?
-      this.pointA :
-      this.pointB;
-  }
-
-  get northernPoint(): GeoPoint {
-    if (this.isParallel) {
-      return this.pointA;
-    }
-
-    return this.pointA.isNorthernTo(this.pointB) ?
-      this.pointA :
-      this.pointB;
-  }
-
-  get southernPoint(): GeoPoint {
-    if (this.isParallel) {
-      return this.pointA;
-    }
-
-    return this.pointA.isSouthernTo(this.pointB) ?
-      this.pointA :
-      this.pointB;
-  }
-
-  static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[] {
-    const sorted = points.sort(({lng: lngA}, {lng: lngB}) => lngA - lngB);
-
-    const easternIndex = sorted.reduce((easternIndex, point, index) => {
-      return sorted[easternIndex].isEasternTo(point) ? index : easternIndex;
-    }, 0);
-
-    return [
-      ...sorted.slice(easternIndex),
-      ...sorted.slice(0, easternIndex),
-    ].reduce((
-      splitSegments: GeoSegment[],
-      point,
-      index,
-      sorted,
-    ): GeoSegment[] => {
-      if (index % 2) return splitSegments;
-
-      const splitSegment = new GeoSegment(sorted[index + 1], point);
-
-      splitSegments.push(splitSegment);
-
-      return splitSegments;
-    }, []);
-  }
-
-  static segmentsFromPointsByLat(points: GeoPoint[]): GeoSegment[] {
-    const sorted = points.sort(({lat: latA}, {lat: latB}) => latA - latB);
-
-    return sorted.reduce((
-      splitSegments: GeoSegment[],
-      point,
-      index,
-      sorted,
-    ): GeoSegment[] => {
-      if (index % 2) return splitSegments;
-
-      const splitSegment = new GeoSegment(sorted[index + 1], point);
-
-      splitSegments.push(splitSegment);
-
-      return splitSegments;
-    }, []);
-  }
   rhumbLine: RhumbLine;
 
   constructor(
@@ -258,5 +158,106 @@ export class GeoSegment {
       segment.containsPoint(this.pointB) ||
       segment.containsPoint(this.pointB)
     );
+  }
+
+  get points(): [GeoPoint, GeoPoint] {
+    return [this.pointA, this.pointB];
+  }
+
+  get isAntiMeridian(): boolean {
+    return this.pointA.isCloserThroughAntiMeridian(this.pointB);
+  }
+
+  get isParallel(): boolean {
+    return this.pointA.lat === this.pointB.lat;
+  }
+
+  get isMeridian(): boolean {
+    return this.pointA.lng === this.pointB.lng;
+  }
+
+  get easternPoint(): GeoPoint {
+    if (this.isMeridian) {
+      return this.pointA;
+    }
+
+    return this.pointA.isEasternTo(this.pointB) ?
+      this.pointA :
+      this.pointB;
+  }
+
+  get westernPoint(): GeoPoint {
+    if (this.isMeridian) {
+      return this.pointA;
+    }
+
+    return this.pointA.isWesternTo(this.pointB) ?
+      this.pointA :
+      this.pointB;
+  }
+
+  get northernPoint(): GeoPoint {
+    if (this.isParallel) {
+      return this.pointA;
+    }
+
+    return this.pointA.isNorthernTo(this.pointB) ?
+      this.pointA :
+      this.pointB;
+  }
+
+  get southernPoint(): GeoPoint {
+    if (this.isParallel) {
+      return this.pointA;
+    }
+
+    return this.pointA.isSouthernTo(this.pointB) ?
+      this.pointA :
+      this.pointB;
+  }
+
+  static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[] {
+    const sorted = points.sort(({lng: lngA}, {lng: lngB}) => lngA - lngB);
+
+    const easternIndex = sorted.reduce((easternIndex, point, index) => {
+      return sorted[easternIndex].isEasternTo(point) ? index : easternIndex;
+    }, 0);
+
+    return [
+      ...sorted.slice(easternIndex),
+      ...sorted.slice(0, easternIndex),
+    ].reduce((
+      splitSegments: GeoSegment[],
+      point,
+      index,
+      sorted,
+    ): GeoSegment[] => {
+      if (index % 2) return splitSegments;
+
+      const splitSegment = new GeoSegment(sorted[index + 1], point);
+
+      splitSegments.push(splitSegment);
+
+      return splitSegments;
+    }, []);
+  }
+
+  static segmentsFromPointsByLat(points: GeoPoint[]): GeoSegment[] {
+    const sorted = points.sort(({lat: latA}, {lat: latB}) => latA - latB);
+
+    return sorted.reduce((
+      splitSegments: GeoSegment[],
+      point,
+      index,
+      sorted,
+    ): GeoSegment[] => {
+      if (index % 2) return splitSegments;
+
+      const splitSegment = new GeoSegment(sorted[index + 1], point);
+
+      splitSegments.push(splitSegment);
+
+      return splitSegments;
+    }, []);
   }
 }
