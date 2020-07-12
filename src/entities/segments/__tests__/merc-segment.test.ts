@@ -118,4 +118,352 @@ describe('merc segment', () => {
       });
     });
   });
+
+  describe('closestToPoint', () => {
+    it('should return instance of MercPoint', () => {
+      const segment = new MercSegment(
+        new MercPoint(0.5, 0.5),
+        new MercPoint(0.505, 0.495),
+      );
+      const point = new MercPoint(0.505, 0.5);
+
+      expect(segment.closestToPoint(point)).toBeInstanceOf(MercPoint);
+    });
+
+    it('should return proper closest point', () => {
+      const segment = new MercSegment(
+        new MercPoint(0.5, 0.5),
+        new MercPoint(0.505, 0.495),
+      );
+      const point = new MercPoint(0.505, 0.5);
+
+      expect(segment.closestToPoint(point)).toMatchObject({
+        x: 0.5025,
+        y: 0.4975,
+      });
+    });
+
+    describe('when one of the segments is on anti-meridian', () => {
+      it('should return proper closest point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.995, 0.5),
+          new MercPoint(0.005, 0.495),
+        );
+        const point = new MercPoint(0.003, 0.505);
+
+        expect(segment.closestToPoint(point)).toMatchObject({
+          x: 0.9994000000000001,
+          y: 0.4978,
+        });
+      });
+    });
+  });
+
+  describe('get isAntiMeridian', () => {
+    describe('when segment is antimeridian', () => {
+      it('should return true', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.995, 0.5),
+          new MercPoint(0.005, 0.495),
+        );
+
+        expect(segment.isAntiMeridian).toBe(true);
+      });
+    });
+
+    describe('when segment is not antimeridian', () => {
+      it('should return false', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        expect(segment.isAntiMeridian).toBe(false);
+      });
+    });
+  });
+
+  describe('get isParallelToAxisX', () => {
+    describe('when segment is on parallel', () => {
+      it('should return true', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.5),
+        );
+
+        expect(segment.isParallelToAxisX).toBe(true);
+      });
+    });
+
+    describe('when segment is not on parallel', () => {
+      it('should return false', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        expect(segment.isParallelToAxisX).toBe(false);
+      });
+    });
+  });
+
+  describe('get isParallelToAxisY', () => {
+    describe('when segment is on meridian', () => {
+      it('should return true', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.5, 0.495),
+        );
+
+        expect(segment.isParallelToAxisY).toBe(true);
+      });
+    });
+
+    describe('when segment is not on meridian', () => {
+      it('should return false', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        expect(segment.isParallelToAxisY).toBe(false);
+      });
+    });
+  });
+
+  describe('get easternPoint', () => {
+    it('should return instance of MercPoint', () => {
+      const segment = new MercSegment(
+        new MercPoint(0.5, 0.5),
+        new MercPoint(0.505, 0.495),
+      );
+
+      expect(segment.easternPoint).toBeInstanceOf(MercPoint);
+    });
+
+    describe('when pointA is eastern', () => {
+      it('should return proper eastern point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.505, 0.495),
+          new MercPoint(0.5, 0.5),
+        );
+
+        expect(segment.easternPoint).toMatchObject({
+          x: 0.505,
+          y: 0.495,
+        });
+      });
+    });
+
+    describe('when pointB is eastern', () => {
+      it('should return proper eastern point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        expect(segment.easternPoint).toMatchObject({
+          x: 0.505,
+          y: 0.495,
+        });
+      });
+    });
+
+    describe('when segment on meridian', () => {
+      it('should return eather point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.5, 0.495),
+        );
+
+        expect(segment.easternPoint).toMatchObject({
+          x: 0.5,
+        });
+      });
+    });
+
+    describe('when point is on anti-meridian', () => {
+      it('should return proper eastern point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.995, 0.495),
+          new MercPoint(0.005, 0.5),
+        );
+
+        expect(segment.easternPoint).toMatchObject({
+          x: 0.005,
+          y: 0.5,
+        });
+      });
+    });
+  });
+
+  describe('get westernPoint', () => {
+    it('should return instance of MercPoint', () => {
+      const segment = new MercSegment(
+        new MercPoint(0.5, 0.5),
+        new MercPoint(0.505, 0.495),
+      );
+
+      expect(segment.westernPoint).toBeInstanceOf(MercPoint);
+    });
+
+    describe('when pointA is western', () => {
+      it('should return proper western point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        expect(segment.westernPoint).toMatchObject({
+          x: 0.5,
+          y: 0.5,
+        });
+      });
+    });
+
+    describe('when pointB is western', () => {
+      it('should return proper western point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.505, 0.495),
+          new MercPoint(0.5, 0.5),
+        );
+
+        expect(segment.westernPoint).toMatchObject({
+          x: 0.5,
+          y: 0.5,
+        });
+      });
+    });
+
+    describe('when segment on meridian', () => {
+      it('should return eather point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.5, 0.495),
+        );
+
+        expect(segment.westernPoint).toMatchObject({
+          x: 0.5,
+        });
+      });
+    });
+
+    describe('when point is on anti-meridian', () => {
+      it('should return proper western point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.995, 0.495),
+          new MercPoint(0.005, 0.5),
+        );
+
+        expect(segment.westernPoint).toMatchObject({
+          x: 0.995,
+          y: 0.495,
+        });
+      });
+    });
+  });
+
+  describe('get northernPoint', () => {
+    it('should return instance of MercPoint', () => {
+      const segment = new MercSegment(
+        new MercPoint(0.5, 0.5),
+        new MercPoint(0.505, 0.495),
+      );
+
+      expect(segment.northernPoint).toBeInstanceOf(MercPoint);
+    });
+
+    describe('when pointA is northern', () => {
+      it('should return proper northern point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        expect(segment.northernPoint).toMatchObject({
+          x: 0.505,
+          y: 0.495,
+        });
+      });
+    });
+
+    describe('when pointB is northern', () => {
+      it('should return proper northern point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.505, 0.495),
+          new MercPoint(0.5, 0.5),
+        );
+
+        expect(segment.northernPoint).toMatchObject({
+          x: 0.505,
+          y: 0.495,
+        });
+      });
+    });
+
+    describe('when segment on parallel', () => {
+      it('should return eather point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.505, 0.5),
+          new MercPoint(0.5, 0.5),
+        );
+
+        expect(segment.northernPoint).toMatchObject({
+          y: 0.5,
+        });
+      });
+    });
+  });
+
+  describe('get southernPoint', () => {
+    it('should return instance of MercPoint', () => {
+      const segment = new MercSegment(
+        new MercPoint(0.5, 0.5),
+        new MercPoint(0.505, 0.495),
+      );
+
+      expect(segment.southernPoint).toBeInstanceOf(MercPoint);
+    });
+
+    describe('when pointA is southern', () => {
+      it('should return proper southern point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.5, 0.5),
+          new MercPoint(0.505, 0.495),
+        );
+
+        expect(segment.southernPoint).toMatchObject({
+          x: 0.5,
+          y: 0.5,
+        });
+      });
+    });
+
+    describe('when pointB is southern', () => {
+      it('should return proper southern point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.505, 0.495),
+          new MercPoint(0.5, 0.5),
+        );
+
+        expect(segment.southernPoint).toMatchObject({
+          x: 0.5,
+          y: 0.5,
+        });
+      });
+    });
+
+    describe('when segment on parallel', () => {
+      it('should return eather point', () => {
+        const segment = new MercSegment(
+          new MercPoint(0.505, 0.5),
+          new MercPoint(0.5, 0.5),
+        );
+
+        expect(segment.southernPoint).toMatchObject({
+          y: 0.5,
+        });
+      });
+    });
+  });
 });

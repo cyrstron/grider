@@ -97,7 +97,7 @@ export class GeoSegment {
 
     if (lat === undefined) return;
 
-    if (this.rhumbLine.a !== 0 && !this.containsLat(lat)) return;
+    if (this.rhumbLine.isParallelToAxisY && !this.containsLat(lat)) return;
 
     return lat;
   }
@@ -109,7 +109,7 @@ export class GeoSegment {
 
     if (lng === undefined) return;
 
-    if (this.rhumbLine.b !== 0 && !this.containsLng(lng)) return;
+    if (this.rhumbLine.isParallelToAxisX && !this.containsLng(lng)) return;
 
     return lng;
   }
@@ -141,22 +141,35 @@ export class GeoSegment {
     }
   }
 
-  containsPoint({lat, lng}: GeoPoint): boolean {
-    return this.containsLat(lat) && this.containsLng(lng);
+  hasPoint(point: GeoPoint): boolean {
+    const {
+      pointA,
+      pointB,
+    } = this;
+
+    const {lat, lng} = point.toFormatted();
+    const {lat: lat1, lng: lng1} = pointA.toFormatted();
+    const {lat: lat2, lng: lng2} = pointB.toFormatted();
+
+    return this.rhumbLine.hasPoint(point.toMerc()) &&
+      Math.max(lat1, lat2) >= lat &&
+      Math.min(lat1, lat2) <= lat &&
+      Math.max(lng1, lng2) >= lng &&
+      Math.min(lng1, lng2) <= lng;
   }
 
   containsSegment({pointA, pointB}: GeoSegment): boolean {
-    return this.containsPoint(pointA) && this.containsPoint(pointB);
+    return this.hasPoint(pointA) && this.hasPoint(pointB);
   }
 
   overlapsSegment(segment: GeoSegment): boolean {
     const {pointA, pointB} = segment;
 
     return (
-      this.containsPoint(pointA) ||
-      this.containsPoint(pointB) ||
-      segment.containsPoint(this.pointB) ||
-      segment.containsPoint(this.pointB)
+      this.hasPoint(pointA) ||
+      this.hasPoint(pointB) ||
+      segment.hasPoint(this.pointB) ||
+      segment.hasPoint(this.pointB)
     );
   }
 

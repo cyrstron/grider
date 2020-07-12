@@ -115,13 +115,13 @@ export class Indexation {
         const isFirst = index === 0;
         const isLast = index === lastIndex;
 
-        if (isFirst && segment.containsPoint(pointA)) {
+        if (isFirst && segment.hasPoint(pointA)) {
           boundPoints.push(pointA);
         } else if (isFirst) {
           boundPoints.push(segment.pointA);
         }
 
-        if (!isLast || !segment.containsPoint(pointB)) {
+        if (!isLast || !segment.hasPoint(pointB)) {
           boundPoints.push(segment.pointB);
         } else {
           boundPoints.push(pointB);

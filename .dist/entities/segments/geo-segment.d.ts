@@ -5,16 +5,6 @@ import { MercSegment } from './merc-segment';
 export declare class GeoSegment {
     pointA: GeoPoint;
     pointB: GeoPoint;
-    readonly points: [GeoPoint, GeoPoint];
-    readonly isAntiMeridian: boolean;
-    readonly isParallel: boolean;
-    readonly isMeridian: boolean;
-    readonly easternPoint: GeoPoint;
-    readonly westernPoint: GeoPoint;
-    readonly northernPoint: GeoPoint;
-    readonly southernPoint: GeoPoint;
-    static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[];
-    static segmentsFromPointsByLat(points: GeoPoint[]): GeoSegment[];
     rhumbLine: RhumbLine;
     constructor(pointA: GeoPoint, pointB: GeoPoint);
     toMerc(): MercSegment;
@@ -29,7 +19,17 @@ export declare class GeoSegment {
     lngByLat(lat: number): number | undefined;
     containsLat(lat: number): boolean;
     containsLng(lng: number): boolean;
-    containsPoint({ lat, lng }: GeoPoint): boolean;
+    hasPoint(point: GeoPoint): boolean;
     containsSegment({ pointA, pointB }: GeoSegment): boolean;
     overlapsSegment(segment: GeoSegment): boolean;
+    readonly points: [GeoPoint, GeoPoint];
+    readonly isAntiMeridian: boolean;
+    readonly isParallel: boolean;
+    readonly isMeridian: boolean;
+    readonly easternPoint: GeoPoint;
+    readonly westernPoint: GeoPoint;
+    readonly northernPoint: GeoPoint;
+    readonly southernPoint: GeoPoint;
+    static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[];
+    static segmentsFromPointsByLat(points: GeoPoint[]): GeoSegment[];
 }

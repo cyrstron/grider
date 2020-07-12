@@ -45,14 +45,12 @@ export declare class CenterPoint extends GridPoint {
     readonly southEastNeighbors: {
         southEast: CenterPoint;
     };
-    static fromObject({ i, j, k }: grider.GridPoint, params: GridParams): CenterPoint;
-    static fromGeo(point: GeoPoint, params: GridParams): CenterPoint;
-    static fromGrid(point: GridPoint): CenterPoint;
     nextCenterByCellSide(cellSide: CellSide): CenterPoint;
     isNeighbor(center: CenterPoint): boolean;
     isCloserThroughAntiMeridian(center: CenterPoint): boolean;
     toOppositeHemishpere(): CenterPoint;
     moveByDiff(iDiff: number, jDiff: number): CenterPoint;
-    toPlain(): grider.GridPoint;
     static fromPlain({ i, j, k }: grider.GridPoint, params: GridParams): CenterPoint;
+    static fromGeo(point: GeoPoint, params: GridParams): CenterPoint;
+    static fromGrid(point: GridPoint): CenterPoint;
 }

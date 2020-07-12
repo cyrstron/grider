@@ -73,10 +73,10 @@ export class MercPoint extends Point {
   }
 
   isNorthernTo(point: MercPoint): boolean {
-    return this.y > point.y;
+    return this.y < point.y;
   }
 
   isSouthernTo(point: MercPoint): boolean {
-    return this.y < point.y;
+    return this.y > point.y;
   }
 }

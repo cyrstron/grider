@@ -173,15 +173,15 @@ describe('isNorthernTo', () => {
   });
 
   it('should return true when point is northern', () => {
-    const pointA = new MercPoint(0.1, 0.2);
-    const pointB = new MercPoint(0.1, 0.1);
+    const pointA = new MercPoint(0.1, 0.1);
+    const pointB = new MercPoint(0.1, 0.2);
 
     expect(pointA.isNorthernTo(pointB)).toBe(true);
   });
 
   it('should return false when point is not northern', () => {
-    const pointA = new MercPoint(0.1, 0.1);
-    const pointB = new MercPoint(0.1, 0.2);
+    const pointA = new MercPoint(0.1, 0.2);
+    const pointB = new MercPoint(0.1, 0.1);
 
     expect(pointA.isNorthernTo(pointB)).toBe(false);
   });
@@ -196,15 +196,15 @@ describe('isSouthernTo', () => {
   });
 
   it('should return true when point is southern', () => {
-    const pointA = new MercPoint(0.1, 0.1);
-    const pointB = new MercPoint(0.1, 0.2);
+    const pointA = new MercPoint(0.1, 0.2);
+    const pointB = new MercPoint(0.1, 0.1);
 
     expect(pointA.isSouthernTo(pointB)).toBe(true);
   });
 
   it('should return false when point is not southern', () => {
-    const pointA = new MercPoint(0.1, 0.2);
-    const pointB = new MercPoint(0.1, 0.1);
+    const pointA = new MercPoint(0.1, 0.1);
+    const pointB = new MercPoint(0.1, 0.2);
 
     expect(pointA.isSouthernTo(pointB)).toBe(false);
   });

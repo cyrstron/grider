@@ -1,5 +1,6 @@
 import {Point} from '../point';
 import {Line} from '../../lines';
+import {Segment} from '../../segments';
 
 describe('point', () => {
   describe('constructor', () => {
@@ -129,6 +130,108 @@ describe('point', () => {
     });
   });
 
+
+  describe('containedBySegment', () => {
+    const pointA = new Point(-1, 2);
+    const pointB = new Point(3, -2);
+
+    const segment = new Segment(pointA, pointB);
+
+    describe('when point is on the segment', () => {
+      it('should return true', () => {
+        const point = new Point(2, -1);
+
+        expect(point.containedBySegment(segment)).toBe(true);
+      });
+    });
+
+    describe('when point is not on the segment', () => {
+      it('should return true', () => {
+        const point = new Point(3, 1);
+
+        expect(point.containedBySegment(segment)).toBe(false);
+      });
+    });
+
+    describe('when segment is parallel to x', () => {
+      const pointA = new Point(-1, 2);
+      const pointB = new Point(3, 2);
+
+      const segment = new Segment(pointA, pointB);
+
+      describe('when point is on the segment', () => {
+        it('should return true', () => {
+          const point = new Point(2, 2);
+
+          expect(point.containedBySegment(segment)).toBe(true);
+        });
+      });
+
+      describe('when point is not on the segment', () => {
+        it('should return true', () => {
+          const point = new Point(3, 1);
+
+          expect(point.containedBySegment(segment)).toBe(false);
+        });
+      });
+
+      describe('when closest point on the line has x smaller than segment\'s min x', () => {
+        it('should return proper point', () => {
+          const point = new Point(-4, 2);
+
+          expect(point.containedBySegment(segment)).toBe(false);
+        });
+      });
+
+      describe('when closest point on the line has x bigger than segment\'s max x', () => {
+        it('should return proper point', () => {
+          const point = new Point(6, 2);
+
+          expect(point.containedBySegment(segment)).toBe(false);
+        });
+      });
+    });
+
+    describe('when segment is parallel to y', () => {
+      const pointA = new Point(-1, 1);
+      const pointB = new Point(-1, 5);
+
+      const segment = new Segment(pointA, pointB);
+
+      describe('when point is on the segment', () => {
+        it('should return true', () => {
+          const point = new Point(-1, 4);
+
+          expect(point.containedBySegment(segment)).toBe(true);
+        });
+      });
+
+      describe('when point is not on the segment', () => {
+        it('should return true', () => {
+          const point = new Point(3, 1);
+
+          expect(point.containedBySegment(segment)).toBe(false);
+        });
+      });
+
+      describe('when closest point on the line has y smaller than segment\'s min y', () => {
+        it('should return proper point', () => {
+          const point = new Point(-1, -2);
+
+          expect(point.containedBySegment(segment)).toBe(false);
+        });
+      });
+
+      describe('when closest point on the line has y bigger than segment\'s max y', () => {
+        it('should return proper point', () => {
+          const point = new Point(-1, 8);
+
+          expect(point.containedBySegment(segment)).toBe(false);
+        });
+      });
+    });
+  });
+
   describe('distanceToLine', () => {
     it('should return shortest distance from line to a point', () => {
       const line = new Line(1, 3, 2);
@@ -177,7 +280,6 @@ describe('point', () => {
       });
     });
   });
-
 
   describe('closestOnLine', () => {
     it('should return a Point', () => {
@@ -249,6 +351,130 @@ describe('point', () => {
           const closestPoint = point.closestOnLine(line);
 
           expect(closestPoint).toMatchObject({x: -2, y: -4});
+        });
+      });
+    });
+  });
+
+
+  describe('closestOnSegment', () => {
+    it('should return instance of Point', () => {
+      const pointA = new Point(-1, 2);
+      const pointB = new Point(3, -4);
+      const pointC = new Point(1, 4);
+
+      const segment = new Segment(pointA, pointB);
+
+      expect(pointC.closestOnSegment(segment)).toBeInstanceOf(Point);
+    });
+
+    it('should return proper point', () => {
+      const pointA = new Point(-1, 2);
+      const pointB = new Point(3, -4);
+      const pointC = new Point(1, 3);
+
+      const segment = new Segment(pointA, pointB);
+
+      expect(pointC.closestOnSegment(segment)).toMatchObject({
+        x: -0.8461538461538463,
+        y: 1.7692307692307694,
+      });
+    });
+
+    describe('when closest point on the line is outside the segment', () => {
+      it('should return proper point', () => {
+        const pointA = new Point(-1, 2);
+        const pointB = new Point(3, -4);
+        const pointC = new Point(6, -5);
+
+        const segment = new Segment(pointA, pointB);
+
+        expect(pointC.closestOnSegment(segment)).toMatchObject({
+          x: 3,
+          y: -4,
+        });
+      });
+
+      describe('when segment is parallel to x', () => {
+        it('should return proper point', () => {
+          const pointA = new Point(-1, 2);
+          const pointB = new Point(3, 2);
+          const pointC = new Point(1, 3);
+
+          const segment = new Segment(pointA, pointB);
+
+          expect(pointC.closestOnSegment(segment)).toMatchObject({
+            x: 1,
+            y: 2,
+          });
+        });
+
+        describe('when closest point on the line has x smaller than segment\'s min x', () => {
+          it('should return proper point', () => {
+            const pointA = new Point(-1, 2);
+            const pointB = new Point(3, 2);
+            const pointC = new Point(-4, 3);
+
+            const segment = new Segment(pointA, pointB);
+
+            expect(pointC.closestOnSegment(segment)).toMatchObject({
+              x: -1,
+              y: 2,
+            });
+          });
+        });
+
+        describe('when closest point on the line has x bigger than segment\'s max x', () => {
+          it('should return proper point', () => {
+            const pointA = new Point(-1, 2);
+            const pointB = new Point(3, 2);
+            const pointC = new Point(5, 3);
+
+            const segment = new Segment(pointA, pointB);
+
+            expect(pointC.closestOnSegment(segment)).toMatchObject({
+              x: 3,
+              y: 2,
+            });
+          });
+        });
+      });
+    });
+
+    describe('when segment is parallel to y', () => {
+      const pointA = new Point(-1, 2);
+      const pointB = new Point(-1, -3);
+
+      const segment = new Segment(pointA, pointB);
+
+      it('should return proper point', () => {
+        const pointC = new Point(3, 1);
+
+        expect(pointC.closestOnSegment(segment)).toMatchObject({
+          x: -1,
+          y: 1,
+        });
+      });
+
+      describe('when closest point on the line has y smaller than segment\'s min y', () => {
+        it('should return proper point', () => {
+          const pointC = new Point(1, -5);
+
+          expect(pointC.closestOnSegment(segment)).toMatchObject({
+            x: -1,
+            y: -3,
+          });
+        });
+      });
+
+      describe('when closest point on the line has y bigger than segment\'s max y', () => {
+        it('should return proper point', () => {
+          const pointC = new Point(1, 5);
+
+          expect(pointC.closestOnSegment(segment)).toMatchObject({
+            x: -1,
+            y: 2,
+          });
         });
       });
     });
