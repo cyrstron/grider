@@ -134,7 +134,7 @@ describe('point', () => {
       const line = new Line(1, 3, 2);
       const point = new Point(-2, 2);
 
-      expect(point.distanceToLine(line)).toBe(2.280350850198276);
+      expect(point.distanceToLine(line)).toBe(1.8973665961010275);
     });
 
     describe('when point is on the line', () => {
@@ -195,7 +195,7 @@ describe('point', () => {
 
       const closestPoint = point.closestOnLine(line);
 
-      expect(closestPoint).toMatchObject({x: 2.8000000000000003, y: -1.5999999999999999});
+      expect(closestPoint).toMatchObject({x: 0.4, y: -0.8});
     });
 
     describe('when point is on the line', () => {
