@@ -60,8 +60,8 @@ export class Line {
 
     return new Line(
       1 / x,
-      -(1 / y),
-      -(x1 / x) - (y1 / y),
+      1 / y,
+      - (x1 / x) - (y1 / y),
     );
   }
 
