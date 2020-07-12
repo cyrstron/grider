@@ -137,20 +137,20 @@ export class Segment {
       minY: minYB,
     } = segment;
 
-    if (this.line.a === 0) {
+    if (this.line.isParallelToAxisX) {
       segmentAHasPoint = intersection.x <= maxXA && intersection.x >= minXA &&
         maxYB >= maxYA && minYB <= minYA;
-    } else if (this.line.b === 0) {
+    } else if (this.line.isParallelToAxisY) {
       segmentAHasPoint = intersection.y <= maxYA && intersection.y >= minYA &&
         maxXB >= maxXA && minXB <= minXA;
     } else {
       segmentAHasPoint = this.hasPoint(intersection);
     }
 
-    if (segment.line.a === 0) {
+    if (segment.line.isParallelToAxisX) {
       segmentBHasPoint = intersection.x <= maxXB && intersection.x >= minXB &&
         maxYA >= maxYB && minYA <= minYB;
-    } else if (segment.line.b === 0) {
+    } else if (segment.line.isParallelToAxisY) {
       segmentBHasPoint = intersection.y <= maxYB && intersection.y >= minYB &&
         maxXA >= maxXB && minXA <= minXB;
     } else {
