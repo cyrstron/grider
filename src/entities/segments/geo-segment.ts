@@ -168,17 +168,42 @@ export class GeoSegment {
   overlapsSegment(segment: GeoSegment): boolean {
     const {pointA, pointB} = segment;
 
-    const isOnAlikeLine =
-      (this.isMeridian && segment.isMeridian) ||
-      (this.isParallel && segment.isParallel) ||
-      this.rhumbLine.isEqual(segment.rhumbLine);
-
-    return isOnAlikeLine && (
+    const segmentsHaveSimilarPoints = (
       this.hasPoint(pointA) ||
         this.hasPoint(pointB) ||
         segment.hasPoint(this.pointB) ||
         segment.hasPoint(this.pointB)
     );
+
+    if (!segmentsHaveSimilarPoints) return false;
+
+    if (
+      (this.isMeridian && segment.isMeridian) ||
+      (this.isParallel && segment.isParallel)
+    ) return true;
+
+    let testPointA = this.pointA.toMerc();
+    let testPointB = this.pointB.toMerc();
+    let testPointC = segment.pointA.toMerc();
+    let testPointD = segment.pointB.toMerc();
+
+    let testLineA = this.rhumbLine;
+    let testLineB = segment.rhumbLine;
+
+    if (this.isAntiMeridian || segment.isAntiMeridian) {
+      testPointA = testPointA.toOppositeHemisphere();
+      testPointB = testPointB.toOppositeHemisphere();
+      testPointC = testPointC.toOppositeHemisphere();
+      testPointD = testPointD.toOppositeHemisphere();
+
+      testLineA = this.toOppositeHemisphere().rhumbLine;
+      testLineB = segment.toOppositeHemisphere().rhumbLine;
+    }
+
+    return testLineA.hasPoint(testPointC) &&
+      testLineA.hasPoint(testPointD) &&
+      testLineB.hasPoint(testPointA) &&
+      testLineB.hasPoint(testPointB);
   }
 
   get points(): [GeoPoint, GeoPoint] {
@@ -237,17 +262,14 @@ export class GeoSegment {
       this.pointB;
   }
 
-  static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[] {
-    const sorted = points.sort(({lng: lngA}, {lng: lngB}) => lngA - lngB);
+  static segmentsFromPointsByLat(points: GeoPoint[]): GeoSegment[] {
+    if (points.length % 2 !== 0) {
+      throw new Error('Even points number needed!');
+    }
 
-    const easternIndex = sorted.reduce((easternIndex, point, index) => {
-      return sorted[easternIndex].isEasternTo(point) ? index : easternIndex;
-    }, 0);
+    const sorted = points.sort(({lat: latA}, {lat: latB}) => latA - latB);
 
-    return [
-      ...sorted.slice(easternIndex),
-      ...sorted.slice(0, easternIndex),
-    ].reduce((
+    return sorted.reduce((
       splitSegments: GeoSegment[],
       point,
       index,
@@ -263,10 +285,21 @@ export class GeoSegment {
     }, []);
   }
 
-  static segmentsFromPointsByLat(points: GeoPoint[]): GeoSegment[] {
-    const sorted = points.sort(({lat: latA}, {lat: latB}) => latA - latB);
+  static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[] {
+    if (points.length % 2 !== 0) {
+      throw new Error('Even points number needed!');
+    }
 
-    return sorted.reduce((
+    const sorted = points.sort(({lng: lngA}, {lng: lngB}) => lngA - lngB);
+
+    const easternIndex = sorted.reduce((easternIndex, point, index) => {
+      return sorted[easternIndex].isEasternTo(point) ? index : easternIndex;
+    }, 0);
+
+    return [
+      ...sorted.slice(easternIndex),
+      ...sorted.slice(0, easternIndex),
+    ].reduce((
       splitSegments: GeoSegment[],
       point,
       index,
