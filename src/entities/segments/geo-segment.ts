@@ -142,20 +142,23 @@ export class GeoSegment {
   }
 
   hasPoint(point: GeoPoint): boolean {
-    const {
-      pointA,
-      pointB,
-    } = this;
+    if (this.isMeridian || this.isParallel) {
+      return (
+        this.containsLat(point.lat) && this.containsLng(point.lng)
+      );
+    }
 
-    const {lat, lng} = point.toFormatted();
-    const {lat: lat1, lng: lng1} = pointA.toFormatted();
-    const {lat: lat2, lng: lng2} = pointB.toFormatted();
+    let testLine = this.rhumbLine;
+    let testPoint = point;
 
-    return this.rhumbLine.hasPoint(point.toMerc()) &&
-      Math.max(lat1, lat2) >= lat &&
-      Math.min(lat1, lat2) <= lat &&
-      Math.max(lng1, lng2) >= lng &&
-      Math.min(lng1, lng2) <= lng;
+    if (this.isAntiMeridian) {
+      testLine = this.toOppositeHemisphere().rhumbLine;
+      testPoint = point.toOppositeHemisphere();
+    }
+
+    return testLine.hasPoint(testPoint.toMerc()) &&
+      this.containsLat(point.lat) &&
+      this.containsLng(point.lng);
   }
 
   containsSegment({pointA, pointB}: GeoSegment): boolean {
@@ -165,11 +168,16 @@ export class GeoSegment {
   overlapsSegment(segment: GeoSegment): boolean {
     const {pointA, pointB} = segment;
 
-    return (
+    const isOnAlikeLine =
+      (this.isMeridian && segment.isMeridian) ||
+      (this.isParallel && segment.isParallel) ||
+      this.rhumbLine.isEqual(segment.rhumbLine);
+
+    return isOnAlikeLine && (
       this.hasPoint(pointA) ||
-      this.hasPoint(pointB) ||
-      segment.hasPoint(this.pointB) ||
-      segment.hasPoint(this.pointB)
+        this.hasPoint(pointB) ||
+        segment.hasPoint(this.pointB) ||
+        segment.hasPoint(this.pointB)
     );
   }
 
@@ -182,11 +190,11 @@ export class GeoSegment {
   }
 
   get isParallel(): boolean {
-    return this.pointA.lat === this.pointB.lat;
+    return this.rhumbLine.isParallelToAxisX;
   }
 
   get isMeridian(): boolean {
-    return this.pointA.lng === this.pointB.lng;
+    return this.rhumbLine.isParallelToAxisY;
   }
 
   get easternPoint(): GeoPoint {

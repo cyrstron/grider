@@ -4,6 +4,7 @@ export class WebWorkerMock implements Worker {
   } = {};
 
   onmessage: ((this: Worker, e: MessageEvent) => any) | null = null;
+  onmessageerror: ((this: Worker, e: MessageEvent) => any) | null = null;
 
   onerror: ((this: AbstractWorker, e: ErrorEvent) => any) | null = null;
 

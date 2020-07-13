@@ -429,7 +429,7 @@ describe('geo segment', () => {
   });
 
   describe('containsLat', () => {
-    describe('when segment contains lat', () => {
+    describe('when segment intersects lat', () => {
       it('should return true', () => {
         const segment = new GeoSegment(
           new GeoPoint(0, 0),
@@ -438,6 +438,181 @@ describe('geo segment', () => {
 
         expect(segment.containsLat(2.5)).toBe(true);
       });
+    });
+
+    describe('when segment does not intersect lat', () => {
+      it('should return false', () => {
+        const segment = new GeoSegment(
+          new GeoPoint(0, 0),
+          new GeoPoint(5, 5),
+        );
+
+        expect(segment.containsLat(7.5)).toBe(false);
+      });
+    });
+
+    describe('when segment is on parallel', () => {
+      describe('when segment is on given lat', () => {
+        it('should return true', () => {
+          const segment = new GeoSegment(
+            new GeoPoint(0, 0),
+            new GeoPoint(0, 5),
+          );
+
+          expect(segment.containsLat(0)).toBe(true);
+        });
+      });
+
+      describe('when segment is not on given lat', () => {
+        it('should return false', () => {
+          const segment = new GeoSegment(
+            new GeoPoint(0, 0),
+            new GeoPoint(0, 5),
+          );
+
+          expect(segment.containsLat(7.5)).toBe(false);
+        });
+      });
+    });
+  });
+
+  describe('containsLng', () => {
+    describe('when segment intersects lng', () => {
+      it('should return true', () => {
+        const segment = new GeoSegment(
+          new GeoPoint(0, 0),
+          new GeoPoint(5, 5),
+        );
+
+        expect(segment.containsLng(2.5)).toBe(true);
+      });
+    });
+
+    describe('when segment does not intersect lng', () => {
+      it('should return false', () => {
+        const segment = new GeoSegment(
+          new GeoPoint(0, 0),
+          new GeoPoint(5, 5),
+        );
+
+        expect(segment.containsLng(7.5)).toBe(false);
+      });
+    });
+
+    describe('when segment is on meridian', () => {
+      describe('when segment is on given lng', () => {
+        it('should return true', () => {
+          const segment = new GeoSegment(
+            new GeoPoint(0, 0),
+            new GeoPoint(5, 0),
+          );
+
+          expect(segment.containsLng(0)).toBe(true);
+        });
+      });
+
+      describe('when segment is not on given lng', () => {
+        it('should return false', () => {
+          const segment = new GeoSegment(
+            new GeoPoint(0, 0),
+            new GeoPoint(5, 0),
+          );
+
+          expect(segment.containsLng(7.5)).toBe(false);
+        });
+      });
+    });
+
+    describe('when segment intersects anti-meridian', () => {
+      describe('when segment intersects lng', () => {
+        it('should return true', () => {
+          const segment = new GeoSegment(
+            new GeoPoint(0, 177.5),
+            new GeoPoint(5, -177.5),
+          );
+
+          expect(segment.containsLng(-180)).toBe(true);
+        });
+      });
+
+      describe('when segment does not intersect lng', () => {
+        it('should return false', () => {
+          const segment = new GeoSegment(
+            new GeoPoint(0, 177.5),
+            new GeoPoint(5, -177.5),
+          );
+
+          expect(segment.containsLng(-175)).toBe(false);
+        });
+      });
+    });
+  });
+
+  describe('hasPoint', () => {
+    describe('when point is on the segment', () => {
+      it('should return true', () => {
+        const segment = new GeoSegment(
+          new GeoPoint(0, 0),
+          new GeoPoint(5, 5),
+        );
+        const point = new GeoPoint(2.502383227706767, 2.499999999999991);
+
+        expect(segment.hasPoint(point)).toBe(true);
+      });
+    });
+
+    describe('when point is barely on the segment', () => {
+      it('should return true', () => {
+        const segment = new GeoSegment(
+          new GeoPoint(0, 0),
+          new GeoPoint(5, 5),
+        );
+        const point = new GeoPoint(2.502383227706767, 2.500000000000004);
+
+        expect(segment.hasPoint(point)).toBe(true);
+      });
+    });
+
+    describe('when point is not on the segment', () => {
+      it('should return false', () => {
+        const segment = new GeoSegment(
+          new GeoPoint(0, 0),
+          new GeoPoint(5, 5),
+        );
+        const point = new GeoPoint(2.502383227706767, 5);
+
+        expect(segment.hasPoint(point)).toBe(false);
+      });
+    });
+
+    describe('when point intersects anti-meridian', () => {
+      describe('when point is on the segment', () => {
+        it('should return true', () => {
+          const segment = new GeoSegment(
+            new GeoPoint(0, -177.5),
+            new GeoPoint(5, 177.5),
+          );
+          const point = new GeoPoint(2.502383227706767, -180.00000000000004);
+
+          expect(segment.hasPoint(point)).toBe(true);
+        });
+      });
+
+      describe('when point is not on the segment', () => {
+        it('should return false', () => {
+          const segment = new GeoSegment(
+            new GeoPoint(0, -177.5),
+            new GeoPoint(5, 177.5),
+          );
+          const point = new GeoPoint(2.502383227706767, 175);
+
+          expect(segment.hasPoint(point)).toBe(false);
+        });
+      });
+    });
+
+    describe('when segment is parallel', () => {
+
     });
   });
 });

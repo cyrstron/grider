@@ -39,6 +39,10 @@ export class Line {
     return interceptPoint.isEqual(point);
   }
 
+  isEqual(line: Line): boolean {
+    return this.xByY(0) === line.xByY(0) && this.yByX(0) === line.yByX(0);
+  }
+
   distanceToPoint(
     point: Point,
   ): number {
