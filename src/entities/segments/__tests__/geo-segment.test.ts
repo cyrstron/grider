@@ -864,7 +864,7 @@ describe('geo segment', () => {
               new GeoPoint(175, 0),
             );
             const segmentB = new GeoSegment(
-              new GeoPoint(176, 0),
+              new GeoPoint(174, 0),
               new GeoPoint(170, 0),
             );
 
