@@ -777,7 +777,7 @@ describe('geo segment', () => {
       });
     });
 
-    describe('when segments are on meridian', () => {
+    describe('when segments are on parallel', () => {
       describe('when point is on the segment', () => {
         it('should return true', () => {
           const segmentA = new GeoSegment(
@@ -807,9 +807,41 @@ describe('geo segment', () => {
           expect(segmentA.overlapsSegment(segmentB)).toBe(false);
         });
       });
+
+      describe('when one of segments intersects anti-meridian', () => {
+        describe('when segmentA overlaps segmentB', () => {
+          it('should return true', () => {
+            const segmentA = new GeoSegment(
+              new GeoPoint(0, -175),
+              new GeoPoint(0, 175),
+            );
+            const segmentB = new GeoSegment(
+              new GeoPoint(0, -179),
+              new GeoPoint(0, -170),
+            );
+
+            expect(segmentA.overlapsSegment(segmentB)).toBe(true);
+          });
+        });
+
+        describe('when segmentA does not overlap segmentB', () => {
+          it('should return true', () => {
+            const segmentA = new GeoSegment(
+              new GeoPoint(0, -175),
+              new GeoPoint(0, 175),
+            );
+            const segmentB = new GeoSegment(
+              new GeoPoint(0, 174),
+              new GeoPoint(0, 170),
+            );
+
+            expect(segmentA.overlapsSegment(segmentB)).toBe(false);
+          });
+        });
+      });
     });
 
-    describe('when segments are on parallel', () => {
+    describe('when segments are on meridian', () => {
       describe('when point is on the segment', () => {
         it('should return true', () => {
           const segmentA = new GeoSegment(
@@ -837,39 +869,6 @@ describe('geo segment', () => {
           );
 
           expect(segmentA.overlapsSegment(segmentB)).toBe(false);
-        });
-      });
-
-
-      describe('when one of segments intersects anti-meridian', () => {
-        describe('when segmentA overlaps segmentB', () => {
-          it('should return true', () => {
-            const segmentA = new GeoSegment(
-              new GeoPoint(-175, 0),
-              new GeoPoint(175, 0),
-            );
-            const segmentB = new GeoSegment(
-              new GeoPoint(-179, 0),
-              new GeoPoint(-170, 0),
-            );
-
-            expect(segmentA.overlapsSegment(segmentB)).toBe(true);
-          });
-        });
-
-        describe('when segmentA does not overlap segmentB', () => {
-          it('should return true', () => {
-            const segmentA = new GeoSegment(
-              new GeoPoint(-175, 0),
-              new GeoPoint(175, 0),
-            );
-            const segmentB = new GeoSegment(
-              new GeoPoint(174, 0),
-              new GeoPoint(170, 0),
-            );
-
-            expect(segmentA.overlapsSegment(segmentB)).toBe(false);
-          });
         });
       });
     });
