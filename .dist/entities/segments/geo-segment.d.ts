@@ -22,14 +22,14 @@ export declare class GeoSegment {
     hasPoint(point: GeoPoint): boolean;
     containsSegment({ pointA, pointB }: GeoSegment): boolean;
     overlapsSegment(segment: GeoSegment): boolean;
-    readonly points: [GeoPoint, GeoPoint];
-    readonly isAntiMeridian: boolean;
-    readonly isParallel: boolean;
-    readonly isMeridian: boolean;
-    readonly easternPoint: GeoPoint;
-    readonly westernPoint: GeoPoint;
-    readonly northernPoint: GeoPoint;
-    readonly southernPoint: GeoPoint;
-    static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[];
+    get points(): [GeoPoint, GeoPoint];
+    get isAntiMeridian(): boolean;
+    get isParallel(): boolean;
+    get isMeridian(): boolean;
+    get easternPoint(): GeoPoint;
+    get westernPoint(): GeoPoint;
+    get northernPoint(): GeoPoint;
+    get southernPoint(): GeoPoint;
     static segmentsFromPointsByLat(points: GeoPoint[]): GeoSegment[];
+    static segmentsFromPointsByLng(points: GeoPoint[]): GeoSegment[];
 }

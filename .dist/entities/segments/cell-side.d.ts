@@ -8,6 +8,6 @@ export declare class CellSide extends GeoSegment {
     peakB: PeakPoint;
     params: GridParams;
     constructor(pointA: GeoPoint, pointB: GeoPoint, peakA: PeakPoint, peakB: PeakPoint, params: GridParams);
-    readonly averagePoint: GridPoint;
+    get averagePoint(): GridPoint;
     static fromPeaks(peakA: PeakPoint, peakB: PeakPoint): CellSide;
 }

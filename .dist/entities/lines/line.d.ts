@@ -5,11 +5,12 @@ export declare class Line {
     b: number;
     c: number;
     constructor(a: number, b: number, c: number);
-    readonly isParallelToAxisY: boolean;
-    readonly isParallelToAxisX: boolean;
+    get isParallelToAxisY(): boolean;
+    get isParallelToAxisX(): boolean;
     xByY(y: number): number | undefined;
     yByX(x: number): number | undefined;
     hasPoint(point: Point): boolean;
+    isEqual(line: Line): boolean;
     distanceToPoint(point: Point): number;
     getNormalVector(): Vector;
     perpendicularByPoint({ x: x1, y: y1 }: Point): Line;

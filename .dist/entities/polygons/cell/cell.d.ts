@@ -10,7 +10,7 @@ export declare class Cell extends GeoPolygon<CellSide> {
     center: CenterPoint;
     peaks: PeakPoint[];
     constructor(center: CenterPoint);
-    readonly neighbors: {
+    get neighbors(): {
         west?: Cell;
         southWest: Cell;
         east?: Cell;
@@ -20,36 +20,36 @@ export declare class Cell extends GeoPolygon<CellSide> {
         north?: Cell;
         northWest: Cell;
     };
-    readonly northNeighbors: {
+    get northNeighbors(): {
         northEast?: Cell;
         north?: Cell;
         northWest?: Cell;
     };
-    readonly southNeighbors: {
+    get southNeighbors(): {
         southWest?: Cell;
         southEast?: Cell;
         south?: Cell;
     };
-    readonly westNeighbors: {
+    get westNeighbors(): {
         west?: Cell;
         southWest?: Cell;
         northWest?: Cell;
     };
-    readonly eastNeighbors: {
+    get eastNeighbors(): {
         east?: Cell;
         southEast?: Cell;
         northEast?: Cell;
     };
-    readonly northEastNeighbors: {
+    get northEastNeighbors(): {
         northEast: Cell;
     };
-    readonly southWestNeighbors: {
+    get southWestNeighbors(): {
         southWest: Cell;
     };
-    readonly northWestNeighbors: {
+    get northWestNeighbors(): {
         northWest: Cell;
     };
-    readonly southEastNeighbors: {
+    get southEastNeighbors(): {
         southEast: Cell;
     };
     static fromCenter(center: CenterPoint): Cell;

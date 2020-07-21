@@ -9,11 +9,11 @@ export declare class MercSegment extends Segment {
     toOppositeHemisphere(): MercSegment;
     intersectionPoint(segment: MercSegment): MercPoint | undefined;
     closestToPoint(point: MercPoint): MercPoint;
-    readonly isAntiMeridian: boolean;
-    readonly isParallelToAxisX: boolean;
-    readonly isParallelToAxisY: boolean;
-    readonly easternPoint: MercPoint;
-    readonly westernPoint: MercPoint;
-    readonly northernPoint: MercPoint;
-    readonly southernPoint: MercPoint;
+    get isAntiMeridian(): boolean;
+    get isParallelToAxisX(): boolean;
+    get isParallelToAxisY(): boolean;
+    get easternPoint(): MercPoint;
+    get westernPoint(): MercPoint;
+    get northernPoint(): MercPoint;
+    get southernPoint(): MercPoint;
 }

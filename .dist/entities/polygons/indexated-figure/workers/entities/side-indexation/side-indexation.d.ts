@@ -19,11 +19,11 @@ export declare class SideIndexation {
         [key: string]: number[];
     };
     approximation: GeoSegment;
-    readonly isAntiMeridian: boolean;
-    readonly north: number;
-    readonly south: number;
-    readonly east: number;
-    readonly west: number;
+    get isAntiMeridian(): boolean;
+    get north(): number;
+    get south(): number;
+    get east(): number;
+    get west(): number;
     static fromSpreadedSide(points: GeoPoint[], spreaded: SpreadedSide): SideIndexation;
     constructor(points: GeoPoint[], spreadedSide: SpreadedSide, lngIndexes: {
         [key: string]: number[];

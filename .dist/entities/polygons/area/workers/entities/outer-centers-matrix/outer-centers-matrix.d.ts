@@ -4,7 +4,7 @@ import { CentersMatrix } from '../centers-matrix';
 import { PolyMatrix } from '../poly-matrix';
 declare type OuterCentersMatrixPayload = Array<Array<(CenterPoint | 'outer' | undefined)>>;
 export declare class OuterCentersMatrix extends PolyMatrix {
-    readonly startIndexes: [number, number];
+    get startIndexes(): [number, number];
     static fromCentersMatrix(matrix: CentersMatrix): OuterCentersMatrix;
     payload: OuterCentersMatrixPayload;
     constructor(payload: OuterCentersMatrixPayload, topLeft: CenterPoint);

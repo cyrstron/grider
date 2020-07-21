@@ -10,10 +10,10 @@ export declare class TileIntersection implements Intersects {
     south: SplitGeoSegment[];
     east: SplitGeoSegment[];
     west: SplitGeoSegment[];
-    readonly isContained: boolean;
-    readonly keys: grider.Cardinal[];
-    readonly isEmpty: boolean;
-    readonly pointsIndexes: number[];
+    get isContained(): boolean;
+    get keys(): grider.Cardinal[];
+    get isEmpty(): boolean;
+    get pointsIndexes(): number[];
     static fromBounds(tilePoint: TileMercPoint, north: BoundIntersection[], south: BoundIntersection[], east: BoundIntersection[], west: BoundIntersection[]): TileIntersection;
     constructor(tilePoint: TileMercPoint, north: SplitGeoSegment[], south: SplitGeoSegment[], east: SplitGeoSegment[], west: SplitGeoSegment[]);
     normalize(): TileIntersection;

@@ -3,7 +3,7 @@ import { CellSide } from '../../segments/cell-side';
 import { GeoPoint } from '../geo-point';
 import { GridPoint } from '../grid-point';
 export declare class CenterPoint extends GridPoint {
-    readonly neighbors: {
+    get neighbors(): {
         south?: CenterPoint;
         north?: CenterPoint;
         west?: CenterPoint;
@@ -13,36 +13,36 @@ export declare class CenterPoint extends GridPoint {
         northEast: CenterPoint;
         northWest: CenterPoint;
     };
-    readonly northNeighbors: {
+    get northNeighbors(): {
         north?: CenterPoint;
         northEast?: CenterPoint;
         northWest?: CenterPoint;
     };
-    readonly southNeighbors: {
+    get southNeighbors(): {
         south?: CenterPoint;
         southEast?: CenterPoint;
         southWest?: CenterPoint;
     };
-    readonly westNeighbors: {
+    get westNeighbors(): {
         west?: CenterPoint;
         northWest?: CenterPoint;
         southWest?: CenterPoint;
     };
-    readonly eastNeighbors: {
+    get eastNeighbors(): {
         east?: CenterPoint;
         southEast?: CenterPoint;
         northEast?: CenterPoint;
     };
-    readonly northEastNeighbors: {
+    get northEastNeighbors(): {
         northEast: CenterPoint;
     };
-    readonly southWestNeighbors: {
+    get southWestNeighbors(): {
         southWest: CenterPoint;
     };
-    readonly northWestNeighbors: {
+    get northWestNeighbors(): {
         northWest: CenterPoint;
     };
-    readonly southEastNeighbors: {
+    get southEastNeighbors(): {
         southEast: CenterPoint;
     };
     nextCenterByCellSide(cellSide: CellSide): CenterPoint;

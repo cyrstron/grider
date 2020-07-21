@@ -13,7 +13,7 @@ export declare class GenericPolygon<PointType extends DefaultPoint<PointType> = 
     intersectsPoly(poly: GenericPolygon<PointType, SegmentType>): PointType[];
     intersectsSegment(segment: DefaultSegment<PointType>): boolean;
     intersectsWithSegment(segment: DefaultSegment<PointType>): PointType[];
-    readonly selfIntersections: PointType[];
+    get selfIntersections(): PointType[];
     sideByIndex(index: number): SegmentType;
     sideByIndexInversed(index: number): SegmentType;
     nextIndex(index: number): number;

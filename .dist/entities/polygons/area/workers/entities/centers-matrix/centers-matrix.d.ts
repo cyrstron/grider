@@ -4,9 +4,9 @@ declare type MatrixPayload = Array<Array<CenterPoint | 'outer' | 'inner' | undef
 export declare class CentersMatrix {
     payload: MatrixPayload;
     topLeft: CenterPoint;
-    readonly outerCoords: number[][];
-    readonly borderEmpties: number[][];
-    readonly innerEmpties: number[][][];
+    get outerCoords(): number[][];
+    get borderEmpties(): number[][];
+    get innerEmpties(): number[][][];
     static fromCenters(centers: CenterPoint[]): CentersMatrix;
     constructor(payload: MatrixPayload, topLeft: CenterPoint);
     removeEmptyLines(): CentersMatrix;

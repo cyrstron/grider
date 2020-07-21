@@ -16,11 +16,11 @@ export declare class GeoPolygon<SegmentType extends GeoSegment = GeoSegment> ext
     arePointsOutsidePoly(poly: GeoPolygon): boolean;
     containsPoint(point: GeoPoint): boolean;
     isValidForFigure(): boolean;
-    readonly outmapPoints: GeoPoint[];
-    readonly easternPoint: GeoPoint;
-    readonly westernPoint: GeoPoint;
-    readonly northernPoint: GeoPoint;
-    readonly southernPoint: GeoPoint;
+    get outmapPoints(): GeoPoint[];
+    get easternPoint(): GeoPoint;
+    get westernPoint(): GeoPoint;
+    get northernPoint(): GeoPoint;
+    get southernPoint(): GeoPoint;
     toPlain(): grider.GeoPoint[];
     toGeoJSON(): grider.GeoJSONPolygon;
     static fromGeoJSON({ coordinates: [polygon] }: grider.GeoJSONPolygon): GeoPolygon;
