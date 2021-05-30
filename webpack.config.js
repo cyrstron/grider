@@ -20,7 +20,7 @@ module.exports = (env, argv) => ({
         test: /\.worker\.ts$/,
         use: [{
           loader: 'worker-loader',
-          options: {inline: true, fallback: false},
+          options: {inline: 'no-fallback'},
         }, {
           loader: 'ts-loader',
         }],
